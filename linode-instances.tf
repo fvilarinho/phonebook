@@ -29,7 +29,95 @@ resource "linode_instance" "default" {
       "apt -y install bash ca-certificates curl wget htop dnsutils net-tools vim",
       "curl https://get.docker.com | sh -",
       "systemctl enable docker",
-      "systemctl start docker"
+      "systemctl start docker",
+      "mkdir -p /root/etc",
+    ]
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "docker-compose.yml"
+    destination = "/root/docker-compose.yml"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "etc/frontend.conf"
+    destination = "/root/etc/frontend.conf"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "etc/prometheus.yml"
+    destination = "/root/etc/prometheus.yml"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = ".env"
+    destination = "/root/.env"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "start.sh"
+    destination = "/root/start.sh"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "stop.sh"
+    destination = "/root/stop.sh"
+  }
+
+  provisioner "remote-exec" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    # Installs the required software and initialize the swarm.
+    inline = [
+      "chmod +x /root/*.sh",
+      "./start.sh"
     ]
   }
 
