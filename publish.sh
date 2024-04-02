@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOCKER_CMD=$(which docker)
+
 source .env
 
 echo "$DOCKER_REGISTRY_PASSWORD" | $DOCKER_CMD login -u "$DOCKER_REGISTRY_ID" \
