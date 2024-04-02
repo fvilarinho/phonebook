@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Service
 public class PhoneService {
-
     private final PhoneRepository phoneRepository;
 
     @Autowired
@@ -23,16 +22,25 @@ public class PhoneService {
     }
 
     public Optional<Phone> findById(Long id) {
+        if(id == null || id <= 0)
+            throw new IllegalArgumentException("Please specify a phone id!");
+
         return phoneRepository.findById(id);
     }
 
     public List<Phone> findAllByName(String name) { return phoneRepository.findByNameContainingIgnoreCase(name); }
 
-    public Phone save(Phone phone) {
-        return phoneRepository.save(phone);
+    public void save(Phone phone) {
+        if(phone == null || phone.getName() == null || phone.getName().isEmpty() || phone.getNumber() == null || phone.getNumber().isEmpty())
+            throw new IllegalArgumentException("Please specify the phone details!");
+
+        phoneRepository.save(phone);
     }
 
     public void deleteById(Long id) {
+        if(id == null || id <= 0)
+            throw new IllegalArgumentException("Please specify a phone id!");
+
         phoneRepository.deleteById(id);
     }
 }
