@@ -1,4 +1,8 @@
 /.env
-/.idea/
+/.credentials
 /.gradle/
+/.id_rsa
+/.idea/
+/.terraform*
 /build/
+/terraform.tfstate*

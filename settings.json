@@ -1,0 +1,7 @@
+{
+  "label": "opentelemetry-demo",
+  "tags": [ "observability", "opentelemetry"],
+  "region": "br-gru",
+  "type": "g6-standard-4",
+  "image": "linode/debian11"
+}
