@@ -39,7 +39,7 @@ services:
     volumes: [ "database_data:/var/lib/mysql" ]
     restart: always
     hostname: database
-    ports: [ "3306:3306" ] # Enable for testing/debug purpose.
+    # ports: [ "3306:3306" ] # Enable for testing/debug purpose.
 
   # Agent responsible to collect metrics of the node.
   node-agent:
