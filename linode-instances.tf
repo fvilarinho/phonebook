@@ -1,3 +1,4 @@
+# Local variables definition.
 locals {
   settings = jsondecode(chomp(file(pathexpand(var.settingsFilename))))
 }
@@ -34,6 +35,7 @@ resource "linode_instance" "default" {
     ]
   }
 
+  # Copies the stack definition file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -46,6 +48,32 @@ resource "linode_instance" "default" {
     destination = "/root/docker-compose.yml"
   }
 
+  # Copies the certificate files.
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "etc/cert.pem"
+    destination = "/root/etc/cert.pem"
+  }
+
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(tls_private_key.default.private_key_openssh)
+    }
+
+    source      = "etc/cert.key"
+    destination = "/root/etc/cert.key"
+  }
+
+  # Copies the frontend configuration file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -58,6 +86,7 @@ resource "linode_instance" "default" {
     destination = "/root/etc/frontend.conf"
   }
 
+  # Copies the metrics server configuration file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -70,6 +99,7 @@ resource "linode_instance" "default" {
     destination = "/root/etc/prometheus.yml"
   }
 
+  # Copies the environment definition file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -82,6 +112,7 @@ resource "linode_instance" "default" {
     destination = "/root/.env"
   }
 
+  # Copies the start script file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -94,6 +125,7 @@ resource "linode_instance" "default" {
     destination = "/root/start.sh"
   }
 
+  # Copies the stop script file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
@@ -106,6 +138,7 @@ resource "linode_instance" "default" {
     destination = "/root/stop.sh"
   }
 
+  # Starts the stack.
   provisioner "remote-exec" {
     # Remote connection attributes.
     connection {

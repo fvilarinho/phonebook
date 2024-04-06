@@ -1,12 +1,7 @@
 #!/bin/bash
 
+# Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$TERRAFORM_CMD" ]; then
-    echo "terraform is not installed! Please install it first to continue!"
-
-    exit 1
-  fi
-
   if [ -z "$DOCKER_CMD" ]; then
     echo "docker is not installed! Please install it first to continue!"
 
@@ -14,16 +9,19 @@ function checkDependencies() {
   fi
 }
 
+# Prepares the environment to execute this script.
 function prepareToExecute() {
   source functions.sh
 
   showBanner
 }
 
+# Stops the stack locally.
 function stop() {
   $DOCKER_CMD compose down
 }
 
+# Clean-up (Removes persistent volumes).
 function cleanUp() {
   $DOCKER_CMD volume prune --force
 
@@ -34,6 +32,7 @@ function cleanUp() {
   fi
 }
 
+# Main function.
 function main() {
   prepareToExecute
   checkDependencies

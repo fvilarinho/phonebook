@@ -1,4 +1,5 @@
 services:
+  # Frontend definition.
   frontend:
     image: nginx:latest
     container_name: frontend
@@ -8,6 +9,7 @@ services:
     ports: [ "80:80", "443:443" ]
     depends_on: [ backend ]
 
+  # Backend definition containing the agent to collect metrics and traces.
   backend:
     build:
       context: .
@@ -22,9 +24,10 @@ services:
       APP_PASS: "${APP_PASS}"
     restart: always
     hostname: backend
-    ports: [ "8080:8080", "9102:9102" ]
+    # ports: [ "8080:8080", "9102:9102" ] # Enable for testing/debug purpose.
     depends_on: [ database, jaeger ]
 
+  # Database definition.
   database:
     image: mariadb:latest
     container_name: database
@@ -36,8 +39,9 @@ services:
     volumes: [ "database_data:/var/lib/mysql" ]
     restart: always
     hostname: database
-    ports: [ "3306:3306" ]
+    # ports: [ "3306:3306" ] # Enable for testing/debug purpose.
 
+  # Agent responsible to collect metrics of the node.
   node-agent:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node-agent
@@ -45,15 +49,17 @@ services:
     volumes: [ "/:/host:ro,rslave" ]
     restart: always
     hostname: node-agent
-    ports: [ "9100:9100" ]
+    # ports: [ "9100:9100" ] # Enable for testing/debug purpose.
 
+  # Agent responsible to collect metrics of the frontend.
   frontend-agent:
     image: nginx/nginx-prometheus-exporter:1.1.0
     container_name: frontend-agent
     command: [ "--nginx.scrape-uri=http://frontend/stub_status", "--web.listen-address=0.0.0.0:9101" ]
     hostname: frontend-agent
-    ports: [ "9101:9101" ]
+    # ports: [ "9101:9101" ] # Enable for testing/debug purpose.
 
+  # Agent responsible to collect metrics of the database.
   database-agent:
     image: quay.io/prometheus/mysqld-exporter:latest
     container_name: database-agent
@@ -62,9 +68,10 @@ services:
       DB_ROOT_PASS: "${DB_ROOT_PASS}"
     command: [ "--mysqld.username=root:$DB_ROOT_PASS", "--mysqld.address=$DB_HOST:3306", "--web.listen-address=0.0.0.0:9103" ]
     hostname: database-agent
-    ports: [ "9103:9103" ]
+    # ports: [ "9103:9103" ] # Enable for testing/debug purpose.
     depends_on: [ database ]
 
+  # Metrics server.
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -74,6 +81,7 @@ services:
     ports: [ "9090:9090" ]
     depends_on: [ backend, node-agent, frontend-agent, database-agent ]
 
+  # Traces server.
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: jaeger
@@ -81,6 +89,7 @@ services:
     hostname: jaeger
     ports: [ "16686:16686" ]
 
+  # Data visualization for metrics and traces.
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -89,5 +98,6 @@ services:
     ports: [ "3000:3000" ]
     depends_on: [ prometheus, jaeger ]
 
+# Persistent volumes definition.
 volumes:
   database_data:

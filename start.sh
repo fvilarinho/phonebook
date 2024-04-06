@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Check the dependencies of this script.
 function checkDependencies() {
   if [ -z "$TERRAFORM_CMD" ]; then
     echo "terraform is not installed! Please install it first to continue!"
@@ -14,12 +15,14 @@ function checkDependencies() {
   fi
 }
 
+# Prepares the environment to execute this script.
 function prepareToExecute() {
   source functions.sh
 
   showBanner
 }
 
+# Creates the TLS certificate files.
 function createCertificate() {
   $TERRAFORM_CMD init \
                  -upgrade \
@@ -34,10 +37,12 @@ function createCertificate() {
                  -auto-approve
 }
 
+# Starts the stack locally.
 function start() {
   $DOCKER_CMD compose up -d
 }
 
+# Main function.
 function main () {
   prepareToExecute
   checkDependencies

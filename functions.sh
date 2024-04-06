@@ -37,6 +37,7 @@ function prepareToExecute() {
   export BUILD_ENV_FILENAME="$WORK_DIR/.env"
 
   # Required binaries.
+  export JAVA_CMD=$(which java)
   export TERRAFORM_CMD=$(which terraform)
   export DOCKER_CMD=$(which docker)
 
