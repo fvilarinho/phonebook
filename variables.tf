@@ -14,3 +14,13 @@ variable "privateKeyFilename" {
   type = string
   default = ".id_rsa"
 }
+
+variable "certificateKeyFilename" {
+  type = string
+  default = "etc/cert.key"
+}
+
+variable "certificateFilename" {
+  type = string
+  default = "etc/cert.pem"
+}

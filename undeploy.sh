@@ -1,11 +1,32 @@
 #!/bin/bash
 
-TERRAFORM_CMD=$(which terraform)
+function checkDependencies() {
+  if [ -z "$TERRAFORM_CMD" ]; then
+    echo "terraform is not installed! Please install it first to continue!"
 
-$TERRAFORM_CMD init \
-               -upgrade \
-               -migrate-state || exit 1
+    exit 1
+  fi
+}
 
-$TERRAFORM_CMD destroy \
-               -auto-approve
+function prepareToExecute() {
+  source functions.sh
 
+  showBanner
+}
+
+function undeploy() {
+  $TERRAFORM_CMD init \
+                 -upgrade \
+                 -migrate-state || exit 1
+
+  $TERRAFORM_CMD destroy \
+                 -auto-approve
+}
+
+function main() {
+  prepareToExecute
+  checkDependencies
+  undeploy
+}
+
+main

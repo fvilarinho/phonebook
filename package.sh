@@ -1,7 +1,27 @@
 #!/bin/bash
 
-DOCKER_CMD=$(which docker)
+function checkDependencies() {
+  if [ -z "$DOCKER_CMD" ]; then
+    echo "docker is not installed! Please install it first to continue!"
 
-source .env
+    exit 1
+  fi
+}
 
-$DOCKER_CMD compose build
+function prepareToExecute() {
+  source functions.sh
+
+  showBanner
+}
+
+function package() {
+  $DOCKER_CMD compose build
+}
+
+function main() {
+  prepareToExecute
+  checkDependencies
+  package
+}
+
+main
