@@ -28,7 +28,8 @@ your build environment.
 Just execute the shell script `build.sh` to start the building process. Execute `package.sh` to start the packaging, and 
 execute`publish.sh` to publish the built packages in the repository.
 
-The following variables must be set in your build environment file that is located in `.env`.
+The following variables must be set in your build environment file `.env` that is located in the root directory of this
+project. Please use the file `.env.template` as template.
 
 - `DOCKER_REGISTRY_URL`: Define the Docker Registry Repository URL to build and store the container images. (For 
 example, to use [Docker HUB](https://hub.docker.com), the value will be `docker.io`. To use 
