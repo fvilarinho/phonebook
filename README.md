@@ -95,7 +95,7 @@ If you want to customize the stack by yourself, just edit the following files:
 - [Jaeger](https://www.jaegertracing.io/)
 - [Grafana](https://www.grafana.com/)
 
-Additionally, you can enable [Akamai Datastream 2](https://techdocs.akamai.com/datastream2/docs/welcome-datastream2)
+Additionally, you can create an Akamai Property and enable [Akamai Datastream 2](https://techdocs.akamai.com/datastream2/docs/welcome-datastream2)
 to collect the CDN traffic logs and/or [Akamai SIEM Integration](https://techdocs.akamai.com/siem-integration/docs/welcome-siem-integration)
 for security logs. These logs can be stored in [Hydrolix](https://www.hydrolix.io). Check it out this [repo](https://www.github.com/fvilarinho/hydrolix-demo)
 to know how to provision it.
