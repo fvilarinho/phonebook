@@ -48,12 +48,14 @@ instructions of your Docker Registry repository).
 The following environment variable must be set in your operating system.
 - `DOCKER_REGISTRY_PASSWORD`: Define the Docker Registry Repository Password.
 
-### To start/stop locally
+### To start / stop locally
 Just execute the shell script `start.sh` (after the setup) to start the stack locally, and execute `stop.sh` to stop the
 stack locally.
 
 ### To deploy
-Just execute the shell script `deploy.sh` to start the provisioning, and execute `undeploy.sh` for de-provisioning.
+First, you need to define the credentials of Akamai Connected Cloud. Please check the Settings / Resources sections 
+below.
+After the credentials are defined, just execute the shell script `deploy.sh` to start the provisioning, and execute `undeploy.sh` for de-provisioning.
 
 ### To access
 To access the stack UI, just open your browser and type the URL: `[http|https]://<hostname>/ui` and the login prompt 
@@ -70,14 +72,20 @@ To access the Traces Server UI (Jaeger), just open your browser and type the URL
 For local access, use localhost, for remote access, use the IP/Hostname of the provisioned infrastructure.
 
 ## 4. Settings
-If you want to customize the stack by yourself, just edit the following files in the `iac` directory:
+If you want to customize the stack by yourself, just edit the following files:
 - `main.tf`: Defines the required provisioning providers.
 - `variables.tf`: Defines the provisioning variables.
-- `linode.tf`: Defines the provisioning settings of Akamai Connected Cloud.
+- `linode.tf`: Defines the Akamai Connected Cloud provider.
 - `linode-instances.tf`: Defines the instances to be provisioned in Akamai Connected Cloud.
-- `linode-keys.tf`: Defines the SSH keys and certificates to be provisioned in Akamai Connected Cloud.
-- `docker-compose.yml`: Defines how the application stack will be built.
-- `Dockerfile`: Defines the container image of the application.
+- `linode-keys.tf`: Defines the SSH keys and certificates to be provisioned.
+- `docker-compose.yml`: Defines how the application stack is composed.
+- `Dockerfile`: Defines the container images of the application.
+- `.credentials`: Defines the Akamai Connected Cloud credentials. Please use the file `.credentials.template` as template.
+- `settings.json`: Defines the Akamai Connected Cloud provisioning settings to be used.
+- `etc/frontend.conf`: Defines the Frontend service configurations.
+- `etc/prometheus.conf`: Defines the Prometheus service configurations.
+- `etc/otel_*.json`: OpenTelemetry Dashboards definition.
+- `etc/akamai_ds2_dashboard.json`: Akamai DataStream 2 Dashboard definition.
 
 ## 5. Other resources
 - [Akamai Connected Cloud](https://www.linode.com/)
