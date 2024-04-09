@@ -80,7 +80,7 @@ services:
     container_name: grafana
     restart: always
     hostname: grafana
-    ports: [ "3000:3000" ]
+    ports: [ "3000:81" ]
     depends_on: [ prometheus, jaeger ]
 
 volumes:
