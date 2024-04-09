@@ -1,8 +1,10 @@
-/.env
 /.credentials
+/.env
 /.gradle/
 /.id_rsa
 /.idea/
 /.terraform*
 /build/
+/etc/cert.key
+/etc/cert.pem
 /terraform.tfstate*

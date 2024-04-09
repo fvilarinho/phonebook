@@ -1,11 +1,39 @@
 #!/bin/bash
 
-DOCKER_CMD=$(which docker)
+# Check the dependencies of this script.
+function checkDependencies() {
+  if [ -z "$DOCKER_CMD" ]; then
+    echo "docker is not installed! Please install it first to continue!"
 
-source .env
+    exit 1
+  fi
+}
 
-echo "$DOCKER_REGISTRY_PASSWORD" | $DOCKER_CMD login -u "$DOCKER_REGISTRY_ID" \
-                                                        "$DOCKER_REGISTRY_URL" \
-                                                        --password-stdin || exit 1
+# Prepares the environment to execute this script.
+function prepareToExecute() {
+  source functions.sh
 
-$DOCKER_CMD compose push
+  showBanner
+}
+
+# Authenticates in the container registry.
+function auth() {
+  echo "$DOCKER_REGISTRY_PASSWORD" | $DOCKER_CMD login -u "$DOCKER_REGISTRY_ID" \
+                                                          "$DOCKER_REGISTRY_URL" \
+                                                          --password-stdin || exit 1
+}
+
+# Publishes the container images.
+function publish() {
+  $DOCKER_CMD compose push
+}
+
+# Main function.
+function main() {
+  prepareToExecute
+  checkDependencies
+  auth
+  publish
+}
+
+main
