@@ -3,7 +3,7 @@ locals {
   settings = jsondecode(chomp(file(pathexpand(var.settingsFilename))))
 }
 
-# Creates the manager instance of the swarm.
+# Creates the linode instance and deploy the stack container the application and the observability agents (OpenTelemetry & Prometheus).
 resource "linode_instance" "default" {
   label           = local.settings.label
   tags            = local.settings.tags
@@ -11,14 +11,14 @@ resource "linode_instance" "default" {
   image           = local.settings.image
   region          = local.settings.region
   private_ip      = true
-  authorized_keys = [ chomp(tls_private_key.default.public_key_openssh) ]
+  authorized_keys = [ chomp(chomp(file(pathexpand(var.sshPublicKeyFilename)))) ]
 
   provisioner "remote-exec" {
     # Remote connection attributes.
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
     # Installs the required software and initialize the swarm.
@@ -31,7 +31,7 @@ resource "linode_instance" "default" {
       "curl https://get.docker.com | sh -",
       "systemctl enable docker",
       "systemctl start docker",
-      "mkdir -p /root/etc",
+      "mkdir -p /root/etc /root/iac",
     ]
   }
 
@@ -41,11 +41,11 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
     source      = "docker-compose.yml"
-    destination = "/root/docker-compose.yml"
+    destination = "/root/iac/docker-compose.yml"
   }
 
   # Copies the certificate files.
@@ -54,11 +54,11 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "etc/cert.pem"
-    destination = "/root/etc/cert.pem"
+    source      = var.certificateKeyFilename
+    destination = "/root/etc/cert.key"
   }
 
   provisioner "file" {
@@ -66,11 +66,11 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "etc/cert.key"
-    destination = "/root/etc/cert.key"
+    source      = var.certificateFilename
+    destination = "/root/etc/cert.pem"
   }
 
   # Copies the frontend configuration file.
@@ -79,10 +79,10 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "etc/frontend.conf"
+    source      = "../etc/frontend.conf"
     destination = "/root/etc/frontend.conf"
   }
 
@@ -92,10 +92,10 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "etc/prometheus.yml"
+    source      = "../etc/prometheus.yml"
     destination = "/root/etc/prometheus.yml"
   }
 
@@ -105,11 +105,24 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = ".env"
+    source      = "../.env"
     destination = "/root/.env"
+  }
+
+  # Copies the functions script file.
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = self.ip_address
+      user        = "root"
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
+    }
+
+    source      = "../functions.sh"
+    destination = "/root/functions.sh"
   }
 
   # Copies the start script file.
@@ -118,10 +131,10 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "start.sh"
+    source      = "../start.sh"
     destination = "/root/start.sh"
   }
 
@@ -131,10 +144,10 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "stop.sh"
+    source      = "../stop.sh"
     destination = "/root/stop.sh"
   }
 
@@ -144,7 +157,7 @@ resource "linode_instance" "default" {
     connection {
       host        = self.ip_address
       user        = "root"
-      private_key = chomp(tls_private_key.default.private_key_openssh)
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
     # Installs the required software and initialize the swarm.
@@ -154,5 +167,8 @@ resource "linode_instance" "default" {
     ]
   }
 
-  depends_on = [ tls_private_key.default ]
+  depends_on = [
+    local_sensitive_file.certificateKey,
+    local_sensitive_file.certificate
+  ]
 }

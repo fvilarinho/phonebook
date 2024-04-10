@@ -4,15 +4,22 @@ services:
     image: nginx:latest
     container_name: frontend
     restart: always
-    volumes: [ "./etc/frontend.conf:/etc/nginx/conf.d/default.conf", "./etc/cert.pem:/etc/nginx/ssl/certs/cert.pem", "./etc/cert.key:/etc/nginx/ssl/private/cert.key" ]
+    volumes: [
+      "../etc/frontend.conf:/etc/nginx/conf.d/default.conf",
+      "../etc/cert.pem:/etc/nginx/ssl/certs/cert.pem",
+      "../etc/cert.key:/etc/nginx/ssl/private/cert.key"
+    ]
     hostname: frontend
-    ports: [ "80:80", "443:443" ]
+    ports: [
+      "80:80",
+      "443:443"
+    ]
     depends_on: [ backend ]
 
   # Backend definition containing the agent to collect metrics and traces.
   backend:
     build:
-      context: .
+      context: ..
     image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/phonebook:${BUILD_VERSION}
     container_name: backend
     environment:
@@ -24,8 +31,14 @@ services:
       APP_PASS: "${APP_PASS}"
     restart: always
     hostname: backend
-    # ports: [ "8080:8080", "9102:9102" ] # Enable for testing/debug purpose.
-    depends_on: [ database, jaeger ]
+    # ports: [
+    #   "8080:8080",
+    #   "9102:9102"
+    # ] # Enable for testing/debug purpose.
+    depends_on: [
+      database,
+      jaeger
+    ]
 
   # Database definition.
   database:
@@ -45,7 +58,10 @@ services:
   node-agent:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node-agent
-    command: [ "--path.rootfs=/host", "--web.listen-address=0.0.0.0:9100" ]
+    command: [
+      "--path.rootfs=/host",
+      "--web.listen-address=0.0.0.0:9100"
+    ]
     volumes: [ "/:/host:ro,rslave" ]
     restart: always
     hostname: node-agent
@@ -55,7 +71,10 @@ services:
   frontend-agent:
     image: nginx/nginx-prometheus-exporter:1.1.0
     container_name: frontend-agent
-    command: [ "--nginx.scrape-uri=http://frontend/stub_status", "--web.listen-address=0.0.0.0:9101" ]
+    command: [
+      "--nginx.scrape-uri=http://frontend/stub_status",
+      "--web.listen-address=0.0.0.0:9101"
+    ]
     hostname: frontend-agent
     # ports: [ "9101:9101" ] # Enable for testing/debug purpose.
 
@@ -66,7 +85,11 @@ services:
     environment:
       DB_HOST: "${DB_HOST}"
       DB_ROOT_PASS: "${DB_ROOT_PASS}"
-    command: [ "--mysqld.username=root:$DB_ROOT_PASS", "--mysqld.address=$DB_HOST:3306", "--web.listen-address=0.0.0.0:9103" ]
+    command: [
+      "--mysqld.username=root:$DB_ROOT_PASS",
+      "--mysqld.address=$DB_HOST:3306",
+      "--web.listen-address=0.0.0.0:9103"
+    ]
     hostname: database-agent
     # ports: [ "9103:9103" ] # Enable for testing/debug purpose.
     depends_on: [ database ]
@@ -76,10 +99,15 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     command: [ "--config.file=/etc/prometheus/prometheus.yml" ]
-    volumes: [ "./etc/prometheus.yml:/etc/prometheus/prometheus.yml" ]
+    volumes: [ "../etc/prometheus.yml:/etc/prometheus/prometheus.yml" ]
     hostname: prometheus
     ports: [ "9090:9090" ]
-    depends_on: [ backend, node-agent, frontend-agent, database-agent ]
+    depends_on: [
+      backend,
+      node-agent,
+      frontend-agent,
+      database-agent
+    ]
 
   # Traces server.
   jaeger:
@@ -88,15 +116,6 @@ services:
     restart: always
     hostname: jaeger
     ports: [ "16686:16686" ]
-
-  # Data visualization for metrics and traces.
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: always
-    hostname: grafana
-    ports: [ "3000:81" ]
-    depends_on: [ prometheus, jaeger ]
 
 # Persistent volumes definition.
 volumes:

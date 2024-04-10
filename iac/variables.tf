@@ -11,19 +11,25 @@ variable "settingsFilename" {
 }
 
 # SSH private key filename.
-variable "privateKeyFilename" {
+variable "sshPrivateKeyFilename" {
   type = string
-  default = ".id_rsa"
+  default = "~/.ssh/id_rsa"
+}
+
+# SSH public key filename.
+variable "sshPublicKeyFilename" {
+  type = string
+  default = "~/.ssh/id_rsa.pub"
 }
 
 # TLS certificate key filename.
 variable "certificateKeyFilename" {
   type = string
-  default = "etc/cert.key"
+  default = "../etc/cert.key"
 }
 
 # TLS certificate filename.
 variable "certificateFilename" {
   type = string
-  default = "etc/cert.pem"
+  default = "../etc/cert.pem"
 }

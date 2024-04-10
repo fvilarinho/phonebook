@@ -14,6 +14,8 @@ function prepareToExecute() {
   source functions.sh
 
   showBanner
+
+  cd iac || exit 1
 }
 
 # Destroys the provisioned infrastructure in Akamai Connected Cloud based on the IaC files.

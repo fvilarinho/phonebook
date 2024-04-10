@@ -1,10 +1,11 @@
-/.credentials
 /.env
 /.gradle/
 /.id_rsa
 /.idea/
-/.terraform*
 /build/
 /etc/cert.key
 /etc/cert.pem
-/terraform.tfstate*
+/iac/.credentials
+/iac/.terraform*
+/iac/settings.json
+/iac/terraform*
