@@ -45,7 +45,7 @@ instructions of your Docker Registry repository).
 - `DB_ROOT_PASS`: Define the root password of the database.
 - `APP_USER`: Define the username to authenticate in the application.
 - `APP_PASS`: Define the password to authenticate in the application.
-- 
+  
 The following environment variable must be set in your operating system.
 - `DOCKER_REGISTRY_PASSWORD`: Define the Docker Registry Repository Password.
 
