@@ -105,6 +105,18 @@ resource "null_resource" "defaultFiles" {
     destination = "/root/etc/prometheus.yml"
   }
 
+  provisioner "file" {
+    # Remote connection attributes.
+    connection {
+      host        = linode_instance.default.ip_address
+      user        = "root"
+      private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
+    }
+
+    source      = "../etc/prometheus2json.json"
+    destination = "/root/etc/prometheus2json.json"
+  }
+
   # Copies the environment definition file.
   provisioner "file" {
     # Remote connection attributes.

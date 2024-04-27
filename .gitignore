@@ -9,3 +9,4 @@
 /iac/.terraform*
 /iac/settings.json
 /iac/terraform*
+/etc/prometheus2json.json
