@@ -42,8 +42,9 @@ function prepareToExecute() {
   export DOCKER_CMD=$(which docker)
 
   # Environment variables.
-  source "$BUILD_ENV_FILENAME"
-
+  if [ -f "$BUILD_ENV_FILENAME" ]; then
+    source "$BUILD_ENV_FILENAME"
+  fi
 }
 
 prepareToExecute

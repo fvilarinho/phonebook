@@ -1,0 +1,53 @@
+name: Akamai SIEM Connector Pipeline
+
+on:
+  push:
+    tags: [ "*" ]
+    paths-ignore:
+      - "iac/*.tf"
+      - "iac/.*.template"
+      - "iac/*.template"
+      - "deploy.sh"
+      - "undeploy.sh"
+      - "start.sh"
+      - "stop.sh"
+      - "banner.txt"
+      - "*.md"
+      - "LICENSE"
+      - "*.template"
+      - ".*.template"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Jobs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download the project files.
+        uses: actions/checkout@v3
+
+      - name: Setting up environment.
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "corretto"
+
+      - name: Build services.
+        run: ./build.sh
+
+      - name: Package services.
+        env:
+          DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
+          DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+        run: ./package.sh
+
+      - name: Publish services.
+        env:
+          DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
+          DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+        run: ./publish.sh
