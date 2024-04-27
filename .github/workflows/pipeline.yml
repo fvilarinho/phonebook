@@ -7,6 +7,8 @@ on:
       - "iac/*.tf"
       - "iac/.*.template"
       - "iac/*.template"
+      - "iac/docker-compose.yml"
+      - "etc/*"
       - "deploy.sh"
       - "undeploy.sh"
       - "start.sh"
@@ -43,6 +45,7 @@ jobs:
           DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
           DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          BUILD_VERSION: ${{ secrets.BUILD_VERSION }}
         run: ./package.sh
 
       - name: Publish services.
@@ -50,4 +53,5 @@ jobs:
           DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
           DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          BUILD_VERSION: ${{ secrets.BUILD_VERSION }}
         run: ./publish.sh
