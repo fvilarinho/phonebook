@@ -1,4 +1,4 @@
-name: Akamai SIEM Connector Pipeline
+name: Phonebook Pipeline
 
 on:
   push:
