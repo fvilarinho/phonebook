@@ -21,7 +21,7 @@
                 <label for="number" class="form-label">Number</label>
                 <input type="text" class="form-control w-25" id="number" th:field="*{number}" required>
             </div>
-            <button type="submit" class="btn btn-success">Save</button>
+            <button id="saveButton" type="submit" class="btn btn-success">Save</button>
             <a th:href="@{/ui}" class="btn btn-primary">Back</a>
             <br/><br/>
             <div class="text-center" th:unless="${action.success}" th:text="${action.message}"></div>
