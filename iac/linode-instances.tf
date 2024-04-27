@@ -11,7 +11,7 @@ resource "linode_instance" "default" {
   image           = local.settings.image
   region          = local.settings.region
   private_ip      = true
-  authorized_keys = [ chomp(chomp(file(pathexpand(var.sshPublicKeyFilename)))) ]
+  authorized_keys = [chomp(chomp(file(pathexpand(var.sshPublicKeyFilename))))]
 
   provisioner "remote-exec" {
     # Remote connection attributes.
@@ -34,12 +34,18 @@ resource "linode_instance" "default" {
       "mkdir -p /root/etc /root/iac",
     ]
   }
+}
+
+resource "null_resource" "defaultFiles" {
+  triggers = {
+    always_run = timestamp()
+  }
 
   # Copies the stack definition file.
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -52,7 +58,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -64,7 +70,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -77,7 +83,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -90,7 +96,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -103,7 +109,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -116,7 +122,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -129,7 +135,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -142,7 +148,7 @@ resource "linode_instance" "default" {
   provisioner "file" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -155,7 +161,7 @@ resource "linode_instance" "default" {
   provisioner "remote-exec" {
     # Remote connection attributes.
     connection {
-      host        = self.ip_address
+      host        = linode_instance.default.ip_address
       user        = "root"
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
@@ -168,6 +174,7 @@ resource "linode_instance" "default" {
   }
 
   depends_on = [
+    linode_instance.default,
     local_sensitive_file.certificateKey,
     local_sensitive_file.certificate
   ]
