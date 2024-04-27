@@ -31,7 +31,7 @@ resource "linode_instance" "default" {
       "curl https://get.docker.com | sh -",
       "systemctl enable docker",
       "systemctl start docker",
-      "mkdir -p /root/etc /root/iac",
+      "mkdir -p /root/etc",
     ]
   }
 }
@@ -51,7 +51,7 @@ resource "null_resource" "defaultFiles" {
     }
 
     source      = "docker-compose.yml"
-    destination = "/root/iac/docker-compose.yml"
+    destination = "/root/docker-compose.yml"
   }
 
   # Copies the certificate files.

@@ -14,8 +14,6 @@ function prepareToExecute() {
   source functions.sh
 
   showBanner
-
-  cd iac || exit 1
 }
 
 # Starts the stack locally.

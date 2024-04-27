@@ -31,9 +31,9 @@ resource "linode_firewall" "default" {
     action   = "ACCEPT"
   }
 
-  # Allows Prometheus & Jaeger external traffic only from Grafana and my IP.
+  # Allows external traffic.
   inbound {
-    label    = "allow_grafana"
+    label    = "allow_jaeger_prometheus_traffic"
     protocol = "TCP"
     ports    = "9090,16686"
     ipv4     = local.settings.allowedIps
@@ -43,7 +43,7 @@ resource "linode_firewall" "default" {
 
   # Allows HTTP/HTTPs external traffic from everywhere.
   inbound {
-    label    = "allow_http_https"
+    label    = "allow_http_https_traffic"
     protocol = "TCP"
     ports    = "80,443"
     ipv4     = [ "0.0.0.0/0" ]
