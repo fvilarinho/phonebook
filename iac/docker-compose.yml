@@ -93,18 +93,18 @@ services:
     # ports: [ "9103:9103" ] # Enable for testing/debug purpose.
     depends_on: [ database ]
 
-  #prometheus2json:
-  #  image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/prometheus2json:${BUILD_VERSION}
-  #  container_name: prometheus2json
-  #  command: [ "/etc/prometheus2json.json" ]
-  #  volumes: [ "../etc/prometheus2json.json:/etc/prometheus2json.json" ]
-  #  hostname: prometheus2json
-  #  depends_on: [
-  #    node-agent,
-  #    frontend-agent,
-  #    backend,
-  #    database-agent,
-  #  ]
+  prometheus2json:
+    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/prometheus2json:${BUILD_VERSION}
+    container_name: prometheus2json
+    command: [ "/etc/prometheus2json.json" ]
+    volumes: [ "../etc/prometheus2json.json:/etc/prometheus2json.json" ]
+    hostname: prometheus2json
+    depends_on: [
+      node-agent,
+      frontend-agent,
+      backend,
+      database-agent,
+    ]
 
   # Metrics server.
   prometheus:
