@@ -1,6 +1,5 @@
 services:
   # Backend definition containing the agent to collect metrics and traces.
   backend:
-    build:
-      context: ..
+    build: .
     image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/phonebook:${BUILD_VERSION}

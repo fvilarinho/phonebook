@@ -50,7 +50,7 @@ resource "null_resource" "defaultFiles" {
       private_key = chomp(chomp(file(pathexpand(var.sshPrivateKeyFilename))))
     }
 
-    source      = "docker-compose.yml"
+    source      = "../docker-compose.yml"
     destination = "/root/docker-compose.yml"
   }
 
