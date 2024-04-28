@@ -33,7 +33,7 @@ resource "linode_firewall" "default" {
 
   # Allows external traffic.
   inbound {
-    label    = "allow_jaeger_prometheus_traffic"
+    label    = "allow_jaeger_prometheus"
     protocol = "TCP"
     ports    = "9090,16686"
     ipv4     = local.settings.allowedIps
@@ -43,7 +43,7 @@ resource "linode_firewall" "default" {
 
   # Allows HTTP/HTTPs external traffic from everywhere.
   inbound {
-    label    = "allow_http_https_traffic"
+    label    = "allow_http_https"
     protocol = "TCP"
     ports    = "80,443"
     ipv4     = [ "0.0.0.0/0" ]
