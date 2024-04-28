@@ -1,20 +1,12 @@
 {
   "__inputs": [
     {
-      "name": "DS_JAEGER",
-      "label": "jaeger",
+      "name": "DS_TRAFFICPEAK",
+      "label": "trafficpeak",
       "description": "",
       "type": "datasource",
-      "pluginId": "jaeger",
-      "pluginName": "Jaeger"
-    },
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
+      "pluginId": "grafana-clickhouse-datasource",
+      "pluginName": "ClickHouse"
     }
   ],
   "__elements": {},
@@ -27,21 +19,9 @@
     },
     {
       "type": "datasource",
-      "id": "jaeger",
-      "name": "Jaeger",
-      "version": "1.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
+      "id": "grafana-clickhouse-datasource",
+      "name": "ClickHouse",
+      "version": "4.0.6"
     },
     {
       "type": "panel",
@@ -74,15 +54,50 @@
   "panels": [
     {
       "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
-          "fieldMinMax": false,
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -90,55 +105,183 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
-          "unit": "ms"
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
+        "w": 12,
         "x": 0,
         "y": 0
       },
       "id": 1,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
+        "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "min",
+            "mean",
+            "max"
           ],
-          "fields": "",
-          "values": false
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "10.4.2",
       "targets": [
         {
           "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
           },
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook"
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, value as utilization\n  from demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_utilization_ratio'\n   and $__timeFilter(timestamp)",
+          "refId": "A"
         }
       ],
-      "title": "Response time (All transactions)",
-      "type": "stat"
+      "title": "CPU Utilization",
+      "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, value as load \n  from demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_load_1m'\n   and $__timeFilter(timestamp)",
+          "refId": "A"
+        }
+      ],
+      "title": "Load Average (1m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
       },
       "fieldConfig": {
         "defaults": {
@@ -190,115 +333,18 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 0
+        "w": 12,
+        "x": 0,
+        "y": 8
       },
       "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "min",
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
-          },
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook",
-          "tags": "http.method=GET"
-        }
-      ],
-      "title": "GET time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 0
-      },
-      "id": 3,
       "options": {
         "legend": {
           "calcs": [
@@ -319,22 +365,34 @@
       "targets": [
         {
           "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
           },
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook",
-          "tags": "http.method=POST"
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, value as usage\n  from demo.prometheus \n where name = 'process_runtime_jvm_memory_usage_bytes'\n   and labels like '%Eden%type=heap'\n   and $__timeFilter(timestamp)",
+          "refId": "A"
         }
       ],
-      "title": "POST time",
+      "title": "Memory Utilization",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
       },
       "fieldConfig": {
         "defaults": {
@@ -349,15 +407,15 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -374,6 +432,7 @@
             }
           },
           "mappings": [],
+          "max": 168488570880,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -386,209 +445,14 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 8
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "min",
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
-          },
-          "operation": "WebController.search",
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook"
-        }
-      ],
-      "title": "Search time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 8
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "min",
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
-          },
-          "operation": "WebController.add",
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook"
-        }
-      ],
-      "title": "Add time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 12,
         "y": 8
       },
@@ -599,7 +463,7 @@
             "lastNotNull",
             "min",
             "mean",
-            "max"
+            "last"
           ],
           "displayMode": "table",
           "placement": "bottom",
@@ -613,22 +477,34 @@
       "targets": [
         {
           "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
           },
-          "operation": "WebController.edit",
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook"
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, (168488570880 - sum(value)) as usage\n  from demo.prometheus \n where name = 'node_filesystem_free_bytes'\n   and labels like '%mountpoint=/'\n   and $__timeFilter(timestamp)\n group by timestamp  ",
+          "refId": "A"
         }
       ],
-      "title": "Edit time",
+      "title": "Disk Utilization",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "jaeger",
-        "uid": "${DS_JAEGER}"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
       },
       "fieldConfig": {
         "defaults": {
@@ -643,22 +519,22 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "stepAfter",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -680,15 +556,127 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 8
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, value as count\n  from demo.prometheus \n where name = 'process_runtime_jvm_threads_count'\n   and $__timeFilter(timestamp)",
+          "refId": "A"
+        }
+      ],
+      "title": "Threads Count",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${DS_TRAFFICPEAK}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
       },
       "id": 6,
       "options": {
@@ -711,262 +699,28 @@
       "targets": [
         {
           "datasource": {
-            "type": "jaeger",
-            "uid": "${DS_JAEGER}"
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${DS_TRAFFICPEAK}"
           },
-          "operation": "WebController.save",
-          "queryType": "search",
-          "refId": "A",
-          "service": "phonebook"
-        }
-      ],
-      "title": "Save time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{__name__=\"db_client_connections_usage\", instance=\"backend:9102\", job=\"backend\", otel_scope_name=\"io.opentelemetry.hikaricp-3.0\", otel_scope_version=\"1.33.1-alpha\", pool_name=\"HikariPool-1\", state=\"idle\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Idle"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{__name__=\"db_client_connections_usage\", instance=\"backend:9102\", job=\"backend\", otel_scope_name=\"io.opentelemetry.hikaricp-3.0\", otel_scope_version=\"1.33.1-alpha\", pool_name=\"HikariPool-1\", state=\"used\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Used"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "min",
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "db_client_connections_usage",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
+          "pluginVersion": "4.0.6",
+          "queryType": "table",
+          "rawSql": "select timestamp, value as count\n  from demo.prometheus \n where name = 'process_runtime_jvm_classes_current_loaded'\n   and $__timeFilter(timestamp)",
+          "refId": "A"
         }
       ],
-      "title": "Database connections",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{__name__=\"db_client_connections_pending_requests\", instance=\"backend:9102\", job=\"backend\", otel_scope_name=\"io.opentelemetry.hikaricp-3.0\", otel_scope_version=\"1.33.1-alpha\", pool_name=\"HikariPool-1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Count"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "min",
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "db_client_connections_pending_requests",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Pending requests",
+      "title": "Classes Loaded Count",
       "type": "timeseries"
     }
   ],
@@ -982,8 +736,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Traces Overview",
-  "uid": "fdhjhsuc2wqgwc",
-  "version": 11,
+  "title": "Metrics Overview",
+  "uid": "fdjwwd1r5i96od",
+  "version": 17,
   "weekStart": ""
 }
