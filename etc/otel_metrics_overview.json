@@ -1,35 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_TRAFFICPEAK",
-      "label": "trafficpeak",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "grafana-clickhouse-datasource",
-      "pluginName": "ClickHouse"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.4.2"
-    },
-    {
-      "type": "datasource",
-      "id": "grafana-clickhouse-datasource",
-      "name": "ClickHouse",
-      "version": "4.0.6"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -49,13 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 8,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -117,7 +86,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
         "y": 0
@@ -136,6 +105,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -144,7 +114,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -158,9 +128,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, value as utilization\n  from demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_utilization_ratio'\n   and $__timeFilter(timestamp)",
+          "rawSql": "select timestamp, value as utilization\n  from hydrolix_demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_utilization_ratio'\n   and $__timeFilter(timestamp)",
           "refId": "A"
         }
       ],
@@ -170,7 +140,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -228,7 +198,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
         "y": 0
@@ -247,6 +217,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -255,7 +226,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -269,9 +240,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, value as load \n  from demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_load_1m'\n   and $__timeFilter(timestamp)",
+          "rawSql": "select timestamp, value as load \n  from hydrolix_demo.prometheus \n where name = 'process_runtime_jvm_system_cpu_load_1m'\n   and $__timeFilter(timestamp)",
           "refId": "A"
         }
       ],
@@ -281,7 +252,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -339,10 +310,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 10
       },
       "id": 2,
       "options": {
@@ -358,6 +329,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -366,7 +338,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -380,9 +352,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, value as usage\n  from demo.prometheus \n where name = 'process_runtime_jvm_memory_usage_bytes'\n   and labels like '%Eden%type=heap'\n   and $__timeFilter(timestamp)",
+          "rawSql": "select timestamp, value as usage\n  from hydrolix_demo.prometheus \n where name = 'process_runtime_jvm_memory_usage_bytes'\n   and labels like '%Eden%type=heap'\n   and $__timeFilter(timestamp)",
           "refId": "A"
         }
       ],
@@ -392,7 +364,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -451,10 +423,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 10
       },
       "id": 5,
       "options": {
@@ -470,6 +442,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -478,7 +451,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -492,9 +465,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, (168488570880 - sum(value)) as usage\n  from demo.prometheus \n where name = 'node_filesystem_free_bytes'\n   and labels like '%mountpoint=/'\n   and $__timeFilter(timestamp)\n group by timestamp  ",
+          "rawSql": "select timestamp, (168488570880 - sum(value)) as usage\n  from hydrolix_demo.prometheus \n where name = 'node_filesystem_free_bytes'\n   and labels like '%mountpoint=/'\n   and $__timeFilter(timestamp)\n group by timestamp  ",
           "refId": "A"
         }
       ],
@@ -504,7 +477,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -562,10 +535,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 20
       },
       "id": 4,
       "options": {
@@ -581,6 +554,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -589,7 +563,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -603,9 +577,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, value as count\n  from demo.prometheus \n where name = 'process_runtime_jvm_threads_count'\n   and $__timeFilter(timestamp)",
+          "rawSql": "select timestamp, value as count\n  from hydrolix_demo.prometheus \n where name = 'process_runtime_jvm_threads_count'\n   and $__timeFilter(timestamp)",
           "refId": "A"
         }
       ],
@@ -615,7 +589,7 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "${DS_TRAFFICPEAK}"
+        "uid": "adnuo2ama3280a"
       },
       "fieldConfig": {
         "defaults": {
@@ -673,10 +647,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 20
       },
       "id": 6,
       "options": {
@@ -692,6 +666,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -700,7 +675,7 @@
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "${DS_TRAFFICPEAK}"
+            "uid": "adnuo2ama3280a"
           },
           "editorType": "sql",
           "format": 1,
@@ -714,9 +689,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.0.6",
+          "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "select timestamp, value as count\n  from demo.prometheus \n where name = 'process_runtime_jvm_classes_current_loaded'\n   and $__timeFilter(timestamp)",
+          "rawSql": "select timestamp, value as count\n  from hydrolix_demo.prometheus \n where name = 'process_runtime_jvm_classes_current_loaded'\n   and $__timeFilter(timestamp)",
           "refId": "A"
         }
       ],
@@ -734,10 +709,11 @@
     "from": "now-30m",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "browser",
-  "title": "Metrics Overview",
+  "title": "Opentelemetry Metrics ingesting directly in Hydrolix",
   "uid": "fdjwwd1r5i96od",
-  "version": 17,
+  "version": 2,
   "weekStart": ""
 }
