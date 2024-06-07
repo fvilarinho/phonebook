@@ -5,7 +5,7 @@
   "url": "https://phonebook.vila.app.br",
   "tests": [{
     "id": "c1ba3e52-2f9c-4490-8bfb-7e5cb2a5f8f0",
-    "name": "Add",
+    "name": "Transactions",
     "commands": [{
       "id": "d44a260d-b36a-484b-ba80-a390df9ac006",
       "comment": "",
