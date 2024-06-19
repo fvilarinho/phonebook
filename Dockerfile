@@ -1,5 +1,5 @@
 # Base image defintopn.
-FROM alpine:3.19.1
+FROM alpine:3
 
 # Matadata definition.
 LABEL authors="fvilarinho@gmail.com"
