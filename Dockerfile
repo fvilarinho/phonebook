@@ -35,7 +35,7 @@ RUN mkdir -p ${HOME_DIR} ${BIN_DIR} ${ETC_DIR} ${LIBS_DIR} ${LOGS_DIR}
 
 # Installs all required software.
 RUN apk update && \
-    apk add --no-cache bash ca-certificates wget curl unzip vim net-tools bind-tools openjdk20-jre
+    apk add --no-cache bash ca-certificates wget curl unzip vim net-tools bind-tools openjdk-jre
 
 # Copies all binaries, libraries and scripts.
 COPY bin/*.sh ${BIN_DIR}/
