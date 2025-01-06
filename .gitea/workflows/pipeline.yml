@@ -29,38 +29,26 @@ jobs:
       - name: Download the project files
         uses: actions/checkout@v4
 
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "corretto"
+      - name: Set the environment
+        run: echo "$ENV" > .env
 
-      - name: Test
-        run: chmod uog+rwx $(which java); eval $(which java)
+      - name: Compile & Build
+        run: ./build.sh
 
-#      - name: Install Snyk CLI
-#        run: npm install snyk -g
+      - name: Test & Coverage
+        run: ./test.sh
 
-#      - name: Set the environment
-#        run: echo "$ENV" > .env
+      - name: Code Analysis
+        run: ./codeAnalysis.sh
 
-#      - name: Compile & Build
-#        run: ./build.sh
+      - name: Libraries Analysis
+        run: ./librariesAnalysis.sh
 
-#      - name: Test & Coverage
-#        run: ./test.sh
+      - name: Packaging
+        run: ./package.sh
 
-#      - name: Code Analysis
-#        run: ./codeAnalysis.sh
+      - name: Package Analysis
+        run: ./packageAnalysis.sh
 
-#      - name: Libraries Analysis
-#        run: ./librariesAnalysis.sh
-
-#      - name: Packaging
-#        run: ./package.sh
-
-#      - name: Package Analysis
-#        run: ./packageAnalysis.sh
-
-#      - name: Publishing
-#        run: ./publish.sh
+      - name: Publishing
+        run: ./publish.sh
