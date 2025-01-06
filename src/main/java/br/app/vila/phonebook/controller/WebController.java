@@ -4,8 +4,6 @@ import br.app.vila.phonebook.controller.constants.WebControllerConstants;
 import br.app.vila.phonebook.controller.model.ActionModel;
 import br.app.vila.phonebook.model.Phone;
 import br.app.vila.phonebook.service.PhoneService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
