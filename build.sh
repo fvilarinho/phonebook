@@ -18,8 +18,6 @@ function prepareToExecute() {
 
 # Starts the build process.
 function build() {
-  chmod +x $JAVA_CMD
-  
   ./gradlew build -x test
 }
 
