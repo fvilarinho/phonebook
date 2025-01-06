@@ -21,6 +21,8 @@ permissions:
 jobs:
   build:
     name: Jobs
+    env:
+      ENV: ${{ secrets.ENV }}
     runs-on: gitea-runner
 
     steps:
@@ -36,3 +38,26 @@ jobs:
       - name: Install Snyk CLI
         run: npm install snyk -g
 
+      - name: Set the environment
+        run: echo "$ENV" > .env
+
+      - name: Compile & Build
+        run: ./build.sh
+
+      - name: Test & Coverage
+        run: ./test.sh
+
+      - name: Code Analysis
+        run: ./codeAnalysis.sh
+
+      - name: Libraries Analysis
+        run: ./librariesAnalysis.sh
+
+      - name: Packaging
+        run: ./package.sh
+
+      - name: Package Analysis
+        run: ./packageAnalysis.sh
+
+      - name: Publishing
+        run: ./publish.sh
