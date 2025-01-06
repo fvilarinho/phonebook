@@ -32,3 +32,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "corretto"
+
+      - name: Install Snyk CLI
+        run: npm install snyk -g
+
