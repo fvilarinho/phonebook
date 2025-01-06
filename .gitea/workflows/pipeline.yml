@@ -1,0 +1,34 @@
+name: Phonebook Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - ".env*"
+      - "*.md"
+      - "banner.txt"
+      - "deploy.sh"
+      - "docker-compose.yml"
+      - "etc/**"
+      - "generateCertificateAndCredentials.sh"
+      - "LICENSE"
+      - "start.sh"
+      - "stop.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Jobs
+    runs-on: gitea-runner
+
+    steps:
+      - name: Download the project files
+        uses: actions/checkout@v3
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "corretto"
