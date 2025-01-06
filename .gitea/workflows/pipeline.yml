@@ -29,12 +29,6 @@ jobs:
       - name: Download the project files
         uses: actions/checkout@v4
 
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "corretto"
-
       - name: Install Snyk CLI
         run: npm install snyk -g
 
