@@ -36,7 +36,7 @@ function showBanner() {
 function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
-  export BUILD_ENV_FILENAME="$WORK_DIR/.env"
+  export ENV_FILENAME="$WORK_DIR/.env"
 
   # Required binaries.
   export CERTBOT_CMD=$(which certbot)
@@ -49,8 +49,8 @@ function prepareToExecute() {
   export KUBECTL_CMD=$(which kubectl)
 
   # Environment variables.
-  if [ -f "$BUILD_ENV_FILENAME" ]; then
-    source "$BUILD_ENV_FILENAME"
+  if [ -f "$ENV_FILENAME" ]; then
+    source "$ENV_FILENAME"
   fi
 }
 

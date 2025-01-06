@@ -14,6 +14,8 @@ function prepareToExecute() {
   source functions.sh
 
   showBanner
+
+  cd iac || exit 1
 }
 
 # Authenticates in the container registry.

@@ -1,6 +1,6 @@
 package br.app.vila.phonebook.controller;
 
-import br.app.vila.phonebook.controller.constants.WebControllerConstants;
+import br.app.vila.phonebook.controller.constants.WebControllerAttributes;
 import br.app.vila.phonebook.model.Phone;
 import br.app.vila.phonebook.service.PhoneService;
 import org.junit.jupiter.api.Test;
@@ -28,11 +28,11 @@ class WebControllerTest {
     @Test
     void testHome() throws Exception {
         mockMvc.perform(get("/ui"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.SEARCH_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRIES_ATTRIBUTE_ID))
-               .andExpect(view().name("home"));
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRIES))
+                        .andExpect(view().name("home"));
     }
 
     @Test
@@ -42,11 +42,11 @@ class WebControllerTest {
         ));
 
         mockMvc.perform(post("/ui/search")
-               .flashAttr(WebControllerConstants.SEARCH_ATTRIBUTE_ID, new Phone(null, "Doe", null)))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRIES_ATTRIBUTE_ID))
-               .andExpect(view().name("home"));
+                        .flashAttr(WebControllerAttributes.SEARCH, new Phone(null, "Doe", null)))
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRIES))
+                        .andExpect(view().name("home"));
 
         verify(phoneService, times(1)).findAllByName("Doe");
     }
@@ -54,10 +54,11 @@ class WebControllerTest {
     @Test
     void testAdd() throws Exception {
         mockMvc.perform(get("/ui/add"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRY_ATTRIBUTE_ID))
-               .andExpect(view().name("input"));
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRY))
+                        .andExpect(view().name("input"));
     }
 
     @Test
@@ -65,10 +66,11 @@ class WebControllerTest {
         when(phoneService.findById(1L)).thenReturn(Optional.of(new Phone(1L, "John Doe", "123456789")));
 
         mockMvc.perform(get("/ui/edit/1"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRY_ATTRIBUTE_ID))
-               .andExpect(view().name("input"));
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRY))
+                        .andExpect(view().name("input"));
 
         verify(phoneService, times(1)).findById(1L);
     }
@@ -76,29 +78,39 @@ class WebControllerTest {
     @Test
     void testDelete() throws Exception {
         mockMvc.perform(get("/ui/delete/1"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.SEARCH_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRIES_ATTRIBUTE_ID))
-               .andExpect(view().name("home"));
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRIES))
+                        .andExpect(view().name("home"));
 
         verify(phoneService, times(1)).deleteById(1L);
-        verify(phoneService, times(1)).findAll();
     }
 
     @Test
     void testSave() throws Exception {
-        Phone phone = new Phone(1L, "John Doe", "123456789");
+        Phone entry = new Phone(1L, "John Doe", "123456789");
 
         mockMvc.perform(post("/ui/save")
-                        .flashAttr("phone", phone))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(WebControllerConstants.SEARCH_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ACTION_ATTRIBUTE_ID))
-               .andExpect(model().attributeExists(WebControllerConstants.ENTRIES_ATTRIBUTE_ID))
-               .andExpect(view().name("home"));
+                        .flashAttr(WebControllerAttributes.ENTRY, entry))
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                        .andExpect(model().attributeExists(WebControllerAttributes.ENTRIES))
+                        .andExpect(view().name("home"));
 
-        verify(phoneService, times(1)).save(phone);
-        verify(phoneService, times(1)).findAll();
+        verify(phoneService, times(1)).save(entry);
+
+        entry = new Phone("John Doe", "123456789");
+
+        mockMvc.perform(post("/ui/save")
+                        .flashAttr(WebControllerAttributes.ENTRY, entry))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
+                .andExpect(model().attributeExists(WebControllerAttributes.ACTION))
+                .andExpect(model().attributeExists(WebControllerAttributes.ENTRIES))
+                .andExpect(view().name("home"));
+
+        verify(phoneService, times(1)).save(entry);
     }
 }

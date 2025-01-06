@@ -8,7 +8,6 @@ on:
       - "*.md"
       - "banner.txt"
       - "deploy.sh"
-      - "docker-compose.yml"
       - "etc/**"
       - "generateCertificateAndCredentials.sh"
       - "LICENSE"

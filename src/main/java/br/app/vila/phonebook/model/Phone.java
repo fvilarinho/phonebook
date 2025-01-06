@@ -17,14 +17,18 @@ public class Phone {
     public Phone(){
     }
 
-    public Phone(Long id, String name, String number) {
+    public Phone(String name, String number) {
         this();
 
-        setId(id);
         setName(name);
         setNumber(number);
     }
 
+    public Phone(Long id, String name, String number) {
+        this(name, number);
+
+        setId(id);
+    }
 
     public Long getId() {
         return id;

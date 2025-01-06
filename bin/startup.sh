@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Show banner.
+if [ -e "$ETC_DIR/banner.txt" ]; then
+  cat "$ETC_DIR/banner.txt"
+fi
+
 # Environment variables.
 JAVA_CMD=$(which java)
 
