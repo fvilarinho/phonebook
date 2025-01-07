@@ -21,6 +21,7 @@ ENV OTEL_EXPORTER_PROMETHEUS_PORT=9093
 ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
 
 # Database environment variables.
+ENV DB_HOST=mariadb
 ENV DB_USER=demo
 ENV DB_PASS=demo
 ENV DB_NAME=phonebook

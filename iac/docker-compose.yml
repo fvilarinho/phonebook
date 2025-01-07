@@ -100,6 +100,7 @@ services:
     restart: always
     environment:
       - OTEL_ENABLED=true
+      - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
@@ -132,10 +133,11 @@ services:
     container_name: mariadb-exporter
     restart: always
     environment:
+      - DB_HOST=${DB_HOST}
       - DB_ROOT_PASS=${DB_ROOT_PASS}
     command:
       - "--mysqld.username=root:$DB_ROOT_PASS"
-      - "--mysqld.address=mariadb:3306"
+      - "--mysqld.address=$DB_HOST:3306"
       - "--web.listen-address=0.0.0.0:9094"
     hostname: mariadb-exporter
     #ports:
