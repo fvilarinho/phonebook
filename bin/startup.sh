@@ -11,9 +11,11 @@ JAVA_CMD=$(which java)
 # Startup command.
 if [ "$OTEL_ENABLED" == "true" ]; then
   $JAVA_CMD -javaagent:"$LIBS_DIR"/opentelemetry-javaagent.jar \
+            -Dlogging.config="$ETC_DIR"/logback-spring.xml \
             -jar "$LIBS_DIR"/phonebook.jar
 else
-  $JAVA_CMD -jar "$LIBS_DIR"/phonebook.jar
+  $JAVA_CMD -Dlogging.config="$ETC_DIR"/logback-spring.xml \
+            -jar "$LIBS_DIR"/phonebook.jar
 fi
 
 

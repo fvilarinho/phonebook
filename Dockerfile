@@ -48,6 +48,7 @@ RUN apk update && \
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/phonebook.jar ${LIBS_DIR}/
+COPY etc/logback-spring.xml ${ETC_DIR}/
 COPY libs/*.jar ${LIBS_DIR}/
 
 # Gives the execution permission.

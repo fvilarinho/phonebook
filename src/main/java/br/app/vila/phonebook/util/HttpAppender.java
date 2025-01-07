@@ -104,23 +104,26 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
 
             if(formatObject != null) {
                 URL urlObject = new URL(getUrl());
+                HttpURLConnection connectionObject;
 
                 if(this.connection == null)
-                    this.connection = (HttpURLConnection) urlObject.openConnection();
+                    connectionObject = (HttpURLConnection) urlObject.openConnection();
+                else
+                    connectionObject = this.connection;
 
-                this.connection.setDoOutput(true);
-                this.connection.setRequestMethod(HttpMethod.POST.name());
+                connectionObject.setDoOutput(true);
+                connectionObject.setRequestMethod(HttpMethod.POST.name());
 
                 if (this.authenticated) {
                     String auth = getUser() + ":" + getPassword();
                     String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
                     String authHeaderValue = "Basic " + encodedAuth;
 
-                    this.connection.setRequestProperty("Authorization", authHeaderValue);
+                    connectionObject.setRequestProperty("Authorization", authHeaderValue);
                 }
 
-                this.connection.setRequestProperty("Accept", formatObject.getValue());
-                this.connection.setRequestProperty("Content-Type", formatObject.getValue());
+                connectionObject.setRequestProperty("Accept", formatObject.getValue());
+                connectionObject.setRequestProperty("Content-Type", formatObject.getValue());
 
                 Map<String, Object> logObject = new HashMap<>();
 
@@ -147,14 +150,14 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
                     logLine = String.join(getDelimiter(), values);
                 }
 
-                try (OutputStream os = this.connection.getOutputStream()) {
+                try (OutputStream os = connectionObject.getOutputStream()) {
                     os.write(logLine.getBytes());
                     os.flush();
                 }
 
                 // Handle the response
-                int responseCode = this.connection.getResponseCode();
-                String responseMessage = this.connection.getResponseMessage();
+                int responseCode = connectionObject.getResponseCode();
+                String responseMessage = connectionObject.getResponseMessage();
 
                 if (responseCode != HttpURLConnection.HTTP_OK)
                     setErrorMessage(String.format("Failed to send log: %s - %s%n", responseCode, responseMessage));
