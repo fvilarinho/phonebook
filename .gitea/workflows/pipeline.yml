@@ -18,7 +18,7 @@ permissions:
 jobs:
   build:
     name: Jobs
-    runs-on: ubuntu-latest
+    runs-on: gitea-runner
 
     steps:
       - name: Download the Project Files
