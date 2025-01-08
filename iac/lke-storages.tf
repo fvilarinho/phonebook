@@ -1,5 +1,5 @@
 locals {
-  storagesManifestFilename = abspath(pathexpand("./storages.yml"))
+  storagesManifestFilename = "./storages.yml"
 }
 
 resource "null_resource" "applyStorages" {

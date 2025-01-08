@@ -1,5 +1,5 @@
 locals {
-  applySecretsScriptFilename = abspath(pathexpand("./applySecrets.sh"))
+  applySecretsScriptFilename = "./applySecrets.sh"
 }
 
 resource "null_resource" "applySecrets" {

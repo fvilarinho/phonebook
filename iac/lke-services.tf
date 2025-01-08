@@ -1,5 +1,5 @@
 locals {
-  servicesManifestFilename = abspath(pathexpand("./services.yml"))
+  servicesManifestFilename = "./services.yml"
 }
 
 resource "null_resource" "applyServices" {

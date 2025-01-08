@@ -1,5 +1,5 @@
 locals {
-  fetchIngressScriptFilename = abspath(pathexpand("./fetchIngress.sh"))
+  fetchIngressScriptFilename = "./fetchIngress.sh"
 }
 
 data "external" "ingress" {

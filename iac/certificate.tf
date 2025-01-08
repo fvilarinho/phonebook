@@ -1,5 +1,5 @@
 locals {
-  generateCertificateAndCredentialsScriptFilename = abspath(pathexpand("./generateCertificateAndCredentials.sh"))
+  generateCertificateAndCredentialsScriptFilename = "./generateCertificateAndCredentials.sh"
 }
 
 resource "null_resource" "generateCertificateAndCredentials" {

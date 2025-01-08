@@ -1,5 +1,5 @@
 locals {
-  namespacesManifestFilename = abspath(pathexpand("./namespaces.yml"))
+  namespacesManifestFilename = "./namespaces.yml"
 }
 
 resource "null_resource" "applyNamespaces" {

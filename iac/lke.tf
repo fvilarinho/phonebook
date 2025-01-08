@@ -18,9 +18,8 @@ resource "linode_lke_cluster" "default" {
 }
 
 resource "local_sensitive_file" "kubeconfig" {
-  filename        = abspath(abspath("./.kubeconfig"))
-  content_base64  = linode_lke_cluster.default.kubeconfig
-  file_permission = "0600"
+  filename       = "./.kubeconfig"
+  content_base64 = linode_lke_cluster.default.kubeconfig
 
   depends_on = [ linode_lke_cluster.default ]
 }

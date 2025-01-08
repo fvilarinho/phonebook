@@ -1,5 +1,5 @@
 locals {
-  applyConfigMapsScriptFilename = abspath(pathexpand("./applyConfigMaps.sh"))
+  applyConfigMapsScriptFilename = "./applyConfigMaps.sh"
 }
 
 resource "null_resource" "applyConfigMaps" {
