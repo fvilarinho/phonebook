@@ -3,9 +3,9 @@
 /.idea/
 /build/
 /etc/.htpasswd
-/etc/namespaces.yaml
 /etc/tls/certs/*
 /etc/tls/private/*
-/etc/secrets-*
 /.dccache
-/src/main/resources/banner.txt
+/iac/.terraform*
+/iac/.kubeconfig
+/iac/terraform.tfvars*

@@ -17,6 +17,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private HttpURLConnection connection;
+    private boolean enabled;
     private String url;
     private String format = HttpAppenderFormats.JSON.name();
     private String delimiter = ";";
@@ -28,12 +29,24 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
 
     public HttpAppender(){
         super();
+
+        setEnabled(Boolean.parseBoolean(System.getenv("OBSERVABILITY_ENABLED")));
     }
 
     public HttpAppender(HttpURLConnection connection) {
         this();
 
         this.connection = connection;
+
+        setEnabled(true);
+    }
+
+    private boolean isEnabled() {
+        return this.enabled;
+    }
+
+    private void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getErrorMessage() {
@@ -57,7 +70,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     }
 
     public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
+        this.delimiter = EnvironmentUtil.replaceAll(delimiter);
     }
 
     public String getFormat() {
@@ -65,7 +78,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     }
 
     public void setFormat(String format) {
-        this.format = format;
+        this.format = EnvironmentUtil.replaceAll(format);
     }
 
     public String getUser() {
@@ -73,7 +86,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     }
 
     public void setUser(String user) {
-        this.user = user;
+        this.user = EnvironmentUtil.replaceAll(user);
 
         this.authenticated = (user != null && !user.isEmpty());
     }
@@ -83,7 +96,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = EnvironmentUtil.replaceAll(password);
 
         this.authenticated = (password != null && !password.isEmpty());
     }
@@ -93,11 +106,15 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = EnvironmentUtil.replaceAll(url);
     }
 
     protected void append(ILoggingEvent eventObject) {
         setErrorMessage(null);
+        setProcessed(false);
+
+        if(!isEnabled())
+            return;
 
         try {
             HttpAppenderFormats formatObject= HttpAppenderFormats.fromString(getFormat());

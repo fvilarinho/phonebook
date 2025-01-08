@@ -5,11 +5,9 @@ on:
     branches: [ "master" ]
     paths-ignore:
       - ".env*"
+      - ".gitignore"
       - "*.md"
       - "banner.txt"
-      - "deploy.sh"
-      - "etc/**"
-      - "generateCertificateAndCredentials.sh"
       - "LICENSE"
       - "start.sh"
       - "stop.sh"
@@ -20,16 +18,22 @@ permissions:
 jobs:
   build:
     name: Jobs
-    env:
-      ENV: ${{ secrets.ENV }}
-    runs-on: gitea-runner
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Download the project files
+      - name: Download the Project Files
         uses: actions/checkout@v4
 
-      - name: Set the environment
-        run: echo "$ENV" > .env
+      - name: Set Terraform Remote Backend Credentials
+        env:
+          PROVISIONING_STATE_CREDENTIALS: ${{ secrets.PROVISIONING_STATE_CREDENTIALS }}
+        run: mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
+
+      - name: Set the Pipeline Environment
+        env:
+          BUILD_SETTINGS: ${{ secrets.BUILD_SETTINGS }}
+          PROVISIONING_SETTINGS: ${{ secrets.PROVISIONING_SETTINGS }}
+        run: echo "$BUILD_SETTINGS" > .env; echo "$PROVISIONING_SETTINGS" > iac/terraform.tfvars
 
       - name: Compile & Build
         run: ./build.sh
@@ -51,3 +55,9 @@ jobs:
 
       - name: Publishing
         run: ./publish.sh
+
+      - name: Deploy
+        env:
+          CERTIFICATE: ${{ secrets.CERTIFICATE }}
+          CERTIFICATE_KEY: ${{ secrets.CERTIFICATE }}
+        run: ./deploy.sh

@@ -4,8 +4,6 @@
 function showLabel() {
   if [[ "$0" == *"build.sh"* ]]; then
     echo "** BUILD **"
-  elif [[ "$0" == *"generateCertificateAndCredentials.sh"* ]]; then
-    echo "** GENERATE CERTIFICATE AND CREDENTIALS **"
   elif [[ "$0" == *"codeAnalysis.sh"* ]]; then
     echo "** CODE ANALYSIS **"
   elif [[ "$0" == *"librariesAnalysis.sh"* ]]; then
@@ -20,6 +18,8 @@ function showLabel() {
     echo "** START **"
   elif [[ "$0" == *"stop.sh"* ]]; then
     echo "** STOP **"
+  elif [[ "$0" == *"deploy.sh"* ]]; then
+    echo "** DEPLOY **"
   fi
 }
 
@@ -38,6 +38,11 @@ function prepareToExecute() {
   export WORK_DIR="$PWD"
   export ENV_FILENAME="$WORK_DIR/.env"
 
+  # Environment variables.
+  if [ -f "$ENV_FILENAME" ]; then
+    source "$ENV_FILENAME"
+  fi
+
   # Required binaries.
   export CERTBOT_CMD=$(which certbot)
   export HTPASSWD_CMD=$(which htpasswd)
@@ -47,11 +52,7 @@ function prepareToExecute() {
   export SNYK_CMD=$(which snyk)
   export DOCKER_CMD=$(which docker)
   export KUBECTL_CMD=$(which kubectl)
-
-  # Environment variables.
-  if [ -f "$ENV_FILENAME" ]; then
-    source "$ENV_FILENAME"
-  fi
+  export TERRAFORM_CMD=$(which terraform)
 }
 
 prepareToExecute

@@ -27,6 +27,9 @@ function start() {
 function main() {
   prepareToExecute
   checkDependencies
+
+  eval ./generateCertificateAndCredentials.sh
+
   start
 }
 
