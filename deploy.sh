@@ -19,6 +19,12 @@ function checkDependencies(){
 
     exit 1
   fi
+
+  if [ -z "$HTPASSWD_CMD" ]; then
+    echo "htpasswd is not installed! Please install it first to continue!"
+
+    exit 1
+  fi
 }
 
 # Prepares the environment to execute this script.
