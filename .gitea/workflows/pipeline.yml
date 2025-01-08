@@ -33,7 +33,7 @@ jobs:
         env:
           BUILD_SETTINGS: ${{ secrets.BUILD_SETTINGS }}
           PROVISIONING_SETTINGS: ${{ secrets.PROVISIONING_SETTINGS }}
-        run: echo "$BUILD_SETTINGS" > .env; echo "$PROVISIONING_SETTINGS" > iac/terraform.tfvars; cat .env; cat iac/terraform.tfvars
+        run: echo "$BUILD_SETTINGS" > .env; echo "$PROVISIONING_SETTINGS" > iac/terraform.tfvars
 
       - name: Compile & Build
         run: ./build.sh
