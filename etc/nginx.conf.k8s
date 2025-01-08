@@ -1,0 +1,75 @@
+server {
+    listen 80;
+    listen 443 ssl;
+
+    ssl_certificate /etc/tls/certs/fullchain.pem;
+    ssl_certificate_key /etc/tls/private/privkey.pem;
+
+    server_name phonebook.* localhost 127.0.0.1;
+
+    location = / {
+        return 301 /ui;
+    }
+
+#     location /stub_status {
+#         stub_status on;
+#         allow 127.0.0.1;
+#         allow 172.18.0.0/16;
+#         allow 10.0.0.0/8;
+#         deny all;
+#     }
+
+    location /ui {
+        auth_basic           "Log In";
+        auth_basic_user_file /etc/nginx/conf.d/.htpasswd;
+
+        proxy_pass http://${BACKEND_HOST}:8080/ui;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_buffer_size 128k;
+        proxy_buffers 4 256k;
+        proxy_busy_buffers_size 256k;
+    }
+
+#     location /traces {
+#         auth_basic           "Log In";
+#         auth_basic_user_file /etc/nginx/conf.d/.htpasswd;
+#
+#         proxy_pass http://${TRACES_HOST}:16686/traces;
+#
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Forwarded-For $remote_addr;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection "upgrade";
+#
+#         proxy_buffer_size 128k;
+#         proxy_buffers 4 256k;
+#         proxy_busy_buffers_size 256k;
+#     }
+#
+#     location /metrics {
+#         auth_basic           "Log In";
+#         auth_basic_user_file /etc/nginx/conf.d/.htpasswd;
+#
+#         proxy_pass http://${METRICS_HOST}:9090/metrics;
+#
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Forwarded-For $remote_addr;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection "upgrade";
+#
+#         proxy_buffer_size 128k;
+#         proxy_buffers 4 256k;
+#         proxy_busy_buffers_size 256k;
+#     }
+}
