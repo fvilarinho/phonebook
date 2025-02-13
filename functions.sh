@@ -41,6 +41,12 @@ function prepareToExecute() {
   # Environment variables.
   if [ -f "$ENV_FILENAME" ]; then
     source "$ENV_FILENAME"
+  else
+    if [ -n "$BUILD_DEFINITIONS" ]; then
+      echo "$BUILD_DEFINITIONS" > "$ENV_FILENAME"
+
+      source "$ENV_FILENAME"
+    fi
   fi
 
   # Required binaries.
@@ -51,7 +57,6 @@ function prepareToExecute() {
   export JAVA_CMD=$(which java)
   export SNYK_CMD=$(which snyk)
   export DOCKER_CMD=$(which docker)
-  export KUBECTL_CMD=$(which kubectl)
   export TERRAFORM_CMD=$(which terraform)
 }
 

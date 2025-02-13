@@ -11,20 +11,6 @@ ENV ETC_DIR=${HOME_DIR}/etc
 ENV LIBS_DIR=${HOME_DIR}/libs
 ENV LOGS_DIR=${HOME_DIR}/logs
 
-# Observability environment variables.
-ENV OBSERVABILITY_ENABLED=false
-ENV METRICS_HOST=grafana
-ENV TRACES_HOST=jaeger
-ENV LOGS_HOST=fluentd
-
-# Opentelemetry environment variables.
-ENV OTEL_SERVICE_NAME=phonebook
-ENV OTEL_METRICS_EXPORTER=prometheus
-ENV OTEL_TRACES_EXPORTER=otlp
-ENV OTEL_LOGS_EXPORTER=none
-ENV OTEL_EXPORTER_PROMETHEUS_PORT=9093
-ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://${TRACES_HOST}:4318
-
 # Database environment variables.
 ENV DB_HOST=mariadb
 ENV DB_USER=demo
@@ -54,7 +40,6 @@ RUN apk update && \
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/phonebook.jar ${LIBS_DIR}/
-COPY libs/*.jar ${LIBS_DIR}/
 
 # Gives the execution permission.
 RUN chmod +X ${BIN_DIR}/*.sh && \

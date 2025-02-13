@@ -8,6 +8,10 @@ resource "null_resource" "generateCertificateAndCredentials" {
   }
 
   provisioner "local-exec" {
+    environment = {
+      LINODE_TOKEN = var.credentials.token
+    }
+
     quiet   = true
     command = local.generateCertificateAndCredentialsScriptFilename
   }

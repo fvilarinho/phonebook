@@ -28,7 +28,9 @@ function main() {
   prepareToExecute
   checkDependencies
 
-  eval ./generateCertificateAndCredentials.sh
+  if [ -e "./generateCertificateAndCredentials.sh" ]; then
+    eval ./generateCertificateAndCredentials.sh
+  fi
 
   start
 }

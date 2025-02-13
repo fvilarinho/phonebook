@@ -24,18 +24,14 @@ jobs:
       - name: Download the Project Files
         uses: actions/checkout@v4
 
-      - name: Set Terraform Remote Backend Credentials
+      - name: Prepare the environment
         env:
           PROVISIONING_STATE_CREDENTIALS: ${{ secrets.PROVISIONING_STATE_CREDENTIALS }}
-        run: mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
-
-      - name: Set the Pipeline Environment
-        env:
-          BUILD_SETTINGS: ${{ secrets.BUILD_SETTINGS }}
-          PROVISIONING_SETTINGS: ${{ secrets.PROVISIONING_SETTINGS }}
-        run: echo "$BUILD_SETTINGS" > .env; echo "$PROVISIONING_SETTINGS" > iac/terraform.tfvars
+        run: chmod +x *.sh; mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
 
       - name: Compile & Build
+        env:
+          BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
         run: ./build.sh
 
       - name: Test & Coverage
@@ -58,6 +54,7 @@ jobs:
 
       - name: Deploy
         env:
+          PROVISIONING_DEFINITIONS: ${{ secrets.PROVISIONING_DEFINITIONS }}
           CERTIFICATE: ${{ secrets.CERTIFICATE }}
-          CERTIFICATE_KEY: ${{ secrets.CERTIFICATE }}
+          CERTIFICATE_KEY: ${{ secrets.CERTIFICATE_KEY }}
         run: ./deploy.sh

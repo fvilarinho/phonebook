@@ -5,7 +5,5 @@
 /etc/.htpasswd
 /etc/tls/certs/*
 /etc/tls/private/*
-/.dccache
 /iac/.terraform*
-/iac/.kubeconfig
 /iac/terraform.tfvars*

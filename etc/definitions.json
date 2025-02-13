@@ -1,0 +1,17 @@
+{
+  "label": "phonebook",
+  "tags": [
+    "demo",
+    "phonebook"
+  ],
+  "region": "br-gru",
+  "type": "g6-standard-4",
+  "allowedIps": {
+    "ipv4": [
+      "0.0.0.0/0"
+    ],
+    "ipv6": [
+      "::1/128"
+    ]
+  }
+}

@@ -8,12 +8,6 @@ function checkDependencies(){
     exit 1
   fi
 
-  if [ -z "$KUBECTL_CMD" ]; then
-    echo "kubectl is not installed! Please install it first to continue!"
-
-    exit 1
-  fi
-
   if [ -z "$JQ_CMD" ]; then
     echo "jq is not installed! Please install it first to continue!"
 
@@ -34,6 +28,10 @@ function prepareToExecute() {
   showBanner
 
   cd iac || exit 1
+
+  if [ -n "$PROVISIONING_DEFINITIONS" ]; then
+    echo "$PROVISIONING_DEFINITIONS" > terraform.tfvars
+  fi
 }
 
 function cleanUp() {

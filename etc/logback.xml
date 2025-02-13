@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-<!--    <appender name="HTTP" class="br.app.vila.phonebook.util.HttpAppender">-->
-<!--        <url>http://${LOGS_HOST}:9880</url>-->
-<!--    </appender>-->
-
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/phonebook.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -27,6 +23,5 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
-<!--        <appender-ref ref="HTTP" />-->
     </root>
 </configuration>

@@ -1,82 +1,10 @@
 services:
-#  grafana:
-#    image: grafana/grafana:latest
-#    container_name: grafana
-#    restart: always
-#    environment:
-#      - GF_SECURITY_ADMIN_USER=${APP_USER}
-#      - GF_SECURITY_ADMIN_PASSWORD=${APP_PASS}
-#      - GF_SERVER_PROTOCOL=https
-#      - GF_SERVER_CERT_FILE=/etc/tls/certs/fullchain.pem
-#      - GF_SERVER_CERT_KEY=/etc/tls/private/privkey.pem
-#    volumes:
-#      - grafana_data:/var/lib/grafana
-#      - ../etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
-#      - ../etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem
-#    hostname: grafana
-#    ports:
-#      - "3000:3000"
-
-#  fluentd:
-#    image: ghcr.io/fvilarinho/fluentd:1.0.0
-#    container_name: fluentd
-#    restart: always
-#    volumes:
-#      - ../etc/fluentd.conf:/opt/bitnami/fluentd/conf/fluentd.conf
-#    hostname: fluentd
-#    ports:
-#      - "9880:9880"
-
-#  jaeger:
-#    image: jaegertracing/all-in-one:latest
-#    container_name: jaeger
-#    restart: always
-#    environment:
-#      - COLLECTOR_OTLP_ENABLED=true
-#    command:
-#      - "--query.base-path=/traces"
-#    hostname: jaeger
-#    ports:
-#      - "16686:16686"
-#      - "4317:4317"
-
-#  prometheus:
-#    image: quay.io/prometheus/prometheus:latest
-#    container_name: prometheus
-#    restart: always
-#    command:
-#      - "--config.file=/etc/prometheus.yml"
-#      - '--web.external-url=/metrics'
-#    volumes:
-#      - ../etc/prometheus.yml:/etc/prometheus.yml
-#    hostname: prometheus
-#    ports:
-#      - "9090:9090"
-
-#  node-exporter:
-#    image: quay.io/prometheus/node-exporter:latest
-#    container_name: node-exporter
-#    restart: always
-#    privileged: true
-#    command:
-#      - '--path.rootfs=/host'
-#      - "--web.listen-address=0.0.0.0:9091"
-#    volumes:
-#      - '/:/host:ro,delegated'
-#    hostname: node-exporter
-#    ports:
-#      - "9091:9091"
-
   nginx:
     image: nginx:latest
     container_name: nginx
     restart: always
     environment:
       - BACKEND_HOST=${BACKEND_HOST}
-#      - GRAFANA_HOST=${GRAFANA_HOST}
-#      - METRICS_HOST=${METRICS_HOST}
-#      - TRACES_HOST=${TRACES_HOST}
-#      - LOGS_HOST=${LOGS_HOST}
     volumes:
       - ../etc/nginx.conf:/etc/nginx/templates/default.conf.template
       - ../etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
@@ -88,22 +16,6 @@ services:
       - "443:443"
     depends_on:
       - phonebook
-#      - prometheus
-#      - jaeger
-
-#  nginx-exporter:
-#    image: nginx/nginx-prometheus-exporter:latest
-#    container_name: nginx-exporter
-#    environment:
-#      - FRONTEND_HOST=${FRONTEND_HOST}
-#    command:
-#      - "--nginx.scrape-uri=http://$FRONTEND_HOST/stub_status"
-#      - "--web.listen-address=0.0.0.0:9092"
-#    hostname: nginx-exporter
-#    ports:
-#      - "9092:9092"
-#    depends_on:
-#      - nginx
 
   phonebook:
     build: ..
@@ -111,10 +23,6 @@ services:
     container_name: phonebook
     restart: always
     environment:
-#      - OBSERVABILITY_ENABLED=true
-#      - METRICS_HOST=${METRICS_HOST}
-#      - TRACES_HOST+=${TRACES_HOST}
-#      - LOGS_HOST=${LOGS_HOST}
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
@@ -122,13 +30,8 @@ services:
     volumes:
       - ../etc/logback.xml:/home/phonebook/etc/logback.xml
     hostname: phonebook
-    #ports:
-    #  - "8080:8080"
-    #  - "9093:9893"
     depends_on:
       - mariadb
-#      - jaeger
-#      - fluentd
 
   mariadb:
     image: mariadb:latest
@@ -142,26 +45,6 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     hostname: mariadb
-    #ports:
-    #  - "3306:3306"
-
-#  mariadb-exporter:
-#    image: quay.io/prometheus/mysqld-exporter:latest
-#    container_name: mariadb-exporter
-#    restart: always
-#    environment:
-#      - DB_HOST=${DB_HOST}
-#      - DB_ROOT_PASS=${DB_ROOT_PASS}
-#    command:
-#      - "--mysqld.username=root:$DB_ROOT_PASS"
-#      - "--mysqld.address=$DB_HOST:3306"
-#      - "--web.listen-address=0.0.0.0:9094"
-#    hostname: mariadb-exporter
-#    ports:
-#      - "9094:9094"
-#    depends_on:
-#      - mariadb
 
 volumes:
   mariadb_data:
-#  grafana_data:

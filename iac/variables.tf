@@ -1,19 +1,5 @@
-variable linodeToken {}
-
-variable appName {}
-
-variable appDomain {}
-
-variable settings {
+variable "credentials" {
   default = {
-    region  = "<region>"
-    nodes   = {
-      type  = "<type>"
-      count = 2
-    }
-    allowedIps = {
-      ipv4 = [ "0.0.0.0/0" ]
-      ipv6 = [ "::/0" ]
-    }
+    token = "<token>"
   }
 }

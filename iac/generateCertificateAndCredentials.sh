@@ -36,8 +36,8 @@ function generateCertificate() {
            ../etc/tls/private
 
   if [ -z "$CERTIFICATE" ] || [ -z "$CERTIFICATE_KEY" ]; then
-    CERTIFICATE_FILENAME="/etc/letsencrypt/live/$APP_DOMAIN/fullchain.pem"
-    CERTIFICATE_KEY_FILENAME="/etc/letsencrypt/live/$APP_DOMAIN/privkey.pem"
+    CERTIFICATE_FILENAME="/etc/letsencrypt/live/$APP_NAME.$APP_DOMAIN/fullchain.pem"
+    CERTIFICATE_KEY_FILENAME="/etc/letsencrypt/live/$APP_NAME.$APP_DOMAIN/privkey.pem"
 
     if [ ! -e "$CERTIFICATE_FILENAME" ] || [ ! -e "$CERTIFICATE_KEY_FILENAME" ]; then
       CERTIFICATE_VALIDATION_CREDENTIALS=/tmp/.certbotValidation.credentials
@@ -49,7 +49,7 @@ function generateCertificate() {
       $CERTBOT_CMD certonly \
                    --dns-linode \
                    --dns-linode-credentials "$CERTIFICATE_VALIDATION_CREDENTIALS" \
-                   -d "*.$APP_DOMAIN" \
+                   -d "$APP_NAME.$APP_DOMAIN" \
                    -m "$APP_EMAIL" \
                    --agree-tos \
                    -n || exit 1
