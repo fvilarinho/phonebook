@@ -16,7 +16,7 @@ data "linode_instances" "cluster" {
 
 # Firewall definition.
 resource "linode_firewall" "default" {
-  label           = "${var.appName}-firewall"
+  label           = "${var.appName}-cn-fw"
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
 
@@ -93,81 +93,32 @@ resource "linode_firewall" "default" {
   # Akamai compliance rule.
   inbound {
     action   = "ACCEPT"
-    label    = "allowed-ips"
+    label    = "allow-akamai-ips"
     protocol = "TCP"
-    ipv4     = local.allowedIpv4
-    ipv6     = var.settings.allowedIps.ipv6
+    ports    = "22,443"
+    ipv4     = [
+      "172.236.119.4/30",
+      "172.234.160.4/30",
+      "172.236.94.4/30",
+      "139.144.212.168/31",
+      "172.232.23.164/31"
+    ]
+    ipv6     = [
+      "2600:3c06::f03c:94ff:febe:162f/128",
+      "2600:3c06::f03c:94ff:febe:16ff/128",
+      "2600:3c06::f03c:94ff:febe:16c5/128",
+      "2600:3c07::f03c:94ff:febe:16e6/128",
+      "2600:3c07::f03c:94ff:febe:168c/128",
+      "2600:3c07::f03c:94ff:febe:16de/128",
+      "2600:3c08::f03c:94ff:febe:16e9/128",
+      "2600:3c08::f03c:94ff:febe:1655/128",
+      "2600:3c08::f03c:94ff:febe:16fd/128"
+    ]
   }
 
-  # Akamai compliance rule.
-  inbound {
-    action   = "ACCEPT"
-    label    = "allowed-ips"
-    protocol = "UDP"
-    ipv4     = local.allowedIpv4
-    ipv6     = var.settings.allowedIps.ipv6
-  }
-
-  depends_on = [
-    data.linode_instances.cluster,
-    linode_lke_cluster.default,
-    null_resource.applyDeployments,
-    null_resource.applyServices,
-    null_resource.applyStorages,
-    null_resource.applySecrets,
-    null_resource.applyConfigMaps,
-    null_resource.applyNamespaces
-  ]
-}
-
-resource "linode_firewall_device" "clusterNodes" {
-  for_each = { for node in linode_lke_cluster.default.pool[0].nodes : node.instance_id => node }
-
-  firewall_id = linode_firewall.default.id
-  entity_id   = each.key
-  entity_type = "linode"
-
-  depends_on = [
-    linode_firewall.default,
-    linode_lke_cluster.default,
-    null_resource.applyDeployments,
-    null_resource.applyServices,
-    null_resource.applyStorages,
-    null_resource.applySecrets,
-    null_resource.applyConfigMaps,
-    null_resource.applyNamespaces
-  ]
-}
-
-data "linode_nodebalancers" "default" {
   depends_on = [
     linode_lke_cluster.default,
-    null_resource.applyDeployments,
-    null_resource.applyServices,
-    null_resource.applyStorages,
-    null_resource.applySecrets,
-    null_resource.applyConfigMaps,
-    null_resource.applyNamespaces
-  ]
-}
-
-data "linode_nodebalancer" "ingress" {
-  for_each = { for nodebalancer in data.linode_nodebalancers.default.nodebalancers : nodebalancer.ipv4 => nodebalancer }
-
-  id = each.value.id
-
-  depends_on = [ data.linode_nodebalancers.default ]
-}
-
-resource "linode_firewall_device" "ingress" {
-  firewall_id = linode_firewall.default.id
-  entity_id   = data.linode_nodebalancer.ingress[linode_domain_record.default.target].id
-  entity_type = "nodebalancer"
-
-  depends_on = [
-    data.linode_nodebalancer.ingress,
-    linode_domain_record.default,
-    linode_lke_cluster.default,
+    local_sensitive_file.kubeconfig,
     null_resource.applyDeployments,
     null_resource.applyServices,
     null_resource.applyStorages,
