@@ -27,7 +27,7 @@ jobs:
       - name: Prepare the environment
         env:
           PROVISIONING_STATE_CREDENTIALS: ${{ secrets.PROVISIONING_STATE_CREDENTIALS }}
-        run: chmod +x *.sh; mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
+        run: chmod +x *.sh; chmod +x ./bin/*.sh; mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
 
       - name: Compile & Build
         env:

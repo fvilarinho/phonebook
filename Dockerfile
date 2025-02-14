@@ -42,7 +42,7 @@ COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/phonebook.jar ${LIBS_DIR}/
 
 # Gives the execution permission.
-RUN chmod +X ${BIN_DIR}/*.sh && \
+RUN chmod +x ${BIN_DIR}/*.sh && \
     ln -s ${BIN_DIR}/startup.sh /entrypoint.sh
 
 WORKDIR ${HOME_DIR}
