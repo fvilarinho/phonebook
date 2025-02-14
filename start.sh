@@ -20,6 +20,7 @@ function prepareToExecute() {
 
 # Starts the stack locally.
 function start() {
+  $DOCKER_CMD compose pull
   $DOCKER_CMD compose up -d
 }
 
