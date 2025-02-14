@@ -47,5 +47,4 @@ resource "linode_firewall" "default" {
    linodes = [ linode_instance.default.id]
 
    depends_on = [ linode_instance.default ]
-   ]
  }
