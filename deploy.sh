@@ -32,6 +32,16 @@ function prepareToExecute() {
   if [ -n "$PROVISIONING_DEFINITIONS" ]; then
     echo "$PROVISIONING_DEFINITIONS" > terraform.tfvars
   fi
+
+  if [ -n "$SSH_PRIVATE_KEY" ]; then
+    mkdir -p ~/.ssh
+
+    echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+
+    if [ -n "$SSH_PUBLIC_KEY" ]; then
+      echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
+    fi
+  fi
 }
 
 function cleanUp() {
