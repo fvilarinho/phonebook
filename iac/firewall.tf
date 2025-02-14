@@ -1,9 +1,3 @@
-# Fetches the local IP.
-data "http" "myIp" {
-  url    = "https://ipinfo.io"
-  method = "GET"
-}
-
 resource "linode_firewall" "default" {
    label           = "${local.definitions.label}-fw"
    tags            = local.definitions.tags
@@ -37,20 +31,11 @@ resource "linode_firewall" "default" {
 
    inbound {
      action   = "ACCEPT"
-     label    = "allow-http-for-external-ips"
+     label    = "allow-external-ips"
      protocol = "TCP"
-     ports    = "80,443"
      ipv4     = local.definitions.allowedIps.ipv4
      ipv6     = local.definitions.allowedIps.ipv6
    }
-
-  inbound {
-    action   = "ACCEPT"
-    label    = "allow-ssh-for-external-ips"
-    protocol = "TCP"
-    ports    = "22"
-    ipv4     = [ "${jsondecode(data.http.myIp.response_body).ip}/32" ]
-  }
 
    inbound {
      action   = "ACCEPT"
@@ -61,8 +46,6 @@ resource "linode_firewall" "default" {
 
    linodes = [ linode_instance.default.id]
 
-   depends_on = [
-     linode_instance.default,
-     data.http.myIp
+   depends_on = [ linode_instance.default ]
    ]
  }
