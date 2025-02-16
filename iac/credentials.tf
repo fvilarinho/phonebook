@@ -9,8 +9,3 @@ resource "linode_sshkey" "default" {
   label   = local.definitions.label
   ssh_key = chomp(file(local.sshPublicKeyFilename))
 }
-
-# Definition of the initial password for the compute instance.
-resource "random_password" "default" {
-  length = 15
-}
