@@ -14,8 +14,6 @@ function prepareToExecute() {
   source functions.sh
 
   showBanner
-
-  cd iac || exit 1
 }
 
 # Authenticates in the container registry.
@@ -27,6 +25,8 @@ function auth() {
 
 # Publishes the container images.
 function publish() {
+  auth
+
   $DOCKER_CMD compose push
 }
 
@@ -34,7 +34,6 @@ function publish() {
 function main() {
   prepareToExecute
   checkDependencies
-  auth
   publish
 }
 
