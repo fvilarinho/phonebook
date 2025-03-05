@@ -28,6 +28,8 @@ function prepareToExecute() {
   showBanner
 
   cd iac || exit 1
+
+  cat terraform.tfvars
 }
 
 function cleanUp() {
