@@ -36,16 +36,34 @@ function showBanner() {
 function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
-  export ENV_FILENAME="$WORK_DIR/.env"
+  export BUILD_DEFINITIONS_FILENAME="$WORK_DIR/.env"
 
   # Environment variables.
-  if [ -f "$ENV_FILENAME" ]; then
-    source "$ENV_FILENAME"
+  if [ -f "$BUILD_DEFINITIONS_FILENAME" ]; then
+    source "$BUILD_DEFINITIONS_FILENAME"
   else
     if [ -n "$BUILD_DEFINITIONS" ]; then
-      echo "$BUILD_DEFINITIONS" > "$ENV_FILENAME"
+      echo "$BUILD_DEFINITIONS" > "$BUILD_DEFINITIONS_FILENAME"
 
-      source "$ENV_FILENAME"
+      source "$BUILD_DEFINITIONS_FILENAME"
+    fi
+  fi
+
+  if [ -n "$PROVISIONING_DEFINITIONS" ]; then
+    echo "$PROVISIONING_DEFINITIONS" > terraform.tfvars
+  fi
+
+  if [ -n "$PROVISIONING_STATE_CREDENTIALS" ]; then
+    mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
+  fi
+
+  if [ -n "$SSH_PRIVATE_KEY" ]; then
+    mkdir -p ~/.ssh
+
+    echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+
+    if [ -n "$SSH_PUBLIC_KEY" ]; then
+      echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
     fi
   fi
 
