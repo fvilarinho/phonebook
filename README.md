@@ -24,7 +24,8 @@ To Build, Test, Validate, Package, Publish and Deploy:
 - [`terraform 1.5.x`](https://www.terraform.io)
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
 - [`certbot 2.11.x`](https://certbot.eff.org/)
-- [`Gitea 1.22.x`](https://gitea.com) - Only required if you want to run these workflows in a CI/CD pipeline.
+- [`Gitea 1.22.x`](https://gitea.com) - Only required if you want to run these workflows in a CI/CD pipeline. Please 
+check the file `.gitea/workflows/pipeline.yml` to define the steps to be executed in the pipeline.
 - [`Sonarqube 25.3.x`](https://www.sonarsource.com/open-source-editions/sonarqube-community-edition/)
 - [`Akamai Cloud Computing account`](https://techdocs.akamai.com/linode-api/reference/get-started)
 
