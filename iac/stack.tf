@@ -10,7 +10,6 @@ resource "null_resource" "stackFiles" {
     }
 
     inline = [
-      "mkdir -p /root/phonebook/iac",
       "mkdir -p /root/phonebook/etc/tls/certs",
       "mkdir -p /root/phonebook/etc/tls/private"
     ]
@@ -72,8 +71,8 @@ resource "null_resource" "stackFiles" {
       private_key = chomp(file(local.sshPrivateKeyFilename))
     }
 
-    source = "./docker-compose.yml"
-    destination = "/root/phonebook/iac/docker-compose.yml"
+    source = "../docker-compose.yml"
+    destination = "/root/phonebook/docker-compose.yml"
   }
 
   provisioner "file" {

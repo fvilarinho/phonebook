@@ -6,10 +6,10 @@ services:
     environment:
       - BACKEND_HOST=${BACKEND_HOST}
     volumes:
-      - ../etc/nginx.conf:/etc/nginx/templates/default.conf.template
-      - ../etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
-      - ../etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem
-      - ../etc/.htpasswd:/etc/nginx/conf.d/.htpasswd
+      - ./etc/nginx.conf:/etc/nginx/templates/default.conf.template
+      - ./etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
+      - ./etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem
+      - ./etc/.htpasswd:/etc/nginx/conf.d/.htpasswd
     hostname: nginx
     ports:
       - "80:80"
@@ -18,7 +18,7 @@ services:
       - phonebook
 
   phonebook:
-    build: ..
+    build: .
     image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${APP_NAME}:${BUILD_VERSION}
     container_name: phonebook
     restart: always
@@ -28,7 +28,7 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
     volumes:
-      - ../etc/logback.xml:/home/phonebook/etc/logback.xml
+      - ./etc/logback.xml:/home/phonebook/etc/logback.xml
     hostname: phonebook
     depends_on:
       - mariadb

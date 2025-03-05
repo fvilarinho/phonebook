@@ -14,8 +14,6 @@ function prepareToExecute() {
   source functions.sh
 
   showBanner
-
-  cd iac || exit
 }
 
 # Starts the stack locally.
@@ -29,8 +27,10 @@ function main() {
   prepareToExecute
   checkDependencies
 
-  if [ -e "./generateCertificateAndCredentials.sh" ]; then
-    eval ./generateCertificateAndCredentials.sh
+  GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME=../bin/tls/generateCertificateAndCredentials.sh
+
+  if [ -e "$GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME" ]; then
+    eval "$GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME"
   fi
 
   start
