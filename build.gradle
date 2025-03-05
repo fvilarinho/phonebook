@@ -19,8 +19,7 @@ java {
 // Code analysis.
 sonar {
     properties {
-        property "sonar.projectKey", System.getenv("SONAR_ORGANIZATION") + "_phonebook"
-        property "sonar.organization", System.getenv("SONAR_ORGANIZATION")
+        property "sonar.projectKey", "phonebook"
         property "sonar.host.url", System.getenv("SONAR_URL")
         property "sonar.coverage.exclusions", "**/PhonebookApplication**"
     }
