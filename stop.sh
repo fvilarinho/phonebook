@@ -18,7 +18,7 @@ function prepareToExecute() {
 
 # Stops the stack locally.
 function stop() {
-  $DOCKER_CMD compose down --remove-orphans
+  $DOCKER_CMD compose down --remove-orphans || exit 1
 
   $DOCKER_CMD volume prune --all --force
 }
