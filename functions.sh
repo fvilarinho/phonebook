@@ -37,6 +37,10 @@ function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
   export BUILD_DEFINITIONS_FILENAME="$WORK_DIR/.env"
+  export PROVISIONING_DEFINITIONS_FILENAME="$WORK_DIR/iac/terraform.tfvars"
+  export PROVISIONING_STATE_CREDENTIALS_FILENAME=~/.aws/credentials
+  export SSH_PRIVATE_KEY_FILENAME=~/.ssh/id_rsa
+  export SSH_PUBLIC_KEY_FILENAME=~/.ssh/id_rsa.pub
 
   # Environment variables.
   if [ -f "$BUILD_DEFINITIONS_FILENAME" ]; then
@@ -50,20 +54,20 @@ function prepareToExecute() {
   fi
 
   if [ -n "$PROVISIONING_DEFINITIONS" ]; then
-    echo "$PROVISIONING_DEFINITIONS" > terraform.tfvars
+    echo "$PROVISIONING_DEFINITIONS" > "$PROVISIONING_DEFINITIONS_FILENAME"
   fi
 
   if [ -n "$PROVISIONING_STATE_CREDENTIALS" ]; then
-    mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > ~/.aws/credentials
+    mkdir -p ~/.aws/; echo "$PROVISIONING_STATE_CREDENTIALS" > "$PROVISIONING_STATE_CREDENTIALS_FILENAME"
   fi
 
   if [ -n "$SSH_PRIVATE_KEY" ]; then
     mkdir -p ~/.ssh
 
-    echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    echo "$SSH_PRIVATE_KEY" > "$SSH_PRIVATE_KEY_FILENAME"
 
     if [ -n "$SSH_PUBLIC_KEY" ]; then
-      echo "$SSH_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
+      echo "$SSH_PUBLIC_KEY" > "$SSH_PUBLIC_KEY_FILENAME"
     fi
   fi
 
