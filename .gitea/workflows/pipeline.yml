@@ -4,13 +4,11 @@ on:
   push:
     branches: [ "master" ]
     paths-ignore:
-      - ".env*"
+      - ".env.template"
       - ".gitignore"
       - "*.md"
       - "banner.txt"
       - "LICENSE"
-      - "start.sh"
-      - "stop.sh"
 
 permissions:
   contents: read
