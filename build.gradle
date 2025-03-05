@@ -10,12 +10,6 @@ plugins {
 // Package name.
 group = 'br.app.vila'
 
-// Compiler compliance.
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
 // Code analysis.
 sonar {
     properties {
