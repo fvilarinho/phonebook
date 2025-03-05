@@ -15,34 +15,30 @@ the variables.
 
 ### Requirements
 
-To Build, Test, Validate, Package and Publish:
-- [`Java JDK 17.x or later`](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [`Docker 27.x`](https://www.docker.com)
+To Build, Test, Validate, Package, Publish and Deploy:
+- [`Java JDK 21.x or later`](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [`docker 27.x`](https://www.docker.com)
 - [`curl 8.12.x`](https://curl.se/)
 - [`jq 1.7.x`](https://jqlang.org/)
 - [`snyk 1.x`](https://snyk.io/)
-- [`Github Packages Credentials`](https://github.com) or any other docker registry.
-- [`Sonarcloud Credentials`](https://sonarcloud.io)
-- [`Snyk Credentials`](https://snyk.io)
+- [`terraform 1.5.x`](https://www.terraform.io)
+- [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
+- [`certbot 2.11.x`](https://certbot.eff.org/)
+- [`Gitea 1.22.x`](https://gitea.com) - Only required if you want to run these workflows in a CI/CD pipeline.
+- [`Sonarqube 25.3.x`](https://www.sonarsource.com/open-source-editions/sonarqube-community-edition/)
+- [`Akamai Cloud Computing account`](https://techdocs.akamai.com/linode-api/reference/get-started)
 
 To Run Locally:
-- [`Docker 27.x`](https://www.docker.com)
+- [`docker 27.x`](https://www.docker.com)
 - [`certbot 2.11.x`](https://certbot.eff.org/)
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
-
-To Deploy in Akamai Connected Cloud:
-- [`Terraform 1.5.x`](https://www.terraform.io)
-- [`jq 1.7.x`](https://jqlang.org/)
-- [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
-- [`certbot 2.11.x`](https://certbot.eff.org/)
-- [`Akamai Cloud Computing Credentials`](https://techdocs.akamai.com/linode-api/reference/get-started)
 
 ### Components
 - **Frontend**: It contains the UI of the application. It runs [`nginx`](https://nginx.org/)
 - **Backend**: It contains the backend with all business logic of the application. It runs [`Spring Boot`](https://spring.io/projects/spring-boot)
 - **Database**: It contains the database to store the application data. It runs [`mariadb`](https://mariadb.org/)
 
-All components are containerized. (Please check the file `iac/docker-compose.tf` for more details).
+All components are containerized. (Please check the files `docker-compose.tf` and `Dockerfile` for more details).
 
 ### Important notes
 It's not a good practice to commit any sensitive data in the repository so...
