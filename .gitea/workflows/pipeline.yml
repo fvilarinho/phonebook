@@ -26,7 +26,7 @@ jobs:
         run: chmod +x *.sh; chmod +x ./bin/*.sh;
 
       - name: Notify when start
-        run: ./notify.sh "{{ job.name }}"
+        run: ./notify.sh {{ job.name }}
 
       - name: Compile & Build
         env:
