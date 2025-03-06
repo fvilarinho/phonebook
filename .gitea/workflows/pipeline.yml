@@ -22,9 +22,11 @@ jobs:
       - name: Download the Project Files
         uses: actions/checkout@v4
 
-      - name: Prepare the environment
-        env:
+      - name: Prepare the Environment
         run: chmod +x *.sh; chmod +x ./bin/*.sh;
+
+      - name: Notify when start
+        run: ./notify.sh "{{ job }}"
 
       - name: Compile & Build
         env:
