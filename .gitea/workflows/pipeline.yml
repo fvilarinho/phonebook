@@ -26,7 +26,9 @@ jobs:
         run: chmod +x *.sh; chmod +x ./bin/*.sh;
 
       - name: Notify when start
-        run: ./notify.sh {{ job.name }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: https://hooks.slack.com/services/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
 
       - name: Compile & Build
         env:
