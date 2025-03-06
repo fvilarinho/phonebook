@@ -24,7 +24,9 @@ function prepareToExecute() {
 function notify() {
   URL="https://hooks.slack.com/services/$SLACK_TOKEN"
 
-  $CURL_CMD -X POST \
+  $CURL_CMD -s \
+            -o /dev/null \
+            -X POST \
             -H "Content-type: application/json" \
             --data "{\"text\": \"$MESSAGE\"}" \
             "$URL"

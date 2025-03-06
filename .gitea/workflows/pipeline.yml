@@ -58,3 +58,7 @@ jobs:
           CERTIFICATE: ${{ secrets.CERTIFICATE }}
           CERTIFICATE_KEY: ${{ secrets.CERTIFICATE_KEY }}
         run: ./deploy.sh
+
+      - name: Notify if fails
+        if: failure()
+        run: ./notify.sh Fails
