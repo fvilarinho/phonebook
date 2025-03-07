@@ -7,10 +7,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PhoneService {
     private final PhoneRepository phoneRepository;
+
+    public void test(){
+        String var = null;
+
+        if(var.equals("test"))
+            System.out.println(new Random().nextInt());
+    }
 
     @Autowired
     public PhoneService(PhoneRepository phoneRepository) {
