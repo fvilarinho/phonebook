@@ -38,16 +38,16 @@ function prepareToExecute() {
 function codeAnalysis() {
   ./gradlew sonar || exit 1
 
-  echo "$CURL_CMD -s -u \"$SONAR_USER:$SONAR_PASSWORD\" \"$SONAR_URL\"/api/qualitygates/project_status?projectKey=\"$SONAR_PROJECT_KEY\""
+  QUALITY_GATE_STATUS=$($CURL_CMD -s \
+                                  -u "$SONAR_USER:$SONAR_PASSWORD" \
+                                  "$SONAR_URL"/api/qualitygates/project_status?projectKey="$SONAR_PROJECT_KEY" | $JQ_CMD -r '.projectStatus.status')
 
-  #| $JQ_CMD -r '.projectStatus.status')
+  if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
+    echo
+    echo "Code analysis failed! Please check your quality gates!"
 
-  #if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
-  #  echo
-  #  echo "Code analysis failed! Please check your quality gates!"
-
-  #  exit 1
-  #fi
+    exit 1
+  fi
 
   $SNYK_CMD code test --severity-threshold=high
 }
