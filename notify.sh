@@ -23,6 +23,16 @@ function prepareToExecute() {
 function notify() {
   URL=https://hooks.slack.com/services/$SLACK_TOKEN
 
+  if [ "$STATUS" == "success" ]; then
+    SUCCESS="Great news :smiley! The pipeline execution was <span style="color:green">*flawless*</span>! Good job :heart:!"
+  else
+    MESSAGE="I got bad news :sob:! The pipeline execution <span style="color:red">*failed*</span> in some steps!"
+  fi
+
+  if []
+  MESSAGE=
+
+
   $CURL_CMD -X POST \
             -H 'Content-type: application/json' \
             --data "{
@@ -31,7 +41,7 @@ function notify() {
       \"type\": \"section\",
       \"text\": {
         \"type\": \"mrkdwn\",
-        \"text\": \"*Hi!* The pipeline execution is complete with the status *$STATUS*\"
+        \"text\": \"$MESSAGE\"
       }
     },
     {
@@ -41,15 +51,45 @@ function notify() {
       \"type\": \"section\",
       \"text\": {
         \"type\": \"mrkdwn\",
-        \"text\": \"Click the button to check the details!\"
+        \"text\": \"Pipeline Execution\"
       },
       \"accessory\": {
         \"type\": \"button\",
         \"text\": {
           \"type\": \"plain_text\",
-          \"text\": \"Learn More\"
+          \"text\": \"Details\"
         },
         \"url\": \"https://git.vila.app.br/fvilarin/phonebook/actions\"
+      }
+    },
+    {
+      \"type\": \"section\",
+      \"text\": {
+        \"type\": \"mrkdwn\",
+        \"text\": \"Code Quality!\"
+      },
+      \"accessory\": {
+        \"type\": \"button\",
+        \"text\": {
+          \"type\": \"plain_text\",
+          \"text\": \"Details\"
+        },
+        \"url\": \"https://codequality.vila.app.br/dashboard?id=phonebook\"
+      }
+    },
+    {
+      \"type\": \"section\",
+      \"text\": {
+        \"type\": \"mrkdwn\",
+        \"text\": \"Tests Reports!\"
+      },
+      \"accessory\": {
+        \"type\": \"button\",
+        \"text\": {
+          \"type\": \"plain_text\",
+          \"text\": \"Details\"
+        },
+        \"url\": \"https://codequality.vila.app.br/reports/phonebook\"
       }
     }
   ]
