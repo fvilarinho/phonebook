@@ -24,16 +24,14 @@ function notify() {
   URL=https://hooks.slack.com/services/$SLACK_TOKEN
 
   if [ "$STATUS" == "success" ]; then
-    SUCCESS="Great news :smiley! The pipeline execution was <span style="color:green">*flawless*</span>! Good job :heart:!"
+    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline execution was *FLAWLESS*! Good job :heart:!"
   else
-    MESSAGE="I got bad news :sob:! The pipeline execution <span style="color:red">*failed*</span> in some steps!"
+    MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe pipeline execution *FAILED* in some steps!"
   fi
 
-  if []
-  MESSAGE=
-
-
-  $CURL_CMD -X POST \
+  $CURL_CMD -s \
+            -o /dev/null \
+            -X POST \
             -H 'Content-type: application/json' \
             --data "{
   \"blocks\": [
@@ -51,7 +49,7 @@ function notify() {
       \"type\": \"section\",
       \"text\": {
         \"type\": \"mrkdwn\",
-        \"text\": \"Pipeline Execution\"
+        \"text\": \":rocket: Pipeline Execution\"
       },
       \"accessory\": {
         \"type\": \"button\",
@@ -66,7 +64,7 @@ function notify() {
       \"type\": \"section\",
       \"text\": {
         \"type\": \"mrkdwn\",
-        \"text\": \"Code Quality!\"
+        \"text\": \":clipboard: Code Quality!\"
       },
       \"accessory\": {
         \"type\": \"button\",
@@ -81,7 +79,7 @@ function notify() {
       \"type\": \"section\",
       \"text\": {
         \"type\": \"mrkdwn\",
-        \"text\": \"Tests Reports!\"
+        \"text\": \":arrow_forward: Tests Report!\"
       },
       \"accessory\": {
         \"type\": \"button\",
@@ -91,7 +89,10 @@ function notify() {
         },
         \"url\": \"https://codequality.vila.app.br/reports/phonebook\"
       }
-    }
+    },
+    {
+      \"type\": \"divider\"
+    },
   ]
 }" "$URL"
 }
