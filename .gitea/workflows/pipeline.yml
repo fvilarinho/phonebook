@@ -57,3 +57,6 @@ jobs:
           CERTIFICATE: ${{ secrets.CERTIFICATE }}
           CERTIFICATE_KEY: ${{ secrets.CERTIFICATE_KEY }}
         run: ./deploy.sh
+
+      - name: Notify
+        run: ./notify.sh "{{ job.status }}"
