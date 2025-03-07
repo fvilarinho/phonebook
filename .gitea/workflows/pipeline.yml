@@ -59,4 +59,4 @@ jobs:
         run: ./deploy.sh
 
       - name: Notify
-        run: ./notify.sh "{{ job.status }}"
+        run: ./notify.sh "${{ job.status }}"
