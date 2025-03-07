@@ -8,6 +8,7 @@ function checkDependencies() {
   fi
 
   export STATUS=$1
+  export TEST=$2
 
   if [ -z "$STATUS" ]; then
     echo "Status is not defined!"
@@ -24,7 +25,7 @@ function notify() {
   URL=https://hooks.slack.com/services/$SLACK_TOKEN
 
   if [ "$STATUS" == "success" ]; then
-    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline execution was *FLAWLESS*! Good job :heart:!"
+    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline execution was *FLAWLESS*! Good job :heart:! $TEST"
   else
     MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe pipeline execution *FAILED* in some steps!"
   fi
@@ -99,10 +100,10 @@ function notify() {
 
 function main() {
   prepareToExecute
-  checkDependencies "$1"
+  checkDependencies "$1" "$2"
   notify
 }
 
-main "$1"
+main "$1" "$2"
 
 
