@@ -26,6 +26,14 @@ public class WebController {
         this.phoneService = phoneService;
     }
 
+    @GetMapping("/test")
+    public void test() {
+        String var = null;
+
+        if(var.equals("Test"))
+            System.out.println("123");
+    }
+
     @GetMapping("/ui")
     public String home(Model model) {
         logger.info("Loading all entries registered in the phonebook");
