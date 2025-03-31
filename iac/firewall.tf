@@ -1,6 +1,6 @@
 resource "linode_firewall" "default" {
-   label           = "${local.definitions.label}-fw"
-   tags            = local.definitions.tags
+   label           = "${var.settings.label}-fw"
+   tags            = var.settings.tags
    inbound_policy  = "DROP"
    outbound_policy = "ACCEPT"
 
@@ -33,8 +33,8 @@ resource "linode_firewall" "default" {
      action   = "ACCEPT"
      label    = "allow-external-ips"
      protocol = "TCP"
-     ipv4     = local.definitions.allowedIps.ipv4
-     ipv6     = local.definitions.allowedIps.ipv6
+     ipv4     = var.settings.allowedIps.ipv4
+     ipv6     = var.settings.allowedIps.ipv6
    }
 
    inbound {

@@ -1,13 +1,10 @@
-locals {
-  definitions = jsondecode(file(abspath(pathexpand("../etc/definitions.json"))))
-}
-
 resource "linode_instance" "default" {
-  label           = local.definitions.label
-  tags            = local.definitions.tags
-  region          = local.definitions.region
-  type            = local.definitions.type
+  label           = var.settings.label
+  tags            = var.settings.tags
+  region          = var.settings.region
+  type            = var.settings.type
   image           = "linode/debian12"
+  backups_enabled = true
   private_ip      = true
   authorized_keys = [ linode_sshkey.default.ssh_key ]
 
@@ -22,7 +19,7 @@ resource "linode_instance" "default" {
     inline = [
       "apt update",
       "apt -y upgrade",
-      "hostnamectl set-hostname ${local.definitions.label}",
+      "hostnamectl set-hostname ${var.settings.label}",
       "apt -y install curl wget unzip zip dnsutils net-tools htop",
       "curl https://get.docker.com | sh -",
     ]

@@ -48,10 +48,10 @@ public class WebController {
     }
 
     @GetMapping("/ui/add")
-    public String add(Model model, @ModelAttribute(WebControllerAttributes.SEARCH) Phone search) {
+    public String add(Model model) {
         logger.info("Adding a new entry in phonebook");
 
-        model.addAttribute(WebControllerAttributes.SEARCH, search);
+        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
         model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
         model.addAttribute(WebControllerAttributes.ENTRY, new Phone());
 
@@ -59,10 +59,10 @@ public class WebController {
     }
 
     @GetMapping("/ui/edit/{id}")
-    public String edit(Model model, @ModelAttribute(WebControllerAttributes.SEARCH) Phone search, @NonNull @PathVariable Long id) {
+    public String edit(Model model, @NonNull @PathVariable Long id) {
         logger.info("Editing the entry with id {}", id);
 
-        model.addAttribute(WebControllerAttributes.SEARCH, search);
+        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
         model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
         model.addAttribute(WebControllerAttributes.ENTRY, phoneService.findById(id));
 
@@ -70,12 +70,12 @@ public class WebController {
     }
 
     @GetMapping("/ui/delete/{id}")
-    public String delete(Model model, @ModelAttribute(WebControllerAttributes.SEARCH) Phone search, @NonNull @PathVariable Long id) {
+    public String delete(Model model, @NonNull @PathVariable Long id) {
         phoneService.deleteById(id);
 
         logger.info("Deleting the entry with id {}", id);
 
-        model.addAttribute(WebControllerAttributes.SEARCH, search);
+        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
         model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(true, "The entry was deleted successfully!"));
         model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
 
@@ -83,7 +83,7 @@ public class WebController {
     }
 
     @PostMapping("/ui/save")
-    public String save(Model model, @ModelAttribute(WebControllerAttributes.SEARCH) Phone search, @ModelAttribute(WebControllerAttributes.ENTRY) Phone entry) {
+    public String save(Model model, @ModelAttribute(WebControllerAttributes.ENTRY) Phone entry) {
         boolean isNew = (entry.getId() == null);
 
         phoneService.save(entry);
@@ -93,7 +93,7 @@ public class WebController {
         else
             logger.info("Updating the entry with id {}", entry.getId());
 
-        model.addAttribute(WebControllerAttributes.SEARCH, search);
+        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
         model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(true, "The entry was saved successfully!"));
         model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
 
