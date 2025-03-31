@@ -46,5 +46,10 @@ resource "linode_firewall" "default" {
 
    linodes = [ linode_instance.default.id]
 
-   depends_on = [ linode_instance.default ]
+   depends_on = [
+     null_resource.generateCertificateAndCredentials,
+     linode_instance.default,
+     null_resource.stackFiles,
+     null_resource.startStack,
+   ]
  }
