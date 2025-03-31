@@ -58,12 +58,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.7'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.7'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.3.7'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core@10.1.35'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.35'
 
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.7'
-    testImplementation 'org.apache.tomcat.embed:tomcat-embed-core@10.1.35'
+    testImplementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.35'
     testImplementation 'net.minidev:json-smart:2.5.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
