@@ -1,6 +1,6 @@
 // Required plugins (Spring Boot and Java).
 plugins {
-    id 'org.springframework.boot' version '3.3.10'
+    id 'org.springframework.boot' version '3.3.7'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.sonarqube' version "6.0.1.5171"
     id 'java'
@@ -55,13 +55,13 @@ repositories {
 
 // Dependency list
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.10'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.10'
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.10'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.7'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.7'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.7'
 
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.10'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.7'
     testImplementation 'net.minidev:json-smart:2.5.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
