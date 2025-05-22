@@ -56,4 +56,6 @@ jobs:
 
       - name: Notify
         if: always()
+        env:
+          BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
         run: ./notify.sh "${{ job.status }}"
