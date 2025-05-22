@@ -16,11 +16,11 @@ permissions:
 jobs:
   build:
     name: Jobs
-    runs-on: gitea-runner
+    runs-on: ubuntu-latest
 
     steps:
       - name: Download the Project Files
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Prepare the Environment
         run: chmod +x *.sh; chmod +x ./bin/*.sh

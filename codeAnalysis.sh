@@ -39,7 +39,7 @@ function codeAnalysis() {
   ./gradlew sonar || exit 1
 
   QUALITY_GATE_STATUS=$($CURL_CMD -s \
-                                  -u "$SONAR_USER:$SONAR_PASSWORD" \
+                                  -H "Authorization: Bearer $SONAR_TOKEN" \
                                   "$SONAR_URL"/api/qualitygates/project_status?projectKey="$SONAR_PROJECT_KEY" | $JQ_CMD -r '.projectStatus.status')
 
   if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then

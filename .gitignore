@@ -7,3 +7,4 @@
 /etc/tls/private/*
 /iac/.terraform*
 /iac/terraform.tfvars*
+/.dccache
