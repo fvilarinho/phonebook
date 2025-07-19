@@ -16,6 +16,8 @@ permissions:
 jobs:
   build:
     name: Jobs
+    env:
+      BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +35,6 @@ jobs:
 
       - name: Compile & Build
         env:
-          BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
         run: ./build.sh
 
       - name: Test & Coverage
@@ -56,6 +57,4 @@ jobs:
 
       - name: Notify
         if: always()
-        env:
-          BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
         run: ./notify.sh "${{ job.status }}"
