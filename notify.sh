@@ -30,6 +30,7 @@ function notify() {
   fi
 
   $CURL_CMD -s \
+            -o /dev/null \
             -X POST \
             -H 'Content-type: application/json' \
             --data "{
