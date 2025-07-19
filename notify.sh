@@ -30,7 +30,6 @@ function notify() {
   fi
 
   $CURL_CMD -s \
-            -o /dev/null \
             -X POST \
             -H 'Content-type: application/json' \
             --data "{
@@ -41,58 +40,7 @@ function notify() {
         \"type\": \"mrkdwn\",
         \"text\": \"$MESSAGE\"
       }
-    },
-    {
-      \"type\": \"divider\"
-    },
-    {
-      \"type\": \"section\",
-      \"text\": {
-        \"type\": \"mrkdwn\",
-        \"text\": \":rocket: Pipeline Execution\"
-      },
-      \"accessory\": {
-        \"type\": \"button\",
-        \"text\": {
-          \"type\": \"plain_text\",
-          \"text\": \"Details\"
-        },
-        \"url\": \"https://git.vila.app.br/fvilarin/phonebook/actions\"
-      }
-    },
-    {
-      \"type\": \"section\",
-      \"text\": {
-        \"type\": \"mrkdwn\",
-        \"text\": \":clipboard: Code Quality!\"
-      },
-      \"accessory\": {
-        \"type\": \"button\",
-        \"text\": {
-          \"type\": \"plain_text\",
-          \"text\": \"Details\"
-        },
-        \"url\": \"https://codequality.vila.app.br/dashboard?id=phonebook\"
-      }
-    },
-    {
-      \"type\": \"section\",
-      \"text\": {
-        \"type\": \"mrkdwn\",
-        \"text\": \":arrow_forward: Tests Report!\"
-      },
-      \"accessory\": {
-        \"type\": \"button\",
-        \"text\": {
-          \"type\": \"plain_text\",
-          \"text\": \"Details\"
-        },
-        \"url\": \"https://codequality.vila.app.br/reports/phonebook\"
-      }
-    },
-    {
-      \"type\": \"divider\"
-    },
+    }
   ]
 }" "$URL"
 }
