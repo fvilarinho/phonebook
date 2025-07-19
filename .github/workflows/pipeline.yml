@@ -34,7 +34,6 @@ jobs:
         run: chmod +x *.sh; chmod +x ./bin/*.sh; npm install snyk -g
 
       - name: Compile & Build
-        env:
         run: ./build.sh
 
       - name: Test & Coverage
