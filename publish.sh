@@ -25,6 +25,12 @@ function auth() {
 
 # Publishes the container images.
 function publish() {
+  PACKAGE_NAME="build/packages/$APP_NAME.tar"
+
+  if [ -e "$PACKAGE_NAME" ]; then
+    $DOCKER_CMD load -i "$PACKAGE_NAME" || exit 1
+  fi
+
   auth
 
   $DOCKER_CMD compose push

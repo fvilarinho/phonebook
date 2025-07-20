@@ -24,7 +24,11 @@ function prepareToExecute() {
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  $DOCKER_CMD load -i "build/packages/$APP_NAME.tar" || exit 1
+  PACKAGE_NAME="build/packages/$APP_NAME.tar"
+
+  if [ -e "$PACKAGE_NAME" ]; then
+    $DOCKER_CMD load -i "$PACKAGE_NAME" || exit 1
+  fi
 
   $SNYK_CMD container test "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                       --file=./Dockerfile \
