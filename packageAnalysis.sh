@@ -2,7 +2,13 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$SNYK_CMD" ]; then
+  if [ ! -e "$DOCKER_CMD" ]; then
+    echo "docker is not installed! Please install it first to continue!"
+
+    exit 1
+  fi
+
+  if [ ! -e "$SNYK_CMD" ]; then
     echo "snyk is not installed! Please install it first to continue!"
 
     exit 1
@@ -18,7 +24,9 @@ function prepareToExecute() {
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  $SNYK_CMD container test "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/phonebook:$BUILD_VERSION" \
+  $DOCKER_CMD load -i "build/packages/$APP_NAME.tar" || exit 1
+
+  $SNYK_CMD container test "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                       --file=./Dockerfile \
                       --severity-threshold=high
 }

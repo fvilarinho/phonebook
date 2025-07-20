@@ -2,7 +2,7 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$DOCKER_CMD" ]; then
+  if [ ! -e "$DOCKER_CMD" ]; then
     echo "docker is not installed! Please install it first to continue!"
 
     exit 1
@@ -18,7 +18,11 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  $DOCKER_CMD compose build
+  $DOCKER_CMD compose build || exit 1
+
+  mkdir -p build/packages || exit 1
+
+  $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION"
 }
 
 # Main function.

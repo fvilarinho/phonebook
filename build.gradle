@@ -1,14 +1,14 @@
 // Required plugins (Spring Boot and Java).
 plugins {
-    id 'org.springframework.boot' version '3.3.13'
-    id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.sonarqube' version "6.0.1.5171"
-    id 'java'
-    id 'jacoco'
+    id "org.springframework.boot" version "3.3.13"
+    id "io.spring.dependency-management" version "1.1.7"
+    id "org.sonarqube" version "6.0.1.5171"
+    id "java"
+    id "jacoco"
 }
 
 // Package name.
-group = 'br.app.vila'
+group = "br.app.vila"
 
 // Compiler compliance.
 java {
@@ -40,7 +40,7 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/PhonebookApplication**'])
+            fileTree(dir: it, exclude: ["**/PhonebookApplication**"])
         })
     }
 }
@@ -56,20 +56,20 @@ repositories {
 
 // Dependency list
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.13'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.13'
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.13'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.43'
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:3.3.13"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:3.3.13"
+    implementation "org.springframework.boot:spring-boot-starter-web:3.3.13"
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:10.1.43"
 
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
+    implementation "org.mariadb.jdbc:mariadb-java-client:3.5.1"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.13'
-    testImplementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.35'
-    testImplementation 'net.minidev:json-smart:2.5.2'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:3.3.13"
+    testImplementation "org.apache.tomcat.embed:tomcat-embed-core:10.1.43"
+    testImplementation "net.minidev:json-smart:2.5.2"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
-    testImplementation 'org.mockito:mockito-core:5.15.2'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.11.4"
+    testImplementation "org.mockito:mockito-core:5.15.2"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.15.2"
 }
 
 // Test workflow.

@@ -2,7 +2,7 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$DOCKER_CMD" ]; then
+  if [ ! -e "$DOCKER_CMD" ]; then
     echo "docker is not installed! Please install it first to continue!"
 
     exit 1

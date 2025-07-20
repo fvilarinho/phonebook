@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function checkDependencies() {
-  if [ -z "$CURL_CMD" ]; then
+  if [ ! -e "$CURL_CMD" ]; then
     echo "curl is not installed! Please install it first to continue!"
 
     exit 1
@@ -21,7 +21,7 @@ function prepareToExecute() {
 }
 
 function notify() {
-  URL=https://hooks.slack.com/services/$SLACK_TOKEN
+  URL="https://hooks.slack.com/services/$SLACK_TOKEN"
 
   if [ "$STATUS" == "success" ]; then
     MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline execution was *FLAWLESS*! Good job :heart:!"

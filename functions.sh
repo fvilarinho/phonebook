@@ -55,9 +55,10 @@ function prepareToExecute() {
   fi
 
   # Required binaries.
-  export HTPASSWD_CMD=$(which htpasswd 2>/dev/null)
   export CURL_CMD=$(which curl 2>/dev/null)
   export JQ_CMD=$(which jq 2>/dev/null)
+  export OPENSSL_CMD=$(which openssl 2>/dev/null)
+  export HTPASSWD_CMD=$(which htpasswd 2>/dev/null)
   export JAVA_CMD=$(which java 2>/dev/null)
   export SNYK_CMD=$(which snyk 2>/dev/null)
   export DOCKER_CMD=$(which docker 2>/dev/null)

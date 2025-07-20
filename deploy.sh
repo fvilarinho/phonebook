@@ -2,19 +2,19 @@
 
 # Check the dependencies of this script.
 function checkDependencies(){
-  if [ -z "$TERRAFORM_CMD" ]; then
+  if [ ! -e "$TERRAFORM_CMD" ]; then
     echo "terraform is not installed! Please install it first to continue!"
 
     exit 1
   fi
 
-  if [ -z "$JQ_CMD" ]; then
+  if [ ! -e "$JQ_CMD" ]; then
     echo "jq is not installed! Please install it first to continue!"
 
     exit 1
   fi
 
-  if [ -z "$HTPASSWD_CMD" ]; then
+  if [ ! -e "$HTPASSWD_CMD" ]; then
     echo "htpasswd is not installed! Please install it first to continue!"
 
     exit 1

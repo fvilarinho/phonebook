@@ -2,7 +2,7 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$DOCKER_CMD" ]; then
+  if [ ! -e "$DOCKER_CMD" ]; then
     echo "docker is not installed! Please install it first to continue!"
 
     exit 1
@@ -25,8 +25,8 @@ function auth() {
 
 # Starts the stack locally.
 function start() {
-  auth
   generateCertificateAndCredentials
+  auth
 
   $DOCKER_CMD compose pull || exit 1
   $DOCKER_CMD compose up -d
@@ -34,10 +34,10 @@ function start() {
 
 # Ensures the certificate and credentials exist.
 function generateCertificateAndCredentials() {
-  GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME=../bin/tls/generateCertificateAndCredentials.sh
+  GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME=bin/generateCertificateAndCredentials.sh
 
   if [ -e "$GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME" ]; then
-    eval "$GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME"
+    eval "$GENERATE_CERTIFICATE_AND_CREDENTIALS_SCRIPT_FILENAME" || exit 1
   fi
 }
 

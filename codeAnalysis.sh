@@ -2,25 +2,25 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$CURL_CMD" ]; then
+  if [ ! -e "$CURL_CMD" ]; then
     echo "curl is not installed! Please install it first to continue!"
 
     exit 1
   fi
 
-  if [ -z "$JQ_CMD" ]; then
+  if [ ! -e "$JQ_CMD" ]; then
     echo "jq is not installed! Please install it first to continue!"
 
     exit 1
   fi
 
-  if [ -z "$JAVA_CMD" ]; then
+  if [ ! -e "$JAVA_CMD" ]; then
     echo "java is not installed! Please install it first to continue!"
 
     exit 1
   fi
 
-  if [ -z "$SNYK_CMD" ]; then
+  if [ ! -e "$SNYK_CMD" ]; then
     echo "snyk is not installed! Please install it first to continue!"
 
     exit 1
@@ -40,7 +40,7 @@ function codeAnalysis() {
 
   QUALITY_GATE_STATUS=$($CURL_CMD -s \
                                   -H "Authorization: Bearer $SONAR_TOKEN" \
-                                  "$SONAR_URL"/api/qualitygates/project_status?projectKey="$SONAR_PROJECT_KEY" | $JQ_CMD -r '.projectStatus.status')
+                                  "$SONAR_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | $JQ_CMD -r '.projectStatus.status')
 
   if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
     echo

@@ -2,7 +2,7 @@
 
 # Check the dependencies of this script.
 function checkDependencies() {
-  if [ -z "$SNYK_CMD" ]; then
+  if [ ! -e "$SNYK_CMD" ]; then
     echo "snyk is not installed! Please install it first to continue!"
 
     exit 1
@@ -18,7 +18,7 @@ function prepareToExecute() {
 
 # Starts the libraries analysis process.
 function librariesAnalysis() {
-  $SNYK_CMD test --severity-threshold=high || exit
+  $SNYK_CMD test --severity-threshold=high || exit 1
   $SNYK_CMD log4shell
 }
 
