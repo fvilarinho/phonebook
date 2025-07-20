@@ -3,35 +3,21 @@ Getting Started
 
 ### Introduction
 This is a demo project for education/training purposes of software development, Cloud Computing and DevOps.
-It does the provisioning of the Akamai Connected Cloud resources that includes:
-- **Compute**: VM that will run the application. (Please check the file `iac/compute.tf` for more details).
-- **Firewall**: Rules to protect the application. (Please check the file `iac/firewall.tf` for more details).
-- **Certificate**: TLS certificate to force HTTPs traffic. (Please check the file `iac/certificate.tf` for more details).
-- **Credentials**: SSH key for remote access authentication. (Please check the file `iac/credentials.tf` for more 
-details).
-
-All Terraform files use `variables` that are stored in the `variables.tf`. Please check this [link](https://developer.hashicorp.com/terraform/tutorials/configuration-language/variables) to customize 
-the variables.
 
 ### Requirements
-
-To Build, Test, Validate, Package, Publish and Deploy:
 - [`Java JDK 21.x or later`](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 - [`docker 27.x`](https://www.docker.com)
 - [`curl 8.12.x`](https://curl.se/)
 - [`jq 1.7.x`](https://jqlang.org/)
 - [`snyk 1.x`](https://snyk.io/)
-- [`terraform 1.5.x`](https://www.terraform.io)
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
-- [`certbot 2.11.x`](https://certbot.eff.org/)
-- [`Gitea 1.22.x`](https://gitea.com) - Only required if you want to run these workflows in a CI/CD pipeline. Please 
-check the file `.gitea/workflows/pipeline.yml` to define the steps to be executed in the pipeline.
-- [`Sonarqube 25.3.x`](https://www.sonarsource.com/open-source-editions/sonarqube-community-edition/)
-- [`Akamai Cloud Computing account`](https://techdocs.akamai.com/linode-api/reference/get-started)
+- [`Github account`](https://github.com) - Please check the file `.github/workflows/pipeline.yml` to define the steps to
+be executed in the pipeline.
+- [`Sonarcloud account`](https://sonarcloud.io)
 
 To Run Locally:
 - [`docker 27.x`](https://www.docker.com)
-- [`certbot 2.11.x`](https://certbot.eff.org/)
+- [`openssl 3.x`](https://openssl.org)
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
 
 ### Components
@@ -46,17 +32,11 @@ It's not a good practice to commit any sensitive data in the repository so...
 
 **DON'T EXPOSE OR COMMIT ANY SENSITIVE DATA IN THE PROJECT.**
 
-### Documentation
-
-Follow the documentation below to know more about Akamai:
-- [**Akamai Techdocs**](https://techdocs.akamai.com)
-
 ### Contact
 **LinkedIn:**
 - https://www.linkedin.com/in/fvilarinho
 
 **e-Mail:**
-- fvilarin@akamai.com
 - fvilarinho@gmail.com
 - fvilarinho@outlook.com
 - me@vila.net.br
