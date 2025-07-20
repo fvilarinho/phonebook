@@ -1,5 +1,5 @@
 # Base image definition.
-FROM alpine:3.21
+FROM ghcr.io/fvilarinho/alpine:3.21
 
 # Metadata definition.
 LABEL authors="me@vila.net.br"
