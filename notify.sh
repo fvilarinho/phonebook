@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Check the dependencies of this script.
 function checkDependencies() {
   if [ ! -e "$CURL_CMD" ]; then
     echo "curl is not installed! Please install it first to continue!"
@@ -16,10 +17,12 @@ function checkDependencies() {
   fi
 }
 
+# Prepares the environment to execute this script.
 function prepareToExecute() {
   source functions.sh
 }
 
+# Send a message to the notification service.
 function notify() {
   URL="https://hooks.slack.com/services/$SLACK_TOKEN"
 
@@ -46,6 +49,7 @@ function notify() {
 }" "$URL"
 }
 
+# Main function.
 function main() {
   prepareToExecute
   checkDependencies "$1" "$2"
