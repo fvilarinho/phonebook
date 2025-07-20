@@ -5,6 +5,4 @@
 /etc/.htpasswd
 /etc/tls/certs/*
 /etc/tls/private/*
-/iac/.terraform*
-/iac/terraform.tfvars*
 /.dccache

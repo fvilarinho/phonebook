@@ -18,8 +18,6 @@ function showLabel() {
     echo "** START **"
   elif [[ "$0" == *"stop.sh"* ]]; then
     echo "** STOP **"
-  elif [[ "$0" == *"deploy.sh"* ]]; then
-    echo "** DEPLOY **"
   fi
 }
 
@@ -37,7 +35,6 @@ function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
   export BUILD_DEFINITIONS_FILENAME="$WORK_DIR/.env"
-  export PROVISIONING_DEFINITIONS_FILENAME="$WORK_DIR/iac/terraform.tfvars"
 
   # Environment variables.
   if [ -f "$BUILD_DEFINITIONS_FILENAME" ]; then
@@ -50,10 +47,6 @@ function prepareToExecute() {
     fi
   fi
 
-  if [ -n "$PROVISIONING_DEFINITIONS" ]; then
-    echo "$PROVISIONING_DEFINITIONS" > "$PROVISIONING_DEFINITIONS_FILENAME"
-  fi
-
   # Required binaries.
   export CURL_CMD=$(which curl 2>/dev/null)
   export JQ_CMD=$(which jq 2>/dev/null)
@@ -62,7 +55,6 @@ function prepareToExecute() {
   export JAVA_CMD=$(which java 2>/dev/null)
   export SNYK_CMD=$(which snyk 2>/dev/null)
   export DOCKER_CMD=$(which docker 2>/dev/null)
-  export TERRAFORM_CMD=$(which terraform 2>/dev/null)
 }
 
 prepareToExecute
