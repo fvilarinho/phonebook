@@ -34,7 +34,7 @@ RUN apk update && \
                        vim \
                        net-tools \
                        bind-tools \
-                       openjdk21-jre
+                       openjdk17-jre
 
 # Copies all binaries, libraries and scripts.
 COPY banner.txt ${ETC_DIR}/

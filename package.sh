@@ -18,7 +18,7 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  $DOCKER_CMD compose build || exit 1
+  $DOCKER_CMD compose build "$APP_NAME" || exit 1
 
   mkdir -p build/packages || exit 1
 
