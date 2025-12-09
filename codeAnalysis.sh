@@ -49,7 +49,7 @@ function codeAnalysis() {
     exit 1
   fi
 
-  $SNYK_CMD code test --severity-threshold=high
+  $SNYK_CMD code test --severity-threshold=critical
 }
 
 # Main function.

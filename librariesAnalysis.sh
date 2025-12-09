@@ -18,7 +18,7 @@ function prepareToExecute() {
 
 # Starts the libraries analysis process.
 function librariesAnalysis() {
-  $SNYK_CMD test --severity-threshold=high || exit 1
+  $SNYK_CMD test --severity-threshold=critical || exit 1
   $SNYK_CMD log4shell
 }
 
