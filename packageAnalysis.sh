@@ -24,13 +24,7 @@ function prepareToExecute() {
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  PACKAGE_NAME="build/packages/$APP_NAME.tar"
-
-  if [ -e "$PACKAGE_NAME" ]; then
-    $DOCKER_CMD load -i "$PACKAGE_NAME" || exit 1
-  fi
-
-  $SNYK_CMD container test "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
+  $SNYK_CMD container test oci-archive:"build/packages/$APP_NAME.tar" \
                       --file=./Dockerfile \
                       --severity-threshold=critical
 }
