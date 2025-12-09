@@ -18,6 +18,8 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
+  export COMPOSE_BAKE=true
+
   $DOCKER_CMD compose build "$APP_NAME" || exit 1
 
   mkdir -p build/packages || exit 1
