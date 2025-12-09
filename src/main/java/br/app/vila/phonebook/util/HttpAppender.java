@@ -17,10 +17,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private HttpURLConnection connection;
-    private boolean enabled;
     private String url;
-    private String format = HttpAppenderFormats.JSON.name();
-    private String delimiter = ";";
     private String user;
     private String password;
     private boolean authenticated = false;
@@ -29,24 +26,12 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
 
     public HttpAppender(){
         super();
-
-        setEnabled(Boolean.parseBoolean(System.getenv("OBSERVABILITY_ENABLED")));
     }
 
     public HttpAppender(HttpURLConnection connection) {
         this();
 
         this.connection = connection;
-
-        setEnabled(true);
-    }
-
-    private boolean isEnabled() {
-        return this.enabled;
-    }
-
-    private void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getErrorMessage() {
@@ -63,22 +48,6 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
 
     public void setProcessed(boolean processed) {
         this.processed = processed;
-    }
-
-    public String getDelimiter() {
-        return this.delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = EnvironmentUtil.replaceAll(delimiter);
-    }
-
-    public String getFormat() {
-        return this.format;
-    }
-
-    public void setFormat(String format) {
-        this.format = EnvironmentUtil.replaceAll(format);
     }
 
     public String getUser() {
@@ -113,74 +82,51 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
         setErrorMessage(null);
         setProcessed(false);
 
-        if(!isEnabled())
-            return;
-
         try {
-            HttpAppenderFormats formatObject= HttpAppenderFormats.fromString(getFormat());
+            HttpAppenderFormats formatObject = HttpAppenderFormats.JSON;
+            URL urlObject = new URL(getUrl());
+            HttpURLConnection connectionObject;
 
-            if(formatObject != null) {
-                URL urlObject = new URL(getUrl());
-                HttpURLConnection connectionObject;
-
-                if(this.connection == null)
-                    connectionObject = (HttpURLConnection) urlObject.openConnection();
-                else
-                    connectionObject = this.connection;
-
-                connectionObject.setDoOutput(true);
-                connectionObject.setRequestMethod(HttpMethod.POST.name());
-
-                if (this.authenticated) {
-                    String auth = getUser() + ":" + getPassword();
-                    String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
-                    String authHeaderValue = "Basic " + encodedAuth;
-
-                    connectionObject.setRequestProperty("Authorization", authHeaderValue);
-                }
-
-                connectionObject.setRequestProperty("Accept", formatObject.getValue());
-                connectionObject.setRequestProperty("Content-Type", formatObject.getValue());
-
-                Map<String, Object> logObject = new HashMap<>();
-
-                logObject.put("timestamp", eventObject.getTimeStamp());
-                logObject.put("thread", eventObject.getThreadName());
-                logObject.put("level", eventObject.getLevel().toString());
-                logObject.put("logger", eventObject.getLoggerName());
-                logObject.put("message", eventObject.getFormattedMessage());
-
-                String logLine;
-
-                if(formatObject == HttpAppenderFormats.JSON)
-                    logLine = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(logObject);
-                else {
-                    String[] values = new String[logObject.size()];
-                    int i = 0;
-
-                    for (Object value : logObject.values()) {
-                        values[i] = (value != null ? value.toString() : "");
-
-                        i++;
-                    }
-
-                    logLine = String.join(getDelimiter(), values);
-                }
-
-                try (OutputStream os = connectionObject.getOutputStream()) {
-                    os.write(logLine.getBytes());
-                    os.flush();
-                }
-
-                // Handle the response
-                int responseCode = connectionObject.getResponseCode();
-                String responseMessage = connectionObject.getResponseMessage();
-
-                if (responseCode != HttpURLConnection.HTTP_OK)
-                    setErrorMessage(String.format("Failed to send log: %s - %s%n", responseCode, responseMessage));
-            }
+            if(this.connection == null)
+                connectionObject = (HttpURLConnection) urlObject.openConnection();
             else
-                setErrorMessage("Log format not supported!");
+                connectionObject = this.connection;
+
+            connectionObject.setDoOutput(true);
+            connectionObject.setRequestMethod(HttpMethod.POST.name());
+
+            if (this.authenticated) {
+                String auth = getUser() + ":" + getPassword();
+                String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+                String authHeaderValue = "Basic " + encodedAuth;
+
+                connectionObject.setRequestProperty("Authorization", authHeaderValue);
+            }
+
+            connectionObject.setRequestProperty("Accept", formatObject.getValue());
+            connectionObject.setRequestProperty("Content-Type", formatObject.getValue());
+
+            Map<String, Object> logObject = new HashMap<>();
+
+            logObject.put("timestamp", eventObject.getTimeStamp());
+            logObject.put("thread", eventObject.getThreadName());
+            logObject.put("level", eventObject.getLevel().toString());
+            logObject.put("logger", eventObject.getLoggerName());
+            logObject.put("message", eventObject.getFormattedMessage());
+
+            String logLine = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(logObject);
+
+            try (OutputStream os = connectionObject.getOutputStream()) {
+                os.write(logLine.getBytes());
+                os.flush();
+            }
+
+            // Handle the response
+            int responseCode = connectionObject.getResponseCode();
+            String responseMessage = connectionObject.getResponseMessage();
+
+            if (responseCode != HttpURLConnection.HTTP_OK)
+                setErrorMessage(String.format("Failed to send log: %s - %s%n", responseCode, responseMessage));
         }
         catch (Exception e) {
             setErrorMessage(String.format("Internal server error - %s", e.getMessage()));

@@ -1,6 +1,5 @@
 package br.app.vila.phonebook.util;
 
-import br.app.vila.phonebook.util.constants.HttpAppenderFormats;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +45,6 @@ class HttpAppenderTest {
         // Set up the HttpAppender
         this.httpAppender = new HttpAppender(this.mockConnection);
         this.httpAppender.setUrl("http://example.com/log");
-        this.httpAppender.setFormat(HttpAppenderFormats.JSON.name());
         this.httpAppender.setUser("testUser");
         this.httpAppender.setPassword("testPassword");
 
@@ -64,7 +62,6 @@ class HttpAppenderTest {
         // Set up the HttpAppender
         this.httpAppender = new HttpAppender(this.mockConnection);
         this.httpAppender.setUrl("http://example.com/log");
-        this.httpAppender.setFormat(HttpAppenderFormats.JSON.name());
         this.httpAppender.setUser(null);
         this.httpAppender.setPassword(null);
 
@@ -76,39 +73,6 @@ class HttpAppenderTest {
         this.httpAppender.setPassword("");
 
         this.httpAppender.append(this.mockLoggingEvent);
-
-        assertFalse(this.httpAppender.isProcessed());
-    }
-
-    @Test
-    void testAppendWithInvalidFormat() {
-        // Set up the HttpAppender
-        this.httpAppender = new HttpAppender(this.mockConnection);
-        this.httpAppender.setUrl("http://example.com/log");
-        this.httpAppender.setFormat("INVALID_FORMAT");
-
-        this.httpAppender.append(mockLoggingEvent);
-
-        this.httpAppender.setFormat(null);
-
-        this.httpAppender.append(mockLoggingEvent);
-
-        this.httpAppender.setFormat("");
-
-        this.httpAppender.append(mockLoggingEvent);
-
-        assertFalse(this.httpAppender.isProcessed());
-    }
-
-    @Test
-    void testAppendWithValidFormat() {
-        // Set up the HttpAppender
-        this.httpAppender = new HttpAppender(this.mockConnection);
-        this.httpAppender.setUrl("http://example.com/log");
-        this.httpAppender.setFormat("CSV");
-        this.httpAppender.setDelimiter(",");
-
-        this.httpAppender.append(mockLoggingEvent);
 
         assertFalse(this.httpAppender.isProcessed());
     }
