@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.29.3
     container_name: nginx
     restart: always
     environment:
@@ -19,7 +19,7 @@ services:
 
   phonebook:
     build: .
-    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${APP_NAME}:${BUILD_VERSION}
+    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/phonebook:${BUILD_VERSION}
     container_name: phonebook
     restart: always
     environment:
@@ -34,7 +34,7 @@ services:
       - mariadb
 
   mariadb:
-    image: mariadb:latest
+    image: mariadb:11.8.5-ubi
     container_name: mariadb
     restart: always
     environment:

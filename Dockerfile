@@ -1,5 +1,5 @@
 # Base image definition.
-FROM ghcr.io/fvilarinho/alpine:3.21
+FROM alpine:3.21
 
 # Metadata definition.
 LABEL authors="me@vila.net.br"
@@ -34,14 +34,14 @@ RUN apk update && \
                        vim \
                        net-tools \
                        bind-tools \
-                       openjdk17-jre
+                       openjdk21-jre
 
 # Copies all binaries, libraries and scripts.
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/phonebook.jar ${LIBS_DIR}/
 
-# Gives the execution permission.
+# Gives the  execution permission.
 RUN chmod +x ${BIN_DIR}/*.sh && \
     ln -s ${BIN_DIR}/startup.sh /entrypoint.sh
 

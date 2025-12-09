@@ -34,17 +34,16 @@ function showBanner() {
 function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
-  export BUILD_DEFINITIONS_FILENAME="$WORK_DIR/.env"
+  export BUILD_ENV_FILENAME="$WORK_DIR/.env"
+  export BUILD_SECRETS_FILENAME="$WORK_DIR/.secrets"
 
   # Environment variables.
-  if [ -f "$BUILD_DEFINITIONS_FILENAME" ]; then
-    source "$BUILD_DEFINITIONS_FILENAME"
-  else
-    if [ -n "$BUILD_DEFINITIONS" ]; then
-      echo "$BUILD_DEFINITIONS" > "$BUILD_DEFINITIONS_FILENAME"
+  if [ -f "$BUILD_ENV_FILENAME" ]; then
+    source "$BUILD_ENV_FILENAME"
+  fi
 
-      source "$BUILD_DEFINITIONS_FILENAME"
-    fi
+  if [ -f "$BUILD_SECRETS_FILENAME" ]; then
+    source "$BUILD_SECRETS_FILENAME"
   fi
 
   # Required binaries.

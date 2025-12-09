@@ -1,8 +1,8 @@
-/.env
+/.dccache
 /.gradle/
 /.idea/
+/.secrets
 /build/
 /etc/.htpasswd
 /etc/tls/certs/*
 /etc/tls/private/*
-/.dccache

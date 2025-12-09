@@ -28,7 +28,6 @@ function start() {
   generateCertificateAndCredentials
   auth
 
-  $DOCKER_CMD compose pull || exit 1
   $DOCKER_CMD compose up -d
 }
 
