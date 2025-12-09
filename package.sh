@@ -21,7 +21,8 @@ function package() {
   $DOCKER_CMD buildx build \
                      --platform linux/amd64,linux/arm64 \
                      --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
-                     .
+                     . \
+                     --load
 
   mkdir -p build/packages || exit 1
 
