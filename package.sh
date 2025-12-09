@@ -18,22 +18,13 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  $DOCKER_CMD buildx build \
-                     --platform linux/amd64,linux/arm64 \
-                     --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
-                     .
+  $DOCKER_CMD build \
+              --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
+              .
 
-  IMAGE_EXISTS=$($DOCKER_CMD image ls | grep "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME")
+  mkdir -p build/packages
 
-  echo $IMAGE_EXISTS
-
-  if [ -n "$IMAGE_EXISTS" ]; then
-    mkdir -p build/packages
-
-    $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" || exit 1
-  else
-    echo 2
-  fi
+  $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" || exit 1
 }
 
 # Main function.
