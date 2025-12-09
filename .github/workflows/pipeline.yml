@@ -42,21 +42,21 @@ jobs:
       - name: Compile & Build
         run: ./build.sh
 
-      #- name: Test & Coverage
-      #  run: ./test.sh
+      - name: Test & Coverage
+        run: ./test.sh
 
-      #- name: Code Analysis
-      #  env:
-      #    SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-      #    SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-      #    SONAR_URL: ${{ secrets.SONAR_URL }}
-      #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #  run: ./codeAnalysis.sh
+      - name: Code Analysis
+        env:
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./codeAnalysis.sh
 
-      #- name: Libraries Analysis
-      #  env:
-      #    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #  run: ./librariesAnalysis.sh
+      - name: Libraries Analysis
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: ./librariesAnalysis.sh
 
       - name: Packaging
         env:
@@ -78,6 +78,8 @@ jobs:
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
         run: ./publish.sh
 
-      #- name: Notify
-      #  if: always()
-      #  run: ./notify.sh "${{ job.status }}"
+      - name: Notify
+        if: always()
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+        run: ./notify.sh "${{ job.status }}"
