@@ -52,14 +52,13 @@ jobs:
         env:
           DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL}}
           DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID}}
-          BUILD_VERSION: ${{ secrets.BUILD_VERSION}}
         run: ./packageAnalysis.sh
 
       - name: Publishing
         env:
           DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL}}
           DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID}}
-          BUILD_VERSION: ${{ secrets.BUILD_VERSION}}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRT_PASSWORD}}
         run: ./publish.sh
 
       - name: Notify
