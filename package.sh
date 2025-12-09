@@ -22,6 +22,7 @@ function package() {
 
   $DOCKER_CMD buildx build \
                      --output type=oci,dest="build/packages/$APP_NAME.tar" \
+                     --platform linux/amd64,linux/arm64 \
                      --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                      .
 }
