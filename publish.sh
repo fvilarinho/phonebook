@@ -28,7 +28,7 @@ function publish() {
   PACKAGE_NAME="build/packages/$APP_NAME.tar"
 
   if [ -f "$PACKAGE_NAME" ]; then
-    echo test
+    ls -la "$PACKAGE_NAME"
     $DOCKER_CMD load -i "$PACKAGE_NAME" || exit 1
   fi
 
