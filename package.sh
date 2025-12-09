@@ -23,10 +23,12 @@ function package() {
                      --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                      .
 
-  IMAGE_EXISTS=$(docker image ls | grep "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME")
+  IMAGE_EXISTS=$($DOCKER_CMD image ls | grep "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME")
 
   if [ -n "$IMAGE_EXISTS" ]; then
-    exit 0
+    mkdir -p build/packages
+
+    $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" || exit 1
   fi
 }
 
