@@ -27,7 +27,8 @@ function auth() {
 function publish() {
   PACKAGE_NAME="build/packages/$APP_NAME.tar"
 
-  if [ -e "$PACKAGE_NAME" ]; then
+  if [ -f "$PACKAGE_NAME" ]; then
+    echo test
     $DOCKER_CMD load -i "$PACKAGE_NAME" || exit 1
   fi
 
