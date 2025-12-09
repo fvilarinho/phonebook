@@ -25,11 +25,13 @@ function auth() {
 
 # Publishes the container images.
 function publish() {
-  $DOCKER_CMD load -i "build/packages/$APP_NAME.tar"
-
   auth
 
-  $DOCKER_CMD push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION"
+  $DOCKER_CMD buildx build \
+                     --platform linux/amd64,linux/arm64 \
+                     --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
+                     . \
+                     --push
 }
 
 # Main function.
