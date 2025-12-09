@@ -25,10 +25,14 @@ function package() {
 
   IMAGE_EXISTS=$($DOCKER_CMD image ls | grep "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME")
 
+  echo $IMAGE_EXISTS
+
   if [ -n "$IMAGE_EXISTS" ]; then
     mkdir -p build/packages
 
     $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" || exit 1
+  else
+    echo 2
   fi
 }
 
