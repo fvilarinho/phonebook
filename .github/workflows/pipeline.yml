@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    name: Jobs
+    name: Workflow
     env:
       BUILD_DEFINITIONS: ${{ secrets.BUILD_DEFINITIONS }}
     runs-on: ubuntu-latest
