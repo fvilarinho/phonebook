@@ -33,7 +33,7 @@ function publish() {
 
   auth
 
-  $DOCKER_CMD compose push
+  $DOCKER_CMD push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION"
 }
 
 # Main function.

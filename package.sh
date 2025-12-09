@@ -18,9 +18,9 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  export COMPOSE_BAKE=true
-
-  $DOCKER_CMD compose build "$APP_NAME" || exit 1
+  $DOCKER_CMD buildx build \
+                     --platform linux/amd64,linux/arm64 \
+                     --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" .
 
   mkdir -p build/packages || exit 1
 

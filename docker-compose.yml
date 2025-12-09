@@ -18,8 +18,7 @@ services:
       - phonebook
 
   phonebook:
-    build: .
-    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/phonebook:${BUILD_VERSION}
+    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${APP_NAME}:${BUILD_VERSION}
     container_name: phonebook
     restart: always
     environment:
