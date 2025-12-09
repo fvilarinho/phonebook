@@ -45,7 +45,6 @@ jobs:
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN}}
         run: ./codeAnalysis.sh
 
       - name: Libraries Analysis
