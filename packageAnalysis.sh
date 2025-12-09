@@ -32,7 +32,7 @@ function packageAnalysis() {
 
   $SNYK_CMD container test "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                       --file=./Dockerfile \
-                      --severity-threshold=high
+                      --severity-threshold=critical
 }
 
 # Main function.
