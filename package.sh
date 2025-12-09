@@ -18,13 +18,14 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  mkdir -p build/packages || exit 1
-
   $DOCKER_CMD buildx build \
-                     --output type=oci,dest="build/packages/$APP_NAME.tar" \
                      --platform linux/amd64,linux/arm64 \
                      --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
                      .
+
+  mkdir -p build/packages || exit 1
+
+  $DOCKER_CMD save -o "build/packages/$APP_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION"
 }
 
 # Main function.

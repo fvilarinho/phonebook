@@ -24,7 +24,7 @@ function prepareToExecute() {
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  $SNYK_CMD container test oci-archive:"build/packages/$APP_NAME.tar" \
+  $SNYK_CMD container test docker-archive:"build/packages/$APP_NAME.tar" \
                       --file=./Dockerfile \
                       --severity-threshold=critical
 }
