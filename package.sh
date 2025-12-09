@@ -18,8 +18,6 @@ function prepareToExecute() {
 
 # Creates the container images.
 function package() {
-  mkdir -p build/packages || exit 1
-
   $DOCKER_CMD buildx build \
                      --platform linux/amd64,linux/arm64 \
                      --tag "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$APP_NAME:$BUILD_VERSION" \
