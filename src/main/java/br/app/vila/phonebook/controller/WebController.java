@@ -68,22 +68,28 @@ public class WebController {
             item = phoneService.findById(id);
 
             if (item.isEmpty()) {
-                logger.warn("Entry with id {} does not exist!", id);
+                String message = "Entry with id " + id + " does not exist!";
+
+                logger.warn(message);
+
+                model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
+                model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(false, message));
+                model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
 
                 return "home";
             }
+
+            logger.info("Editing the entry with id {}", id);
+
+            model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
+            model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
+            model.addAttribute(WebControllerAttributes.ENTRY, item);
         }
-        catch(Throwable e){
+        catch (Throwable e) {
             logger.error(e.getMessage());
 
-            return "home";
+            return home(model);
         }
-
-        logger.info("Editing the entry with id {}", id);
-
-        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
-        model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
-        model.addAttribute(WebControllerAttributes.ENTRY, item);
 
         return "input";
     }
@@ -96,24 +102,30 @@ public class WebController {
             item = phoneService.findById(id);
 
             if (item.isEmpty()) {
-                logger.warn("Entry with id {} does not exist!", id);
+                String message = "Entry with id " + id + " does not exist!";
+
+                logger.warn(message);
+
+                model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
+                model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(false, message));
+                model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
 
                 return "home";
             }
+
+            phoneService.deleteById(id);
+
+            logger.info("Deleting the entry with id {}", id);
+
+            model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
+            model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(true, "The entry was deleted successfully!"));
+            model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
         }
         catch(Throwable e){
             logger.error(e.getMessage());
 
-            return "home";
+            return home(model);
         }
-
-        phoneService.deleteById(id);
-
-        logger.info("Deleting the entry with id {}", id);
-
-        model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
-        model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(true, "The entry was deleted successfully!"));
-        model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
 
         return "home";
     }

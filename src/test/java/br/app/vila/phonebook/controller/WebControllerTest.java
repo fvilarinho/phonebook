@@ -77,6 +77,8 @@ class WebControllerTest {
 
     @Test
     void testDelete() throws Exception {
+        when(phoneService.findById(1L)).thenReturn(Optional.of(new Phone(1L, "John Doe", "123456789")));
+
         mockMvc.perform(get("/ui/delete/1"))
                         .andExpect(status().isOk())
                         .andExpect(model().attributeExists(WebControllerAttributes.SEARCH))
