@@ -1,8 +1,8 @@
 services:
   nginx:
     image: nginx:1.29.3
-    container_name: nginx
-    restart: always
+    container_name: frontend
+    restart: unless-stopped
     environment:
       - BACKEND_HOST=${BACKEND_HOST}
     volumes:
@@ -10,7 +10,7 @@ services:
       - ./etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
       - ./etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem
       - ./etc/.htpasswd:/etc/nginx/conf.d/.htpasswd
-    hostname: nginx
+    hostname: frontend
     ports:
       - "80:80"
       - "443:443"
@@ -19,8 +19,8 @@ services:
 
   phonebook:
     image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${APP_NAME}:${BUILD_VERSION}
-    container_name: phonebook
-    restart: always
+    container_name: backend
+    restart: unless-stopped
     environment:
       - DEBUG_ENABLED=${DEBUG_ENABLED}
       - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
@@ -29,26 +29,24 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
-    # ports:
-    #   - "8000:8000" # Debug port
     volumes:
       - ./etc/logback.xml:/home/phonebook/etc/logback.xml
-    hostname: phonebook
+    hostname: backend
     depends_on:
       - mariadb
 
   mariadb:
     image: mariadb:11.8.5-ubi
-    container_name: mariadb
-    restart: always
+    container_name: database
+    restart: unless-stopped
     environment:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
     volumes:
-      - mariadb_data:/var/lib/mysql
-    hostname: mariadb
+      - mariadb-data:/var/lib/mysql
+    hostname: database
 
 volumes:
-  mariadb_data:
+  mariadb-data:
