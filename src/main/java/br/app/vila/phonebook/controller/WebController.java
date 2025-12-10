@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 public class WebController {
     private static final Logger logger = LoggerFactory.getLogger(WebController.class);
@@ -60,17 +62,51 @@ public class WebController {
 
     @GetMapping("/ui/edit/{id}")
     public String edit(Model model, @NonNull @PathVariable Long id) {
+        Optional<Phone> item;
+
+        try {
+            item = phoneService.findById(id);
+
+            if (item.isEmpty()) {
+                logger.warn("Entry with id {} does not exist!", id);
+
+                return "home";
+            }
+        }
+        catch(Throwable e){
+            logger.error(e.getMessage());
+
+            return "home";
+        }
+
         logger.info("Editing the entry with id {}", id);
 
         model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
         model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
-        model.addAttribute(WebControllerAttributes.ENTRY, phoneService.findById(id));
+        model.addAttribute(WebControllerAttributes.ENTRY, item);
 
         return "input";
     }
 
     @GetMapping("/ui/delete/{id}")
     public String delete(Model model, @NonNull @PathVariable Long id) {
+        Optional<Phone> item;
+
+        try {
+            item = phoneService.findById(id);
+
+            if (item.isEmpty()) {
+                logger.warn("Entry with id {} does not exist!", id);
+
+                return "home";
+            }
+        }
+        catch(Throwable e){
+            logger.error(e.getMessage());
+
+            return "home";
+        }
+
         phoneService.deleteById(id);
 
         logger.info("Deleting the entry with id {}", id);
