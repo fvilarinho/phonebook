@@ -6,6 +6,7 @@ services:
     environment:
       - BACKEND_HOST=${BACKEND_HOST}
     volumes:
+      - ./src/static:/var/www/static
       - ./etc/nginx.conf:/etc/nginx/templates/default.conf.template
       - ./etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
       - ./etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem

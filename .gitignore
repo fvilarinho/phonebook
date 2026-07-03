@@ -6,3 +6,4 @@
 /etc/.htpasswd
 /etc/tls/certs/*
 /etc/tls/private/*
+/.myollamaenhancer/
