@@ -30,11 +30,11 @@ services:
       - BUILD_NAME=${BUILD_NAME}
       - DEBUG_ENABLED=${DEBUG_ENABLED}
       - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
-      - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL}
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
+      - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL:-}
+      - DB_HOST=${DB_HOST:-}
+      - DB_USER=${DB_USER:-}
+      - DB_PASS=${DB_PASS:-}
+      - DB_NAME=${DB_NAME:-}
     volumes:
       - ./etc/logback.xml:/home/${BUILD_NAME}/etc/logback.xml
     hostname: backend
