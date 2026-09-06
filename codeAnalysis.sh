@@ -48,6 +48,9 @@ function codeAnalysis() {
 
     exit 1
   fi
+
+  echo
+  echo "Code analysis passed!"
 }
 
 # Main function.
