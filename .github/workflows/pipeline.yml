@@ -63,13 +63,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN}}
         run: ./packageAnalysis.sh
 
-      - name: Publishing
-        env:
-          DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
-          DOCKER_REGISTRY_ID: ${{ secrets.DOCKER_REGISTRY_ID }}
-          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-        run: ./publish.sh
-
       - name: Notify
         if: always()
         env:
