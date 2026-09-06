@@ -1,5 +1,5 @@
 # Base image definition.
-FROM alpine:3.21
+FROM alpine:3.23.5
 
 # Metadata definition.
 LABEL authors="me@vila.net.br"
@@ -12,10 +12,14 @@ ENV LIBS_DIR=${HOME_DIR}/libs
 ENV LOGS_DIR=${HOME_DIR}/logs
 
 # Database environment variables.
-ENV DB_HOST=mariadb
+ENV DB_HOST=database
 ENV DB_USER=demo
 ENV DB_PASS=demo
 ENV DB_NAME=phonebook
+
+# Debug and observavility flags.
+ENV DEBUG_ENABLED=true
+ENV OBSERVABILITY_ENABLED=true
 
 # Creates the directory structure.
 RUN mkdir -p ${HOME_DIR} \
@@ -34,7 +38,7 @@ RUN apk update && \
                        vim \
                        net-tools \
                        bind-tools \
-                       openjdk21-jre
+                       openjdk17-jre
 
 # Copies all binaries, libraries and scripts.
 COPY banner.txt ${ETC_DIR}/

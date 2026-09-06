@@ -22,25 +22,40 @@ public class PhoneService {
     }
 
     public Optional<Phone> findById(Long id) {
-        if(id == null || id <= 0)
+        if (id == null || id <= 0)
             throw new IllegalArgumentException("Please specify a phone id!");
 
         return phoneRepository.findById(id);
     }
 
-    public List<Phone> findAllByName(String name) { return phoneRepository.findByNameContainingIgnoreCase(name); }
+    public List<Phone> findAllByName(String name) {
+        return phoneRepository.findByNameContainingIgnoreCase(name);
+    }
+
 
     public void save(Phone phone) throws IllegalArgumentException {
-        if(phone == null || phone.getName() == null || phone.getName().isEmpty() || phone.getNumber() == null || phone.getNumber().isEmpty())
+        if (phone == null || phone.getName() == null || phone.getName().isEmpty() || phone.getNumber() == null || phone.getNumber().isEmpty())
             throw new IllegalArgumentException("Please specify the phone details!");
+
+        if (phone.getId() == null || phone.getId() == 0)
+            phone.setId(getNextSequence());
 
         phoneRepository.save(phone);
     }
 
     public void deleteById(Long id) throws IllegalArgumentException {
-        if(id == null || id <= 0)
+        if (id == null || id <= 0)
             throw new IllegalArgumentException("Please specify a phone id!");
 
         phoneRepository.deleteById(id);
+    }
+
+    private synchronized Long getNextSequence() {
+        Phone lastPhone = phoneRepository.findFirstByOrderByIdDesc();
+
+        if (lastPhone != null)
+            return (lastPhone.getId() + 1L);
+
+        return 1L;
     }
 }

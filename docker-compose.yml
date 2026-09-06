@@ -1,5 +1,5 @@
 services:
-  nginx:
+  frontend:
     image: nginx:1.29.3
     container_name: frontend
     restart: unless-stopped
@@ -16,10 +16,11 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - phonebook
+      - backend
 
-  phonebook:
-    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${APP_NAME}:${BUILD_VERSION}
+  backend:
+    build: .
+    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${BUILD_NAME}:${BUILD_VERSION}
     container_name: backend
     restart: unless-stopped
     environment:
@@ -31,23 +32,21 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
     volumes:
-      - ./etc/logback.xml:/home/phonebook/etc/logback.xml
+      - ./etc/logback.xml:/home/app/etc/logback.xml
     hostname: backend
     depends_on:
-      - mariadb
+      - database
 
-  mariadb:
-    image: mariadb:11.8.5-ubi
+  database:
+    image: mongo:8.3.8
     container_name: database
     restart: unless-stopped
     environment:
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASS}
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - database-data:/data/db
     hostname: database
 
 volumes:
-  mariadb-data:
+  database-data:

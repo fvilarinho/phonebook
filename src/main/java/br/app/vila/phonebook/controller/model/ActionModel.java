@@ -4,11 +4,11 @@ public class ActionModel {
     private boolean success = false;
     private String message = "";
 
-    public ActionModel(){
+    public ActionModel() {
         super();
     }
 
-    public ActionModel(boolean success, String message){
+    public ActionModel(boolean success, String message) {
         this();
 
         setSuccess(success);

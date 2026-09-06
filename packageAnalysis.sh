@@ -19,14 +19,24 @@ function checkDependencies() {
 function prepareToExecute() {
   source functions.sh
 
+  mkdir -p build/packages
+
   showBanner
 }
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  $SNYK_CMD container test oci-archive:"build/packages/$APP_NAME.tar" \
+  $DOCKER_CMD save -o "build/packages/$BUILD_NAME.tar" "${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${BUILD_NAME}:${BUILD_VERSION}" || exit 1
+
+  $SNYK_CMD container test oci-archive:"build/packages/$BUILD_NAME.tar" \
                       --file=./Dockerfile \
-                      --severity-threshold=critical
+                      --severity-threshold=critical || exit 1
+
+  cleanUp
+}
+
+function cleanUp() {
+  rm -rf build/packages
 }
 
 # Main function.

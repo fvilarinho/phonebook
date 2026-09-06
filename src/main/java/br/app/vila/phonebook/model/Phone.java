@@ -14,7 +14,7 @@ public class Phone {
     private String name;
     private String number;
 
-    public Phone(){
+    public Phone() {
     }
 
     public Phone(String name, String number) {

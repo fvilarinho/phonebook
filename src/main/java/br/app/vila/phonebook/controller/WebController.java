@@ -7,7 +7,6 @@ import br.app.vila.phonebook.service.PhoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,7 +60,7 @@ public class WebController {
     }
 
     @GetMapping("/ui/edit/{id}")
-    public String edit(Model model, @NonNull @PathVariable Long id) {
+    public String edit(Model model, @PathVariable Long id) {
         Optional<Phone> item;
 
         try {
@@ -84,8 +83,7 @@ public class WebController {
             model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
             model.addAttribute(WebControllerAttributes.ACTION, new ActionModel());
             model.addAttribute(WebControllerAttributes.ENTRY, item);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             logger.error(e.getMessage());
 
             return home(model);
@@ -95,7 +93,7 @@ public class WebController {
     }
 
     @GetMapping("/ui/delete/{id}")
-    public String delete(Model model, @NonNull @PathVariable Long id) {
+    public String delete(Model model, @PathVariable Long id) {
         Optional<Phone> item;
 
         try {
@@ -120,8 +118,7 @@ public class WebController {
             model.addAttribute(WebControllerAttributes.SEARCH, new Phone());
             model.addAttribute(WebControllerAttributes.ACTION, new ActionModel(true, "The entry was deleted successfully!"));
             model.addAttribute(WebControllerAttributes.ENTRIES, phoneService.findAll());
-        }
-        catch(Throwable e){
+        } catch (Throwable e) {
             logger.error(e.getMessage());
 
             return home(model);
@@ -136,7 +133,7 @@ public class WebController {
 
         phoneService.save(entry);
 
-        if(isNew)
+        if (isNew)
             logger.info("Saving the new entry with id '{}'", entry.getId());
         else
             logger.info("Updating the entry with id {}", entry.getId());

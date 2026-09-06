@@ -5,7 +5,7 @@ Getting Started
 This is a demo project for education/training purposes of software development, Cloud Computing and DevOps.
 
 ### Requirements
-- [`Java JDK 21.x or later`](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [`Java JDK 17.x or later`](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 - [`docker 27.x`](https://www.docker.com)
 - [`curl 8.12.x`](https://curl.se/)
 - [`jq 1.7.x`](https://jqlang.org/)
@@ -21,9 +21,9 @@ To Run Locally:
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
 
 ### Components
-- **Frontend**: It contains the UI of the application. It runs [`nginx`](https://nginx.org/)
+- **Frontend**: It contains the UI of the application. It runs [`NGINX`](https://nginx.org/)
 - **Backend**: It contains the backend with all business logic of the application. It runs [`Spring Boot`](https://spring.io/projects/spring-boot)
-- **Database**: It contains the database to store the application data. It runs [`mariadb`](https://mariadb.org/)
+- **Database**: It contains the database to store the application data. It runs [`MongoDB`](https://www.mongodb.com/)
 
 All components are containerized. (Please check the files `docker-compose.tf` and `Dockerfile` for more details).
 

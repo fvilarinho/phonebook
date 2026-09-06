@@ -3,8 +3,8 @@ package br.app.vila.phonebook.util;
 import br.app.vila.phonebook.util.constants.HttpAppenderFormats;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpMethod;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -24,7 +24,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
     private boolean processed = false;
     private String errorMessage;
 
-    public HttpAppender(){
+    public HttpAppender() {
         super();
     }
 
@@ -87,7 +87,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
             URL urlObject = new URL(getUrl());
             HttpURLConnection connectionObject;
 
-            if(this.connection == null)
+            if (this.connection == null)
                 connectionObject = (HttpURLConnection) urlObject.openConnection();
             else
                 connectionObject = this.connection;
@@ -127,8 +127,7 @@ public class HttpAppender extends AppenderBase<ILoggingEvent> {
 
             if (responseCode != HttpURLConnection.HTTP_OK)
                 setErrorMessage(String.format("Failed to send log: %s - %s%n", responseCode, responseMessage));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             setErrorMessage(String.format("Internal server error - %s", e.getMessage()));
         }
 

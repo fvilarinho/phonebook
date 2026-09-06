@@ -19,7 +19,7 @@ public enum HttpAppenderFormats {
     }
 
     public static HttpAppenderFormats fromString(String value) {
-        if(value != null && !value.isEmpty()) {
+        if (value != null && !value.isEmpty()) {
             if (value.equalsIgnoreCase(JSON.name()))
                 return JSON;
 
