@@ -27,7 +27,7 @@ public class WebController {
         this.phoneService = phoneService;
     }
 
-    @GetMapping("/ui")
+    @GetMapping("/")
     public String home(Model model) {
         logger.info("Loading all entries registered in the phonebook");
 
@@ -38,7 +38,7 @@ public class WebController {
         return "home";
     }
 
-    @PostMapping("/ui/search")
+    @PostMapping("/search")
     public String search(Model model, @ModelAttribute(WebControllerAttributes.SEARCH) Phone search) {
         logger.info("Searching for entries in the phonebook");
 
@@ -48,7 +48,7 @@ public class WebController {
         return "home";
     }
 
-    @GetMapping("/ui/add")
+    @GetMapping("/add")
     public String add(Model model) {
         logger.info("Adding a new entry in phonebook");
 
@@ -59,7 +59,7 @@ public class WebController {
         return "input";
     }
 
-    @GetMapping("/ui/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Long id) {
         Optional<Phone> item;
 
@@ -92,7 +92,7 @@ public class WebController {
         return "input";
     }
 
-    @GetMapping("/ui/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Long id) {
         Optional<Phone> item;
 
@@ -127,7 +127,7 @@ public class WebController {
         return "home";
     }
 
-    @PostMapping("/ui/save")
+    @PostMapping("/save")
     public String save(Model model, @ModelAttribute(WebControllerAttributes.ENTRY) Phone entry) {
         boolean isNew = (entry.getId() == null);
 

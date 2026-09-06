@@ -32,7 +32,7 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
     volumes:
-      - ./etc/logback.xml:/home/app/etc/logback.xml
+      - ./etc/logback.xml:/home/phonebook/etc/logback.xml
     hostname: backend
     depends_on:
       - database

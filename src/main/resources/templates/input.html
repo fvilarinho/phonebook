@@ -11,7 +11,7 @@
     <body class="container mt-5">
         <h2>Add Phone Entry</h2>
         <hr/>
-        <form th:action="@{/ui/save}" th:object="${entry}" method="POST">
+        <form th:action="@{/save}" th:object="${entry}" method="POST">
             <input type="hidden" id="id" th:field="*{id}">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
@@ -22,7 +22,7 @@
                 <input type="text" class="form-control w-25" id="number" th:field="*{number}" required>
             </div>
             <button id="saveButton" type="submit" class="btn btn-success">Save</button>
-            <a th:href="@{/ui}" class="btn btn-primary">Back</a>
+            <a th:href="@{/}" class="btn btn-primary">Back</a>
             <br/><br/>
             <div class="text-center" th:unless="${action.success}" th:text="${action.message}"></div>
         </form>

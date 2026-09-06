@@ -21,7 +21,7 @@
                 </tr>
             </table>
             <hr/>
-            <form th:action="@{/ui/search}" th:object="${search}" method="POST">
+            <form th:action="@{/search}" th:object="${search}" method="POST">
                 <table class="w-50">
                     <tr>
                         <td colspan="2">
@@ -56,14 +56,14 @@
                         <td th:text="${entry.name}"></td>
                         <td th:text="${entry.number}"></td>
                         <td>
-                            <a th:href="@{/ui/edit/{id}(id=${entry.id})}" class="btn btn-primary">Edit</a>
-                            <a th:href="@{/ui/delete/{id}(id=${entry.id})}" class="btn btn-danger">Delete</a>
+                            <a th:href="@{/edit/{id}(id=${entry.id})}" class="btn btn-primary">Edit</a>
+                            <a th:href="@{/delete/{id}(id=${entry.id})}" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                     <!-- Add more entries here -->
                 </tbody>
             </table>
-            <a th:href="@{/ui/add}" class="btn btn-success">Add</a>
+            <a th:href="@{/add}" class="btn btn-success">Add</a>
             <br/><br/>
             <div class="text-center" th:text="${action.message}"></div>
         </div>
