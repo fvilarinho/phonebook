@@ -18,7 +18,7 @@ if [ "$OBSERVABILITY_ENABLED" == true ]; then
   STARTUP_OPTS="$STARTUP_OPTS -Dlogging.config=file:$ETC_DIR/logback.xml"
 fi
 
-STARTUP_CMD="$JAVA_CMD $STARTUP_OPTS -jar $LIBS_DIR/phonebook.jar"
+STARTUP_CMD="$JAVA_CMD $STARTUP_OPTS -jar $LIBS_DIR/$BUILD_NAME.jar"
 
 # Execute the startup script.
 eval "$STARTUP_CMD"

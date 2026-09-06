@@ -5,7 +5,8 @@ FROM alpine:3.23.5
 LABEL authors="me@vila.net.br"
 
 # OS environment variables.
-ENV HOME_DIR=/home/phonebook
+ENV BUILD_NAME=phonebook
+ENV HOME_DIR=/home/${BUILD_NAME}
 ENV BIN_DIR=${HOME_DIR}/bin
 ENV ETC_DIR=${HOME_DIR}/etc
 ENV LIBS_DIR=${HOME_DIR}/libs
@@ -43,7 +44,7 @@ RUN apk update && \
 # Copies all binaries, libraries and scripts.
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
-COPY build/libs/phonebook.jar ${LIBS_DIR}/
+COPY build/libs/phonebook.jar ${LIBS_DIR}/${BUILD_NAME}.jar
 
 # Gives the  execution permission.
 RUN chmod +x ${BIN_DIR}/*.sh && \

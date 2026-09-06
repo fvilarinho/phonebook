@@ -4,6 +4,9 @@ services:
     container_name: frontend
     restart: unless-stopped
     environment:
+      - BUILD_NAME=${BUILD_NAME}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN}
       - BACKEND_HOST=${BACKEND_HOST}
     volumes:
       - ./src/static:/var/www/static
@@ -24,6 +27,7 @@ services:
     container_name: backend
     restart: unless-stopped
     environment:
+      - BUILD_NAME=${BUILD_NAME}
       - DEBUG_ENABLED=${DEBUG_ENABLED}
       - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
       - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL}
@@ -32,7 +36,7 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
     volumes:
-      - ./etc/logback.xml:/home/phonebook/etc/logback.xml
+      - ./etc/logback.xml:/home/${BUILD_NAME}/etc/logback.xml
     hostname: backend
     depends_on:
       - database
