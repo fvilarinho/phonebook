@@ -4,9 +4,7 @@ services:
     container_name: frontend
     restart: unless-stopped
     environment:
-      - BUILD_NAME=${BUILD_NAME}
       - FRONTEND_HOST=${FRONTEND_HOST:-}
-      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-}
       - BACKEND_HOST=${BACKEND_HOST:-}
     volumes:
       - ./src/main/static:/var/www/static
@@ -27,7 +25,6 @@ services:
     container_name: backend
     restart: unless-stopped
     environment:
-      - BUILD_NAME=${BUILD_NAME}
       - DEBUG_ENABLED=${DEBUG_ENABLED}
       - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
       - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL:-}
