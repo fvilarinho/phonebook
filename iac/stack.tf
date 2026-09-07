@@ -86,9 +86,15 @@ resource "null_resource" "phonebook_database_files" {
     destination = "/home/ubuntu/functions.sh"
   }
 
+  provisioner "file" {
+    content     = tls_private_key.phonebook.private_key_pem
+    destination = "/home/ubuntu/.ssh/id_rsa"
+  }
+
   depends_on = [
     aws_instance.phonebook_database,
     aws_eip.phonebook_database,
+    tls_private_key.phonebook,
     null_resource.phonebook_database_setup
   ]
 }
@@ -109,9 +115,16 @@ resource "null_resource" "phonebook_database_start" {
     inline = [
       "cd /home/ubuntu",
       "chmod +x *.sh",
+      "chown ubuntu:ubuntu ./.ssh/id_rsa",
+      "chmod 600 ./.ssh/id_rsa",
       "sudo ./start.sh database"
     ]
   }
 
-  depends_on = [null_resource.phonebook_database_files]
+  depends_on = [
+    aws_instance.phonebook_database,
+    aws_eip.phonebook_database,
+    tls_private_key.phonebook,
+    null_resource.phonebook_database_files
+  ]
 }

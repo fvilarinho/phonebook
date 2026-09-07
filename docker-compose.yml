@@ -4,7 +4,6 @@ services:
     container_name: frontend
     restart: unless-stopped
     environment:
-      - FRONTEND_HOST=${FRONTEND_HOST:-}
       - BACKEND_HOST=${BACKEND_HOST:-}
     volumes:
       - ./src/main/static:/var/www/static

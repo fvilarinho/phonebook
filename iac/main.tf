@@ -4,6 +4,11 @@ terraform {
       source = "hashicorp/aws"
     }
 
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.20.0"
+    }
+
     local = {
       source  = "hashicorp/local"
       version = "2.7.0"
@@ -14,9 +19,9 @@ terraform {
       version = "3.8.1"
     }
 
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "5.20.0"
+    null = {
+      source  = "hashicorp/null"
+      version = "3.3.1"
     }
   }
 

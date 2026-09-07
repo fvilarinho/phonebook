@@ -20,10 +20,12 @@ set -euo pipefail
 DEBIAN_FRONTEND=noninteractive
 
 apt update
-apt -y upgrade -y
+apt -y upgrade
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
 export K3S_TOKEN="${random_password.phonebook_cluster_token.result}"
 curl -sfL https://get.k3s.io | sh -
+chmod og+r /etc/rancher/k3s/k3s.yaml
+ln -s /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
 EOT
 
   tags = {
@@ -51,7 +53,7 @@ resource "aws_instance" "phonebook_cluster_workernode2" {
   ami                         = var.settings.compute.ami
   instance_type               = var.settings.compute.type
   subnet_id                   = aws_subnet.phonebook_pvt_b.id
-  vpc_security_group_ids      = [ aws_security_group.phonebook_cluster_workernodes_traffic.id ]
+  vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
   monitoring                  = true
@@ -64,7 +66,7 @@ set -euo pipefail
 DEBIAN_FRONTEND=noninteractive
 
 apt update
-apt -y upgrade -y
+apt -y upgrade
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
 export K3S_TOKEN="${random_password.phonebook_cluster_token.result}"
 export K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443"
@@ -96,7 +98,7 @@ resource "aws_instance" "phonebook_database" {
   ami                         = var.settings.compute.ami
   instance_type               = var.settings.compute.type
   subnet_id                   = aws_subnet.phonebook_pub_a.id
-  vpc_security_group_ids      = [ aws_security_group.phonebook_database_pub_traffic.id, aws_security_group.phonebook_database_pvt_traffic.id ]
+  vpc_security_group_ids      = [aws_security_group.phonebook_database_pub_traffic.id, aws_security_group.phonebook_database_pvt_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = true
   monitoring                  = true
@@ -137,5 +139,5 @@ resource "aws_eip" "phonebook_database" {
   instance = aws_instance.phonebook_database.id
   domain   = "vpc"
 
-  depends_on = [ aws_instance.phonebook_database ]
+  depends_on = [aws_instance.phonebook_database]
 }
