@@ -8,9 +8,40 @@ locals {
   my_ip = jsondecode(chomp(data.http.myip.response_body)).ip
 }
 
-# Creates the default security groups.
+resource "aws_security_group" "phonebook_cluster_lb_traffic" {
+  name        = "${var.settings.general.name}-cluster-lb-traffic"
+  description = "Allow public HTTP and HTTPS traffic to the K3s application ALB."
+  vpc_id      = aws_vpc.phonebook.id
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [ "${local.my_ip}/32" ]
+  }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [ "${local.my_ip}/32" ]
+  }
+
+  # Target security groups restrict this traffic to K3s Traefik only.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  depends_on = [ aws_vpc.phonebook ]
+}
+
 resource "aws_security_group" "phonebook_database_pub_traffic" {
-  name        = "phonebook_database_pub_traffic"
+  name        = "${var.settings.general.name}-database-pub-traffic"
   description = "Allow public traffic to phonebook database."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -19,7 +50,109 @@ resource "aws_security_group" "phonebook_database_pub_traffic" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${local.my_ip}/32"]
+    cidr_blocks = [ "${local.my_ip}/32" ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  depends_on = [
+    aws_vpc.phonebook,
+    data.http.myip
+  ]
+}
+
+resource "aws_security_group" "phonebook_database_pvt_traffic" {
+  name        = "${var.settings.general.name}-database-pvt-traffic"
+  description = "Allow private traffic to phonebook database."
+  vpc_id      = aws_vpc.phonebook.id
+
+  ingress {
+    description = "MongoDB access"
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}" ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  depends_on = [
+    aws_vpc.phonebook,
+    aws_subnet.phonebook_pvt_a,
+    aws_subnet.phonebook_pvt_b
+  ]
+}
+
+# Allows only the database EC2 to initiate SSH connections to private workers.
+resource "aws_security_group" "phonebook_cluster_workernodes_traffic" {
+  name        = "${var.settings.general.name}-cluster-workernodes-traffic"
+  description = "Allow traffic to workernodes"
+  vpc_id      = aws_vpc.phonebook.id
+
+  ingress {
+    description     = "SSH from phonebook database"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [ aws_security_group.phonebook_database_pub_traffic.id ]
+  }
+
+  ingress {
+    description     = "Traefik HTTP from application ALB"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [ aws_security_group.phonebook_cluster_lb_traffic.id ]
+  }
+
+  ingress {
+    description     = "Traefik HTTPs from application ALB"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [ aws_security_group.phonebook_cluster_lb_traffic.id ]
+  }
+
+  ingress {
+    description = "K3s Kubernetes API"
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    self        = true
+  }
+
+  ingress {
+    description = "K3s supervisor"
+    from_port   = 9345
+    to_port     = 9345
+    protocol    = "tcp"
+    self        = true
+  }
+
+  ingress {
+    description = "Kubernetes kubelet"
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    self        = true
+  }
+
+  ingress {
+    description = "Flannel VXLAN overlay"
+    from_port   = 8472
+    to_port     = 8472
+    protocol    = "udp"
+    self        = true
   }
 
   egress {
@@ -31,29 +164,7 @@ resource "aws_security_group" "phonebook_database_pub_traffic" {
 
   depends_on = [
     aws_vpc.phonebook,
-    data.http.myip
+    aws_security_group.phonebook_database_pub_traffic,
+    aws_security_group.phonebook_cluster_lb_traffic
   ]
-}
-
-resource "aws_security_group" "phonebook_database_pvt_traffic" {
-  name        = "phonebook_database_pvt_traffic"
-  description = "Allow private traffic to phonebook database."
-  vpc_id      = aws_vpc.phonebook.id
-
-  ingress {
-    description = "MongoDB access"
-    from_port   = 27017
-    to_port     = 27017
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.phonebook_pvt_subnet.cidr_block}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  depends_on = [aws_vpc.phonebook]
 }
