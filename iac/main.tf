@@ -3,15 +3,23 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
+
     local = {
       source  = "hashicorp/local"
       version = "2.7.0"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.8.1"
+    }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.20.0"
     }
   }
 
   # Remote state management in S3 bucket.
   backend "s3" {}
 }
-
-# AWS provider settings.
-provider "aws" {}
