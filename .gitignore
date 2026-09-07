@@ -1,9 +1,12 @@
 /.dccache
 /.gradle/
 /.idea/
+/.myollamaenhancer/
 /.secrets
 /build/
 /etc/.htpasswd
+/etc/keypair.pem
 /etc/tls/certs/*
 /etc/tls/private/*
-/.myollamaenhancer/
+/iac/terraform*
+/iac/.terraform*

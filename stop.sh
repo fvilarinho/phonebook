@@ -20,13 +20,6 @@ function prepareToExecute() {
 function stop() {
   $DOCKER_CMD compose down --remove-orphans || exit 1
   $DOCKER_CMD volume prune --all --force
-
-  cleanUp
-}
-
-function cleanUp() {
-  rm -rf etc/.htpasswd
-  rm -rf etc/tls
 }
 
 # Main function.

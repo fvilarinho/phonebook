@@ -54,6 +54,7 @@ function prepareToExecute() {
   export JAVA_CMD=$(which java 2>/dev/null)
   export SNYK_CMD=$(which snyk 2>/dev/null)
   export DOCKER_CMD=$(which docker 2>/dev/null)
+  export TERRAFORM_CMD=$(which terraform 2>/dev/null)
 }
 
 prepareToExecute

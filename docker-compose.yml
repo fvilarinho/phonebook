@@ -9,7 +9,7 @@ services:
       - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-}
       - BACKEND_HOST=${BACKEND_HOST:-}
     volumes:
-      - ./src/static:/var/www/static
+      - ./src/main/static:/var/www/static
       - ./etc/nginx.conf:/etc/nginx/templates/default.conf.template
       - ./etc/tls/certs/fullchain.pem:/etc/tls/certs/fullchain.pem
       - ./etc/tls/private/privkey.pem:/etc/tls/private/privkey.pem
@@ -38,11 +38,14 @@ services:
     volumes:
       - ./etc/logback.xml:/home/${BUILD_NAME}/etc/logback.xml
     hostname: backend
+    ports:
+      - "8080:8080"
+      - "8000:8000"
     depends_on:
       - database
 
   database:
-    image: mongo:8.3.8
+    image: mongo:7.0
     container_name: database
     restart: unless-stopped
     environment:
@@ -51,6 +54,8 @@ services:
     volumes:
       - database-data:/data/db
     hostname: database
+    ports:
+      - "27017:27017"
 
 volumes:
   database-data:
