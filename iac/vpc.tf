@@ -77,7 +77,7 @@ resource "aws_route_table" "phonebook_pvt_subnet_a" {
   }
 
   tags = {
-    Name = "${var.settings.geeral.name}-rtb-natgw-pvt-subnet-a"
+    Name = "${var.settings.general.name}-rtb-natgw-pvt-subnet-a"
   }
 
   depends_on = [
