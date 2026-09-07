@@ -37,7 +37,7 @@ resource "aws_s3_object" "phonebook_static" {
   bucket       = aws_s3_bucket.phonebook_static.id
   key          = each.value
   source       = abspath(pathexpand("../src/main/static/${each.value}"))
-  etag         = filemd5(abspath(pathexpand("/../src/main/static/${each.value}")))
+  etag         = filemd5(abspath(pathexpand("../src/main/static/${each.value}")))
   content_type = lookup(
     {
       "html"  = "text/html"
