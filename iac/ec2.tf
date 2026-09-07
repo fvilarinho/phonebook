@@ -1,7 +1,3 @@
-resource "random_password" "phonebook_cluster_token" {
-  length = 16
-}
-
 # Compute instances.
 resource "aws_instance" "phonebook_cluster_workernode1" {
   ami                         = var.settings.compute.ami
@@ -22,7 +18,7 @@ DEBIAN_FRONTEND=noninteractive
 apt update
 apt -y upgrade
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
-export K3S_TOKEN="${random_password.phonebook_cluster_token.result}"
+export K3S_TOKEN="${random_password.phonebook_cluster.result}"
 curl -sfL https://get.k3s.io | sh -
 chmod og+r /etc/rancher/k3s/k3s.yaml
 ln -s /etc/rancher/k3s/k3s.yaml ${var.settings.compute.home_dir}/.kube/config
@@ -35,7 +31,7 @@ EOT
   }
 
   depends_on = [
-    random_password.phonebook_cluster_token,
+    random_password.phonebook_cluster,
     aws_key_pair.phonebook,
     aws_security_group.phonebook_cluster_workernodes_traffic,
     aws_internet_gateway.phonebook,
@@ -68,7 +64,7 @@ DEBIAN_FRONTEND=noninteractive
 apt update
 apt -y upgrade
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
-export K3S_TOKEN="${random_password.phonebook_cluster_token.result}"
+export K3S_TOKEN="${random_password.phonebook_cluster.result}"
 export K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443"
 curl -sfL https://get.k3s.io | sh -
 EOT
@@ -80,7 +76,7 @@ EOT
   }
 
   depends_on = [
-    random_password.phonebook_cluster_token,
+    random_password.phonebook_cluster,
     aws_key_pair.phonebook,
     aws_security_group.phonebook_cluster_workernodes_traffic,
     aws_subnet.phonebook_pvt_b,
@@ -115,6 +111,9 @@ apt -y upgrade -y
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
 curl -fsSL https://get.docker.com | sh -
 systemctl enable docker
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+mv kubectl /usr/local/bin
+chmod +x /usr/local/bin/kubectl
 EOT
 
   tags = {
@@ -131,6 +130,8 @@ EOT
     aws_internet_gateway.phonebook,
     aws_route_table.phonebook_igw,
     aws_route_table_association.phonebook_pub_subnet_a,
+    aws_instance.phonebook_cluster_workernode1,
+    aws_instance.phonebook_cluster_workernode2
   ]
 }
 
@@ -139,5 +140,5 @@ resource "aws_eip" "phonebook_database" {
   instance = aws_instance.phonebook_database.id
   domain   = "vpc"
 
-  depends_on = [aws_instance.phonebook_database]
+  depends_on = [ aws_instance.phonebook_database ]
 }
