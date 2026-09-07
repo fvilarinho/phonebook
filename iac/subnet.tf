@@ -1,49 +1,49 @@
 resource "aws_subnet" "phonebook_pub_a" {
   vpc_id                                      = aws_vpc.phonebook.id
-  cidr_block                                  = "10.0.1.0/24"
-  availability_zone                           = "us-east-1a"
+  cidr_block                                  = var.settings.network.vpc.subnets.public_a.cidr
+  availability_zone                           = "${data.aws_region.current.name}a"
   map_public_ip_on_launch                     = true
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name                     = "phonebook-pub-subnet-a"
+    Name                     = "${var.settings.general.name}-pub-subnet-a"
     "kubernetes.io/role/elb" = "1"
   }
 }
 
 resource "aws_subnet" "phonebook_pvt_a" {
   vpc_id                                      = aws_vpc.phonebook.id
-  cidr_block                                  = "10.0.2.0/24"
-  availability_zone                           = "us-east-1a"
+  cidr_block                                  = var.settings.network.vpc.subnets.private_a.cidr
+  availability_zone                           = "${data.aws_region.current.name}a"
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name                              = "phonebook-pvt-subnet-a"
+    Name                              = "${var.settings.general.name}-pvt-subnet-a"
     "kubernetes.io/role/internal-elb" = "1"
   }
 }
 
 resource "aws_subnet" "phonebook_pub_b" {
   vpc_id                                      = aws_vpc.phonebook.id
-  cidr_block                                  = "10.0.3.0/24"
-  availability_zone                           = "us-east-1b"
+  cidr_block                                  = var.settings.network.vpc.subnets.public_b.cidr
+  availability_zone                           = "${data.aws_region.current.name}b"
   map_public_ip_on_launch                     = true
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name                     = "phonebook-pub-subnet-b"
+    Name                     = "${var.settings.general.name}-pub-subnet-b"
     "kubernetes.io/role/elb" = "1"
   }
 }
 
 resource "aws_subnet" "phonebook_pvt_b" {
   vpc_id                                      = aws_vpc.phonebook.id
-  cidr_block                                  = "10.0.4.0/24"
-  availability_zone                           = "us-east-1b"
+  cidr_block                                  = var.settings.network.vpc.subnets.private_b.cidr
+  availability_zone                           = "${data.aws_region.current.name}b"
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name                              = "phonebook-pvt-subnet-b"
+    Name                              = "${var.settings.general.name}-pvt-subnet-b"
     "kubernetes.io/role/internal-elb" = "1"
   }
 }
