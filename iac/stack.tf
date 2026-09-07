@@ -17,7 +17,7 @@ resource "null_resource" "phonebook_database_setup" {
 
   connection {
     host        = aws_eip.phonebook_database.public_ip
-    user        = "ubuntu"
+    user        = var.settings.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
@@ -27,7 +27,7 @@ resource "null_resource" "phonebook_database_setup" {
       "sudo cloud-init status --wait",
       "echo 'Cloud-init finished.'",
       "curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -",
-      "sudo ln -s /home/ubuntu/.local/bin/aws /usr/local/bin/aws"
+      "sudo ln -s ${var.settings.compute.home_dir}/.local/bin/aws /usr/local/bin/aws"
     ]
   }
 
@@ -47,48 +47,48 @@ resource "null_resource" "phonebook_database_files" {
 
   connection {
     host        = aws_eip.phonebook_database.public_ip
-    user        = "ubuntu"
+    user        = var.settings.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_filename
-    destination = "/home/ubuntu/docker-compose.yaml"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_banner_filename
-    destination = "/home/ubuntu/banner.txt"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_banner_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_secrets_filename
-    destination = "/home/ubuntu/.secrets"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_secrets_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_env_filename
-    destination = "/home/ubuntu/.env"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_env_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_start_script_filename
-    destination = "/home/ubuntu/start.sh"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_start_script_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_stop_script_filename
-    destination = "/home/ubuntu/stop.sh"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_stop_script_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_stack_helper_script_filename
-    destination = "/home/ubuntu/functions.sh"
+    destination = "${var.settings.compute.home_dir}/${basename(local.phonebook_stack_helper_script_filename)}"
   }
 
   provisioner "file" {
     content     = tls_private_key.phonebook.private_key_pem
-    destination = "/home/ubuntu/.ssh/id_rsa"
+    destination = "${var.settings.compute.home_dir}/.ssh/id_rsa"
   }
 
   depends_on = [
@@ -107,15 +107,15 @@ resource "null_resource" "phonebook_database_start" {
 
   connection {
     host        = aws_eip.phonebook_database.public_ip
-    user        = "ubuntu"
+    user        = var.settings.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "remote-exec" {
     inline = [
-      "cd /home/ubuntu",
+      "cd ${var.settings.compute.home_dir}",
       "chmod +x *.sh",
-      "chown ubuntu:ubuntu ./.ssh/id_rsa",
+      "chown ${var.settings.compute.user}:${var.settings.compute.user} ./.ssh/id_rsa",
       "chmod 600 ./.ssh/id_rsa",
       "sudo ./start.sh database"
     ]

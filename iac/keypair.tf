@@ -8,7 +8,7 @@ resource "aws_key_pair" "phonebook" {
 # Saves the key pair.
 resource "local_file" "phonebook_private_key" {
   content         = tls_private_key.phonebook.private_key_pem
-  filename        = abspath("../etc/keypair.pem")
+  filename        = abspath(pathexpand("../etc/keypair.pem"))
   file_permission = "0400"
 
   depends_on = [ tls_private_key.phonebook ]

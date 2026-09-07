@@ -25,7 +25,7 @@ apt -y install net-tools dnsutils vim curl wget unzip zip htop
 export K3S_TOKEN="${random_password.phonebook_cluster_token.result}"
 curl -sfL https://get.k3s.io | sh -
 chmod og+r /etc/rancher/k3s/k3s.yaml
-ln -s /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
+ln -s /etc/rancher/k3s/k3s.yaml ${var.settings.compute.home_dir}/.kube/config
 EOT
 
   tags = {

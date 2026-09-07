@@ -32,12 +32,12 @@ resource "aws_s3_bucket_public_access_block" "phonebook_database" {
 
 # Uploads all static content files.
 resource "aws_s3_object" "phonebook_static" {
-  for_each = fileset("${path.module}/../src/main/static", "**")
+  for_each = fileset(abspath(pathexpand("../src/main/static")), "**")
 
   bucket       = aws_s3_bucket.phonebook_static.id
   key          = each.value
-  source       = "${path.module}/../src/main/static/${each.value}"
-  etag         = filemd5("${path.module}/../src/main/static/${each.value}")
+  source       = abspath(pathexpand("../src/main/static/${each.value}"))
+  etag         = filemd5(abspath(pathexpand("/../src/main/static/${each.value}")))
   content_type = lookup(
     {
       "html"  = "text/html"
