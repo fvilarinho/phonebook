@@ -1,11 +1,11 @@
 # Creates the bucket to store static content.
 resource "aws_s3_bucket" "phonebook_static" {
-  bucket        = "phonebook-static"
+  bucket        = "${var.settings.general.name}-static"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "phonebook_database" {
-  bucket        = "phonebook-database"
+  bucket        = "${var.settings.general.name}-database"
   force_destroy = true
 }
 
@@ -17,7 +17,7 @@ resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  depends_on = [aws_s3_bucket.phonebook_static]
+  depends_on = [ aws_s3_bucket.phonebook_static ]
 }
 
 resource "aws_s3_bucket_public_access_block" "phonebook_database" {
@@ -27,17 +27,17 @@ resource "aws_s3_bucket_public_access_block" "phonebook_database" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  depends_on = [aws_s3_bucket.phonebook_database]
+  depends_on = [ aws_s3_bucket.phonebook_database ]
 }
 
 # Uploads all static content files.
 resource "aws_s3_object" "phonebook_static" {
   for_each = fileset("${path.module}/../src/main/static", "**")
 
-  bucket = aws_s3_bucket.phonebook_static.id
-  key    = each.value
-  source = "${path.module}/../src/main/static/${each.value}"
-  etag   = filemd5("${path.module}/../src/main/static/${each.value}")
+  bucket       = aws_s3_bucket.phonebook_static.id
+  key          = each.value
+  source       = "${path.module}/../src/main/static/${each.value}"
+  etag         = filemd5("${path.module}/../src/main/static/${each.value}")
   content_type = lookup(
     {
       "html"  = "text/html"
@@ -61,5 +61,5 @@ resource "aws_s3_object" "phonebook_static" {
     "application/octet-stream"
   )
 
-  depends_on = [aws_s3_bucket.phonebook_static]
+  depends_on = [ aws_s3_bucket.phonebook_static ]
 }
