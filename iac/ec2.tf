@@ -1,9 +1,8 @@
-# Compute instances.
 resource "aws_instance" "phonebook_cluster_workernode1" {
   ami                         = var.settings.compute.ami
   instance_type               = var.settings.compute.type
   subnet_id                   = aws_subnet.phonebook_pvt_a.id
-  vpc_security_group_ids      = [ aws_security_group.phonebook_cluster_workernodes_traffic.id ]
+  vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
   monitoring                  = true
@@ -114,6 +113,9 @@ systemctl enable docker
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 mv kubectl /usr/local/bin
 chmod +x /usr/local/bin/kubectl
+curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -
+rm -f /usr/local/bin/aws
+ln -s ${var.settings.compute.home_dir}/.local/bin/aws /usr/local/bin/aws
 EOT
 
   tags = {
@@ -135,10 +137,9 @@ EOT
   ]
 }
 
-# Enables the Elastic IPs.
 resource "aws_eip" "phonebook_database" {
   instance = aws_instance.phonebook_database.id
   domain   = "vpc"
 
-  depends_on = [ aws_instance.phonebook_database ]
+  depends_on = [aws_instance.phonebook_database]
 }

@@ -1,4 +1,3 @@
-# Creates the bucket to store static content.
 resource "aws_s3_bucket" "phonebook_static" {
   bucket        = "${var.settings.general.name}-static"
   force_destroy = true
@@ -9,7 +8,6 @@ resource "aws_s3_bucket" "phonebook_database" {
   force_destroy = true
 }
 
-# Buckets BPA.
 resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   bucket                  = aws_s3_bucket.phonebook_static.id
   block_public_acls       = true
@@ -30,7 +28,6 @@ resource "aws_s3_bucket_public_access_block" "phonebook_database" {
   depends_on = [ aws_s3_bucket.phonebook_database ]
 }
 
-# Uploads all static content files.
 resource "aws_s3_object" "phonebook_static" {
   for_each = fileset(abspath(pathexpand("../src/main/static")), "**")
 

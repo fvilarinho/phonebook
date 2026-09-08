@@ -1,9 +1,7 @@
-# Fetches the current public ip of the local machine.
 data "http" "myip" {
   url = "https://ipinfo.io"
 }
 
-# Defines the required variables for the security groups.
 locals {
   my_ip = jsondecode(chomp(data.http.myip.response_body)).ip
 }
@@ -14,30 +12,27 @@ resource "aws_security_group" "phonebook_cluster_lb_traffic" {
   vpc_id      = aws_vpc.phonebook.id
 
   ingress {
-    description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [ "${local.my_ip}/32" ]
+    cidr_blocks = ["${local.my_ip}/32"]
   }
 
   ingress {
-    description = "HTTPS"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [ "${local.my_ip}/32" ]
+    cidr_blocks = ["${local.my_ip}/32"]
   }
 
-  # Target security groups restrict this traffic to K3s Traefik only.
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  depends_on = [ aws_vpc.phonebook ]
+  depends_on = [aws_vpc.phonebook]
 }
 
 resource "aws_security_group" "phonebook_database_pub_traffic" {
@@ -46,18 +41,17 @@ resource "aws_security_group" "phonebook_database_pub_traffic" {
   vpc_id      = aws_vpc.phonebook.id
 
   ingress {
-    description = "SSH access"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [ "${local.my_ip}/32" ]
+    cidr_blocks = ["${local.my_ip}/32"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   depends_on = [
@@ -72,18 +66,17 @@ resource "aws_security_group" "phonebook_database_pvt_traffic" {
   vpc_id      = aws_vpc.phonebook.id
 
   ingress {
-    description = "MongoDB access"
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   depends_on = [
@@ -100,59 +93,52 @@ resource "aws_security_group" "phonebook_cluster_workernodes_traffic" {
   vpc_id      = aws_vpc.phonebook.id
 
   ingress {
-    description = "SSH from phonebook database"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "Kubernetes API"
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "Kubernetes supervisor"
     from_port   = 9345
     to_port     = 9345
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "Kubelet"
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "Flannel VXLAN overlay"
     from_port   = 8472
     to_port     = 8472
     protocol    = "udp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "HTTP Ingress"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   ingress {
-    description = "HTTPs Ingress"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [ "${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}" ]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_subnet.phonebook_pub_a.cidr_block}", "${aws_subnet.phonebook_pub_b.cidr_block}"]
   }
 
   egress {

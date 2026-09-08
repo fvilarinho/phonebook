@@ -30,10 +30,9 @@ volumes:
 EOT
 }
 
-# Waits for cloud-init to complete before copying files.
 resource "null_resource" "phonebook_database_setup" {
   triggers = {
-    hash = aws_instance.phonebook_database.id
+    hash = "${aws_instance.phonebook_database.id}-${local.phonebook_stack_files_hash}"
   }
 
   connection {
@@ -46,31 +45,8 @@ resource "null_resource" "phonebook_database_setup" {
     inline = [
       "echo 'Waiting for Cloud-init to complete...'",
       "sudo cloud-init status --wait",
-      "echo 'Cloud-init finished.'",
-      "curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -",
-      "sudo rm -f /usr/local/bin/aws",
-      "sudo ln -s ${var.settings.compute.home_dir}/.local/bin/aws /usr/local/bin/aws"
+      "echo 'Cloud-init finished!'",
     ]
-  }
-
-  depends_on = [
-    aws_instance.phonebook_database,
-    aws_eip.phonebook_database,
-    tls_private_key.phonebook,
-    local_file.phonebook_private_key
-  ]
-}
-
-# Copies the required files.
-resource "null_resource" "phonebook_database_files" {
-  triggers = {
-    hash = "${aws_instance.phonebook_database.id}-${local.phonebook_stack_files_hash}"
-  }
-
-  connection {
-    host        = aws_eip.phonebook_database.public_ip
-    user        = var.settings.compute.user
-    private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "file" {
@@ -108,35 +84,20 @@ resource "null_resource" "phonebook_database_files" {
     destination = "${var.settings.compute.home_dir}/.ssh/id_rsa"
   }
 
-  depends_on = [
-    aws_instance.phonebook_database,
-    aws_eip.phonebook_database,
-    tls_private_key.phonebook,
-    null_resource.phonebook_database_setup
-  ]
-}
-
-# Starts the stack.
-resource "null_resource" "phonebook_database_start" {
-  triggers = {
-    hash = "${aws_instance.phonebook_database.id}-${local.phonebook_stack_files_hash}"
-  }
-
-  connection {
-    host        = aws_eip.phonebook_database.public_ip
-    user        = var.settings.compute.user
-    private_key = tls_private_key.phonebook.private_key_pem
-  }
-
   provisioner "remote-exec" {
     inline = [
       "cd ${var.settings.compute.home_dir}",
-      "chmod u+x *.sh",
       "chown ${var.settings.compute.user}:${var.settings.compute.user} ./.ssh/id_rsa",
+      "chmod og-rwx ./.ssh/id_rsa",
+      "scp -o StrictHostKeyChecking=no ${var.settings.compute.user}@${aws_instance.phonebook_cluster_workernode1.private_ip}:/etc/rancher/k3s/k3s.yaml .",
+      "mkdir -p ./.kube",
+      "mv k3s.yaml ./.kube/config",
+      "chmod -R og-rwx ./.kube",
+      "sed -i 's/127.0.0.1/${aws_instance.phonebook_cluster_workernode1.private_ip}/g' ./.kube/config",
+      "chmod u+x *.sh",
+      "chmod og-rwx *.sh",
       "chmod og-rwx *.txt",
       "chmod og-rwx *.yml",
-      "chmod og-rwx *.sh",
-      "chmod og-rwx ./.ssh/id_rsa",
       "chmod og-rwx ./.env",
       "sudo ./start.sh database"
     ]
@@ -145,34 +106,7 @@ resource "null_resource" "phonebook_database_start" {
   depends_on = [
     aws_instance.phonebook_database,
     aws_eip.phonebook_database,
-    tls_private_key.phonebook,
-    null_resource.phonebook_database_files
-  ]
-}
-
-resource "null_resource" "phonebook_cluster_files" {
-  connection {
-    host        = aws_eip.phonebook_database.public_ip
-    user        = var.settings.compute.user
-    private_key = tls_private_key.phonebook.private_key_pem
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "scp -o StrictHostKeyChecking=no ${var.settings.compute.user}@${aws_instance.phonebook_cluster_workernode1.private_ip}:/etc/rancher/k3s/k3s.yaml .",
-      "mkdir -p ./.kube",
-      "mv k3s.yaml ./.kube/config",
-      "chmod -R og-rwx ./.kube",
-      "sed -i 's/127.0.0.1/${aws_instance.phonebook_cluster_workernode1.private_ip}/g' ./.kube/config"
-    ]
-  }
-
-  depends_on = [
-    aws_eip.phonebook_database,
-    tls_private_key.phonebook,
     aws_instance.phonebook_cluster_workernode1,
-    null_resource.phonebook_database_setup,
-    null_resource.phonebook_database_files,
-    null_resource.phonebook_database_start
+    tls_private_key.phonebook
   ]
 }

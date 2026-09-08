@@ -25,7 +25,6 @@ terraform {
     }
   }
 
-  # Remote state management in S3 bucket.
   backend "s3" {}
 }
 

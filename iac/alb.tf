@@ -20,7 +20,6 @@ resource "aws_lb_target_group" "phonebook_cluster" {
   target_type = "instance"
   vpc_id      = aws_vpc.phonebook.id
 
-  # Traefik returns 404 when it is reachable but no default route exists.
   health_check {
     enabled = true
     matcher = "200-499"
@@ -70,7 +69,7 @@ resource "aws_lb_listener" "phonebook_cluster" {
   depends_on = [ aws_lb.phonebook_cluster ]
 }
 
-resource "aws_lb_listener" "phonebook_cluster_https" {
+resource "aws_lb_listener" "secure_phonebook_cluster" {
   load_balancer_arn = aws_lb.phonebook_cluster.arn
   port              = 443
   protocol          = "HTTPS"
