@@ -14,11 +14,18 @@ set -euo pipefail
 
 DEBIAN_FRONTEND=noninteractive
 
+# Update the system.
 apt update
 apt -y upgrade
+
+# Install minimum packages.
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
+
+# Install Kubernates distribution (K3S) as manager node.
 export K3S_TOKEN="${random_password.phonebook_cluster.result}"
 curl -sfL https://get.k3s.io | sh -
+
+# Prepare the kubeconfig file used by kubectl.
 chmod og+r /etc/rancher/k3s/k3s.yaml
 ln -s /etc/rancher/k3s/k3s.yaml ${var.settings.compute.home_dir}/.kube/config
 EOT
@@ -60,9 +67,14 @@ set -euo pipefail
 
 DEBIAN_FRONTEND=noninteractive
 
+# Update the system.
 apt update
 apt -y upgrade
+
+# Install minimum packages.
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
+
+# Install Kubernetes distribution (K3S) as worker node.
 export K3S_TOKEN="${random_password.phonebook_cluster.result}"
 export K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443"
 curl -sfL https://get.k3s.io | sh -
@@ -105,17 +117,24 @@ set -euo pipefail
 
 DEBIAN_FRONTEND=noninteractive
 
+# Update the system.
 apt update
 apt -y upgrade -y
+
+# Install minimum packages.
 apt -y install net-tools dnsutils vim curl wget unzip zip htop
+
+# Install docker.
 curl -fsSL https://get.docker.com | sh -
 systemctl enable docker
+
+# Install kubectl.
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 mv kubectl /usr/local/bin
 chmod +x /usr/local/bin/kubectl
-curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -
-rm -f /usr/local/bin/aws
-ln -s ${var.settings.compute.home_dir}/.local/bin/aws /usr/local/bin/aws
+
+# Install AWS CLI.
+curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -s -- --system
 EOT
 
   tags = {

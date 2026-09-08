@@ -3,7 +3,7 @@ locals {
   phonebook_stack_start_script_filename  = abspath(pathexpand("../start.sh"))
   phonebook_stack_stop_script_filename   = abspath(pathexpand("../stop.sh"))
   phonebook_stack_helper_script_filename = abspath(pathexpand("../functions.sh"))
-  phonebook_stack_files_hash             = "${md5(local.phonebook_stack)}-${filemd5(local.phonebook_stack_banner_filename)}-${md5(local.phonebook_stack_env)}-${filemd5(local.phonebook_stack_start_script_filename)}-${filemd5(local.phonebook_stack_stop_script_filename)}-${filemd5(local.phonebook_stack_helper_script_filename)}}"
+  phonebook_stack_files_hash             = "${aws_instance.phonebook_database.id}-${md5(local.phonebook_stack)}-${filemd5(local.phonebook_stack_banner_filename)}-${md5(local.phonebook_stack_env)}-${filemd5(local.phonebook_stack_start_script_filename)}-${filemd5(local.phonebook_stack_stop_script_filename)}-${filemd5(local.phonebook_stack_helper_script_filename)}}"
 }
 
 locals {
@@ -32,23 +32,15 @@ volumes:
 EOT
 }
 
-resource "null_resource" "phonebook_database_setup" {
+resource "null_resource" "phonebook_stack_setup" {
   triggers = {
-    hash = "${aws_instance.phonebook_database.id}-${local.phonebook_stack_files_hash}"
+    hash = local.phonebook_stack_files_hash
   }
 
   connection {
     host        = aws_eip.phonebook_database.public_ip
     user        = var.settings.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'Waiting for Cloud-init to complete...'",
-      "sudo cloud-init status --wait",
-      "echo 'Cloud-init finished!'",
-    ]
   }
 
   provisioner "file" {
@@ -88,6 +80,9 @@ resource "null_resource" "phonebook_database_setup" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo 'Waiting for Cloud-init to complete...'",
+      "sudo cloud-init status --wait",
+      "echo 'Cloud-init finished!'",
       "cd ${var.settings.compute.home_dir}",
       "chown ${var.settings.compute.user}:${var.settings.compute.user} ./.ssh/id_rsa",
       "chmod og-rwx ./.ssh/id_rsa",
