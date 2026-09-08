@@ -23,6 +23,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$${DB_PASS}
     volumes:
       - database-data:/data/db
+    ports:
+      - "27017:27017"
     hostname: database
 
 volumes:
