@@ -26,11 +26,11 @@ function prepareToExecute() {
 
 # Starts the package analysis process.
 function packageAnalysis() {
-  $DOCKER_CMD save -o "build/packages/$BUILD_NAME.tar" "${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_ID}/${BUILD_NAME}:${BUILD_VERSION}" || exit 1
+  $DOCKER_CMD save -o "build/packages/$BUILD_NAME.tar" "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_ID/$BUILD_NAME:$BUILD_VERSION" || exit 1
 
   $SNYK_CMD container test oci-archive:"build/packages/$BUILD_NAME.tar" \
-                      --file=./Dockerfile \
-                      --severity-threshold=critical || exit 1
+                           --file=./Dockerfile \
+                           --severity-threshold=critical || exit 1
 
   cleanUp
 }

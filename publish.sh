@@ -27,7 +27,7 @@ function auth() {
 function publish() {
   auth
 
-  $DOCKER_CMD compose push backend
+  $DOCKER_CMD compose push
 }
 
 # Main function.
