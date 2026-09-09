@@ -31,7 +31,7 @@ services:
       - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL}
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASS}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
     volumes:
       - ./etc/logback.xml:/home/${BUILD_NAME}/etc/logback.xml
