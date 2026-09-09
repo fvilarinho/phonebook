@@ -18,14 +18,14 @@ function prepareToExecute() {
 
 # Starts the stack locally.
 function start() {
-  $DOCKER_CMD compose up -d "$1"
+  $DOCKER_CMD compose up -d $1
 }
 
 # Main function.
 function main() {
   prepareToExecute
   checkDependencies
-  start "$1"
+  start $1
 }
 
 main $1

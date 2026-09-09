@@ -32,7 +32,7 @@ resource "aws_s3_object" "phonebook_static" {
   for_each = fileset(abspath(pathexpand("../src/main/static")), "**")
 
   bucket       = aws_s3_bucket.phonebook_static.id
-  key          = each.value
+  key          = "static/${each.value}"
   source       = abspath(pathexpand("../src/main/static/${each.value}"))
   etag         = filemd5(abspath(pathexpand("../src/main/static/${each.value}")))
   content_type = lookup(
@@ -59,4 +59,28 @@ resource "aws_s3_object" "phonebook_static" {
   )
 
   depends_on = [ aws_s3_bucket.phonebook_static ]
+}
+
+resource "aws_s3_bucket_policy" "phonebook_static" {
+  bucket = aws_s3_bucket.phonebook_static.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "s3:GetObject"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Resource = "${aws_s3_bucket.phonebook_static.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.phonebook.arn
+          }
+        }
+      }
+    ]
+  })
+
+  depends_on = [aws_cloudfront_distribution.phonebook]
 }
