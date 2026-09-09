@@ -1,10 +1,5 @@
-variable "settings" {
+variable "infrastructure" {
   default = {
-    general = {
-      name   = "<name>"
-      domain = "<domain>"
-    }
-
     compute = {
       ami      = "<ami>"
       type     = "<type>"
