@@ -1,6 +1,8 @@
 locals {
-  phonebook_database_start_script_filename = abspath(pathexpand("../start.sh"))
-  phonebook_database_stop_script_filename = abspath(pathexpand("../stop.sh"))
+  phonebook_database_environment_filename   = ".env"
+  phonebook_database_backup_script_filename = abspath(pathexpand("../bin/backup.sh"))
+  phonebook_database_start_script_filename  = abspath(pathexpand("../start.sh"))
+  phonebook_database_stop_script_filename   = abspath(pathexpand("../stop.sh"))
   phonebook_database_helper_script_filename = abspath(pathexpand("../functions.sh"))
 }
 
@@ -8,10 +10,15 @@ locals {
   phonebook_database_manifest_filename             = "docker-compose.yaml"
   phonebook_database_settings_manifest_filename    = "database-settings.yaml"
   phonebook_database_credentials_manifest_filename = "database-credentials.yaml"
-  phonebook_database_setup_hash                    = "${aws_instance.phonebook_database.id}-${md5(local.phonebook_database_manifest)}-${filemd5(local.banner_filename)}-${filemd5(local.phonebook_database_start_script_filename)}-${filemd5(local.phonebook_database_stop_script_filename)}-${filemd5(local.phonebook_database_helper_script_filename)}}"
+  phonebook_database_setup_hash                    = "${aws_instance.phonebook_database.id}-${filemd5(local.phonebook_database_backup_script_filename)}-${md5(local.phonebook_database_environment)}-${md5(local.phonebook_database_manifest)}-${filemd5(local.banner_filename)}-${filemd5(local.phonebook_database_start_script_filename)}-${filemd5(local.phonebook_database_stop_script_filename)}-${filemd5(local.phonebook_database_helper_script_filename)}}"
 }
 
 locals {
+  phonebook_database_environment = <<EOT
+export DB_USER=${local.secrets.database.user}
+export DB_PASSWORD=${local.secrets.database.password}
+export BACKUP_BUCKET="${local.build.name}-backup"
+EOT
 
   phonebook_database_settings_manifest = <<EOT
 apiVersion: v1
@@ -43,8 +50,8 @@ services:
     container_name: database
     restart: unless-stopped
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${local.secrets.database.user}
-      - MONGO_INITDB_ROOT_PASSWORD=${local.secrets.database.password}
+      - MONGO_INITDB_ROOT_USERNAME=$${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=$${DB_PASSWORD}
     volumes:
       - database-data:/data/db
     ports:
@@ -65,6 +72,16 @@ resource "null_resource" "phonebook_database_setup" {
     host        = aws_instance.phonebook_database.public_ip
     user        = var.infrastructure.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
+  }
+
+  provisioner "file" {
+    source      = local.phonebook_database_backup_script_filename
+    destination = "${var.infrastructure.compute.home_dir}/${basename(local.phonebook_database_backup_script_filename)}"
+  }
+
+  provisioner "file" {
+    content     = local.phonebook_database_environment
+    destination = "${var.infrastructure.compute.home_dir}/${local.phonebook_database_environment_filename}"
   }
 
   provisioner "file" {

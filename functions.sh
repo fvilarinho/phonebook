@@ -31,13 +31,17 @@ function showBanner() {
 }
 
 function loadBuildAttributes() {
-  if [ -f "$BUILD_FILENAME" ]; then
-    export BUILD_NAME=$($JQ_CMD -r '.name' "$BUILD_FILENAME")
-    export BUILD_VERSION=$($JQ_CMD -r '.version' "$BUILD_FILENAME")
-  fi
+  export BUILD_NAME=$($JQ_CMD -r '.name' "$BUILD_FILENAME")
+  export BUILD_VERSION=$($JQ_CMD -r '.version' "$BUILD_FILENAME")
 }
 
 function loadSecretsAttributes() {
+  if [ ! -f "$SECRETS_FILENAME" ]; then
+    if [ -n "$SECRETS" ]; then
+      echo "$SECRETS" > "$SECRETS_FILENAME"
+    fi
+  fi
+
   if [ -f "$SECRETS_FILENAME" ]; then
     export SONAR_URL=$($JQ_CMD -r '.sonar.url' "$SECRETS_FILENAME")
     export SONAR_ORGANIZATION=$($JQ_CMD -r '.sonar.organization' "$SECRETS_FILENAME")
