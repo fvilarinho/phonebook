@@ -1,5 +1,5 @@
 # Base image definition.
-FROM alpine:3.23.5
+FROM alpine:3.21.0
 
 # Metadata definition.
 LABEL authors="me@vila.net.br"
@@ -15,7 +15,7 @@ ENV LOGS_DIR=${HOME_DIR}/logs
 # Database environment variables.
 ENV DB_HOST=database
 ENV DB_USER=demo
-ENV DB_PASS=demo
+ENV DB_PASSWORD=demo
 ENV DB_NAME=phonebook
 
 # Debug and observavility flags.
@@ -45,6 +45,7 @@ RUN apk update && \
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/${BUILD_NAME}.jar ${LIBS_DIR}/
+COPY etc/logback.xml ${ETC_DIR}/
 
 # Gives the  execution permission.
 RUN chmod +x ${BIN_DIR}/*.sh && \
