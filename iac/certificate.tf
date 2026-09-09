@@ -1,10 +1,16 @@
+data "cloudflare_zone" "phonebook" {
+  filter = {
+    name = local.secrets.frontend.domain
+  }
+}
+
 resource "tls_private_key" "phonebook" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "aws_acm_certificate" "phonebook_cluster" {
-  domain_name       = "${var.settings.general.name}.${var.settings.general.domain}"
+  domain_name       = "${local.secrets.frontend.host}.${local.secrets.frontend.domain}"
   validation_method = "DNS"
 
   lifecycle {
@@ -48,17 +54,14 @@ resource "aws_acm_certificate_validation" "phonebook_cluster" {
 
 resource "cloudflare_dns_record" "phonebook_cluster" {
   zone_id = data.cloudflare_zone.phonebook.id
-  name    = "${var.settings.general.name}.${var.settings.general.domain}"
+  name    = "${local.frontend.host}.${local.secrets.frontend.domain}"
   type    = "CNAME"
   content = aws_lb.phonebook_cluster.dns_name
   ttl     = 60
   proxied = false
 
-  depends_on = [aws_lb.phonebook_cluster]
-}
-
-data "cloudflare_zone" "phonebook" {
-  filter = {
-    name = var.settings.general.domain
-  }
+  depends_on = [
+    data.cloudflare_zone.phonebook,
+    aws_lb.phonebook_cluster
+  ]
 }
