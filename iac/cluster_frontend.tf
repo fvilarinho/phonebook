@@ -106,7 +106,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: ${local.secrents.frontend.host}.${local.secrets.frontend.domain}
+    - host: ${local.secrets.frontend.host}.${local.secrets.frontend.domain}
       http:
         paths:
           - path: /
