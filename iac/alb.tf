@@ -73,7 +73,7 @@ resource "aws_lb_listener" "secure_phonebook_cluster" {
   load_balancer_arn = aws_lb.phonebook_cluster.arn
   port              = 443
   protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate_validation.phonebook_cluster.certificate_arn
+  certificate_arn   = aws_acm_certificate_validation.phonebook.certificate_arn
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 
   default_action {
@@ -83,7 +83,7 @@ resource "aws_lb_listener" "secure_phonebook_cluster" {
 
   depends_on = [
     aws_lb.phonebook_cluster,
-    aws_acm_certificate_validation.phonebook_cluster,
+    aws_acm_certificate_validation.phonebook,
     aws_lb_target_group.phonebook_cluster
   ]
 }
