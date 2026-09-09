@@ -30,21 +30,51 @@ function showBanner() {
   showLabel
 }
 
+function loadBuildAttributes() {
+  if [ -f "$BUILD_FILENAME" ]; then
+    export BUILD_NAME=$($JQ_CMD -r '.name' "$BUILD_FILENAME")
+    export BUILD_VERSION=$($JQ_CMD -r '.version' "$BUILD_FILENAME")
+  fi
+}
+
+function loadSecretsAttributes() {
+  if [ -f "$SECRETS_FILENAME" ]; then
+    export SONAR_URL=$($JQ_CMD -r '.sonar.url' "$SECRETS_FILENAME")
+    export SONAR_ORGANIZATION=$($JQ_CMD -r '.sonar.organization' "$SECRETS_FILENAME")
+    export SONAR_PROJECT_KEY=$($JQ_CMD -r '.sonar.projectKey' "$SECRETS_FILENAME")
+    export SONAR_TOKEN=$($JQ_CMD -r '.sonar.token' "$SECRETS_FILENAME")
+
+    export SNYK_TOKEN=$($JQ_CMD -r '.snyk.token' "$SECRETS_FILENAME")
+
+    export SLACK_TOKEN=$($JQ_CMD -r '.slack.token' "$SECRETS_FILENAME")
+
+    export DOCKER_REGISTRY_URL=$($JQ_CMD -r '.dockerRegistry.url' "$SECRETS_FILENAME")
+    export DOCKER_REGISTRY_ID=$($JQ_CMD -r '.dockerRegistry.id' "$SECRETS_FILENAME")
+    export DOCKER_REGISTRY_PASSWORD=$($JQ_CMD -r '.dockerRegistry.password' "$SECRETS_FILENAME")
+
+    export FRONTEND_HOST=$($JQ_CMD -r '.frontend.host' "$SECRETS_FILENAME")
+    export FRONTEND_DOMAIN=$($JQ_CMD -r '.frontend.domain' "$SECRETS_FILENAME")
+    export FRONTEND_USER=$($JQ_CMD -r '.frontend.user' "$SECRETS_FILENAME")
+    export FRONTEND_PASSWORD=$($JQ_CMD -r '.frontend.password' "$SECRETS_FILENAME")
+
+    export BACKEND_HOST=$($JQ_CMD -r '.backend.host' "$SECRETS_FILENAME")
+    export DEBUG_ENABLED=$($JQ_CMD -r '.backend.debug.enabled' "$SECRETS_FILENAME")
+    export OBSERVABILITY_ENABLED=$($JQ_CMD -r '.backend.observability.enabled' "$SECRETS_FILENAME")
+    export OBSERVABILITY_LOGS_URL=$($JQ_CMD -r '.backend.observability.logsUrl' "$SECRETS_FILENAME")
+
+    export DB_HOST=$($JQ_CMD -r '.database.host' "$SECRETS_FILENAME")
+    export DB_NAME=$($JQ_CMD -r '.database.name' "$SECRETS_FILENAME")
+    export DB_USER=$($JQ_CMD -r '.database.user' "$SECRETS_FILENAME")
+    export DB_PASSWORD=$($JQ_CMD -r '.database.password' "$SECRETS_FILENAME")
+  fi
+}
+
 # Prepares the environment to execute the commands of this script.
 function prepareToExecute() {
   # Required files/paths.
   export WORK_DIR="$PWD"
-  export BUILD_ENV_FILENAME="$WORK_DIR/.env"
-  export BUILD_SECRETS_FILENAME="$WORK_DIR/.secrets"
-
-  # Environment variables.
-  if [ -f "$BUILD_ENV_FILENAME" ]; then
-    source "$BUILD_ENV_FILENAME"
-  fi
-
-  if [ -f "$BUILD_SECRETS_FILENAME" ]; then
-    source "$BUILD_SECRETS_FILENAME"
-  fi
+  export BUILD_FILENAME="$WORK_DIR/build.json"
+  export SECRETS_FILENAME="$WORK_DIR/secrets.json"
 
   # Required binaries.
   export CURL_CMD=$(which curl 2>/dev/null)
@@ -55,6 +85,10 @@ function prepareToExecute() {
   export SNYK_CMD=$(which snyk 2>/dev/null)
   export DOCKER_CMD=$(which docker 2>/dev/null)
   export TERRAFORM_CMD=$(which terraform 2>/dev/null)
+
+  # Load environment variables.
+  loadBuildAttributes
+  loadSecretsAttributes
 }
 
 prepareToExecute
