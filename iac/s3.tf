@@ -3,8 +3,8 @@ resource "aws_s3_bucket" "phonebook_static" {
   force_destroy = true
 }
 
-resource "aws_s3_bucket" "phonebook_database" {
-  bucket        = "${local.build.name}-database"
+resource "aws_s3_bucket" "phonebook_backup" {
+  bucket        = "${local.build.name}-backup"
   force_destroy = true
 }
 
@@ -18,14 +18,14 @@ resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   depends_on = [ aws_s3_bucket.phonebook_static ]
 }
 
-resource "aws_s3_bucket_public_access_block" "phonebook_database" {
-  bucket                  = aws_s3_bucket.phonebook_database.id
+resource "aws_s3_bucket_public_access_block" "phonebook_backup" {
+  bucket                  = aws_s3_bucket.phonebook_backup.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  depends_on = [ aws_s3_bucket.phonebook_database ]
+  depends_on = [ aws_s3_bucket.phonebook_backup ]
 }
 
 resource "aws_s3_object" "phonebook_static" {

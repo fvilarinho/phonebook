@@ -165,6 +165,7 @@ resource "aws_instance" "phonebook_database" {
   vpc_security_group_ids      = [aws_security_group.phonebook_database_pub_traffic.id, aws_security_group.phonebook_database_pvt_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.phonebook_database.name
   monitoring                  = true
   user_data_replace_on_change = true
   user_data                   = <<EOT
