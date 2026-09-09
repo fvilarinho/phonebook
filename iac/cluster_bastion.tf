@@ -12,12 +12,11 @@ resource "null_resource" "phonebook_cluster_bastion_setup" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'Waiting for Cloud-init to complete...'",
       "sudo cloud-init status --wait",
-      "echo 'Cloud-init finished!'",
       "cd ${var.infrastructure.compute.home_dir}",
       "chown ${var.infrastructure.compute.user}:${var.infrastructure.compute.user} ./.ssh/id_rsa",
       "chmod og-rwx ./.ssh/id_rsa",
+      "ssh -o StrictHostKeyChecking=no ${var.infrastructure.compute.user}@${aws_instance.phonebook_cluster_workernode1.private_ip} \"sudo cloud-init status --wait\"",
       "scp -o StrictHostKeyChecking=no ${var.infrastructure.compute.user}@${aws_instance.phonebook_cluster_workernode1.private_ip}:/etc/rancher/k3s/k3s.yaml .",
       "mkdir -p ./.kube",
       "mv k3s.yaml ./.kube/config",
@@ -27,8 +26,23 @@ resource "null_resource" "phonebook_cluster_bastion_setup" {
   }
 
   depends_on = [
+    aws_vpc.phonebook,
+    aws_subnet.phonebook_pvt_a,
+    aws_subnet.phonebook_pvt_b,
+    aws_nat_gateway.phonebook_pvt_subnet_a,
+    aws_nat_gateway.phonebook_pvt_subnet_b,
+    aws_eip.phonebook_subnet_a,
+    aws_eip.phonebook_subnet_b,
+    aws_route_table.phonebook_pvt_subnet_a,
+    aws_route_table.phonebook_pvt_subnet_b,
+    aws_route_table_association.phonebook_pvt_subnet_a,
+    aws_route_table_association.phonebook_pvt_subnet_b,
+    aws_route_table.phonebook_igw,
+    aws_route_table_association.phonebook_pub_subnet_a,
+    aws_route_table_association.phonebook_pub_subnet_b,
+    aws_security_group.phonebook_cluster_workernodes_traffic,
     aws_instance.phonebook_cluster_bastion,
     tls_private_key.phonebook,
-    aws_instance.phonebook_cluster_workernode1,
+    aws_instance.phonebook_cluster_workernode1
   ]
 }
