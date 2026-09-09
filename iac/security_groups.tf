@@ -2,6 +2,10 @@ data "http" "myip" {
   url = "https://ipinfo.io"
 }
 
+data "aws_ec2_managed_prefix_list" "cloudfront_ips" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 locals {
   my_ip = jsondecode(chomp(data.http.myip.response_body)).ip
 }
@@ -33,7 +37,7 @@ resource "aws_security_group" "phonebook_cluster_bastion_pub_traffic" {
 
 resource "aws_security_group" "phonebook_cluster_lb_traffic" {
   name        = "${local.build.name}-cluster-lb-traffic"
-  description = "Allow public HTTP and HTTPS traffic to the K3s application ALB."
+  description = "Allow public HTTP traffic to the K3s application ALB."
   vpc_id      = aws_vpc.phonebook.id
 
   ingress {
@@ -44,10 +48,10 @@ resource "aws_security_group" "phonebook_cluster_lb_traffic" {
   }
 
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["${local.my_ip}/32"]
+    from_port      = 80
+    to_port        = 80
+    protocol       = "tcp"
+    prefix_list_ids = [ data.aws_ec2_managed_prefix_list.cloudfront_ips.id ]
   }
 
   egress {
@@ -57,9 +61,43 @@ resource "aws_security_group" "phonebook_cluster_lb_traffic" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  depends_on = [aws_vpc.phonebook]
+  depends_on = [
+    aws_vpc.phonebook,
+    data.aws_ec2_managed_prefix_list.cloudfront_ips
+  ]
 }
 
+resource "aws_security_group" "phonebook_cluster_lb_secure_traffic" {
+  name        = "${local.build.name}-cluster-lb-secure-traffic"
+  description = "Allow public HTTPS traffic to the K3s application ALB."
+  vpc_id      = aws_vpc.phonebook.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["${local.my_ip}/32"]
+  }
+
+  ingress {
+    from_port      = 443
+    to_port        = 443
+    protocol       = "tcp"
+    prefix_list_ids = [ data.aws_ec2_managed_prefix_list.cloudfront_ips.id ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  depends_on = [
+    aws_vpc.phonebook,
+    data.aws_ec2_managed_prefix_list.cloudfront_ips
+  ]
+}
 
 resource "aws_security_group" "phonebook_database_pub_traffic" {
   name        = "${local.build.name}-database-pub-traffic"

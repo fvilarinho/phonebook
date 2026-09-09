@@ -2,7 +2,7 @@ resource "aws_lb" "phonebook_cluster" {
   name                       = "${local.build.name}-cluster-lb"
   load_balancer_type         = "application"
   internal                   = false
-  security_groups            = [ aws_security_group.phonebook_cluster_lb_traffic.id ]
+  security_groups            = [ aws_security_group.phonebook_cluster_lb_traffic.id, aws_security_group.phonebook_cluster_lb_secure_traffic.id ]
   subnets                    = [ aws_subnet.phonebook_pub_a.id, aws_subnet.phonebook_pub_b.id ]
   drop_invalid_header_fields = true
 
