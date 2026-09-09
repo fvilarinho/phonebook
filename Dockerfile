@@ -44,7 +44,7 @@ RUN apk update && \
 # Copies all binaries, libraries and scripts.
 COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
-COPY build/libs/${BUILD_NAME}.jar ${LIBS_DIR}/
+COPY build/libs/phonebook.jar ${LIBS_DIR}/${BUILD_NAME}.jar
 COPY etc/logback.xml ${ETC_DIR}/
 
 # Gives the  execution permission.
