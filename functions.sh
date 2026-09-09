@@ -52,6 +52,14 @@ function loadSecretsAttributes() {
     export DOCKER_REGISTRY_ID=$($JQ_CMD -r '.dockerRegistry.id' "$SECRETS_FILENAME")
     export DOCKER_REGISTRY_PASSWORD=$($JQ_CMD -r '.dockerRegistry.password' "$SECRETS_FILENAME")
 
+    export TERRAFORM_STATE_BUCKET=$($JQ_CMD -r '.terraform.state.bucket' "$SECRETS_FILENAME")
+    export TERRAFORM_STATE_KEY=$($JQ_CMD -r '.terraform.state.key' "$SECRETS_FILENAME")
+
+    export AWS_PROFILE=$($JQ_CMD -r '.aws.profile' "$SECRETS_FILENAME")
+    export AWS_REGION=$($JQ_CMD -r '.aws.region' "$SECRETS_FILENAME")
+
+    export CLOUDFLARE_API_TOKEN=$($JQ_CMD -r '.cloudflare.token' "$SECRETS_FILENAME")
+
     export FRONTEND_HOST=$($JQ_CMD -r '.frontend.host' "$SECRETS_FILENAME")
     export FRONTEND_DOMAIN=$($JQ_CMD -r '.frontend.domain' "$SECRETS_FILENAME")
     export FRONTEND_USER=$($JQ_CMD -r '.frontend.user' "$SECRETS_FILENAME")
