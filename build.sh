@@ -23,7 +23,7 @@ function generateCredentials() {
   if [ ! -e "$CREDENTIALS_FILENAME" ]; then
     echo "Generating frontend credentials..."
 
-    $HTPASSWD_CMD -cbB etc/.htpasswd "$FRONTEND_USER" "$FRONTEND_PASS" || exit 1
+    $HTPASSWD_CMD -cbB etc/.htpasswd "$FRONTEND_USER" "$FRONTEND_PASSWORD" || exit 1
   fi
 }
 
