@@ -92,7 +92,14 @@ EOT
   }
 
   depends_on = [
+    aws_vpc.phonebook,
     aws_subnet.phonebook_pvt_a,
+    aws_nat_gateway.phonebook_pvt_subnet_a,
+    aws_eip.phonebook_subnet_a,
+    aws_route_table.phonebook_pvt_subnet_a,
+    aws_route_table_association.phonebook_pvt_subnet_a,
+    aws_route_table.phonebook_igw,
+    aws_route_table_association.phonebook_pub_subnet_a,
     aws_security_group.phonebook_cluster_workernodes_traffic,
     aws_key_pair.phonebook,
     random_password.phonebook_cluster
@@ -136,7 +143,14 @@ EOT
   }
 
   depends_on = [
+    aws_vpc.phonebook,
     aws_subnet.phonebook_pvt_b,
+    aws_nat_gateway.phonebook_pvt_subnet_b,
+    aws_eip.phonebook_subnet_b,
+    aws_route_table.phonebook_pvt_subnet_b,
+    aws_route_table_association.phonebook_pvt_subnet_b,
+    aws_route_table.phonebook_igw,
+    aws_route_table_association.phonebook_pub_subnet_b,
     aws_security_group.phonebook_cluster_workernodes_traffic,
     aws_key_pair.phonebook,
     random_password.phonebook_cluster,
