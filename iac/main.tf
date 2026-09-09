@@ -29,3 +29,9 @@ terraform {
 }
 
 data "aws_region" "current" {}
+
+locals {
+  build           = jsondecode(file(abspath(pathexpand("../build.json"))))
+  secrets         = jsondecode(file(abspath(pathexpand("../secrets.json"))))
+  banner_filename = abspath(pathexpand("../banner.txt"))
+}
