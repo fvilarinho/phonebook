@@ -1,4 +1,4 @@
-name: Phonebook Pipeline
+name: Phonebook CI/CD Pipeline
 
 on:
   push:
