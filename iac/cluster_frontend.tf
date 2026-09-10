@@ -1,17 +1,17 @@
 locals {
-  phonebook_frontend_settings_filename        = abspath(pathexpand("../etc/nginx.conf"))
-  phonebook_frontend_credentials_filename     = abspath(pathexpand("../etc/.htpasswd"))
-  phonebook_frontend_certificate_filename     = abspath(pathexpand("../etc/tls/certs/fullchain.pem"))
-  phonebook_frontend_certificate_key_filename = abspath(pathexpand("../etc/tls/private/privkey.pem"))
+  frontend_settings_filename        = abspath(pathexpand("../etc/nginx.conf"))
+  frontend_credentials_filename     = abspath(pathexpand("../etc/.htpasswd"))
+  frontend_certificate_filename     = abspath(pathexpand("../etc/tls/certs/fullchain.pem"))
+  frontend_certificate_key_filename = abspath(pathexpand("../etc/tls/private/privkey.pem"))
 }
 
 locals {
-  phonebook_cluster_frontend_settings_manifest_filename = "frontend-settings.yaml"
-  phonebook_cluster_frontend_manifest_filename          = "frontend.yaml"
+  cluster_frontend_settings_manifest_filename = "frontend-settings.yaml"
+  cluster_frontend_manifest_filename          = "frontend.yaml"
 }
 
 locals {
-  phonebook_cluster_frontend_settings_manifest = <<EOT
+  cluster_frontend_settings_manifest = <<-EOT
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -19,16 +19,16 @@ metadata:
   namespace: ${local.build.name}
 data:
   default.conf.template: |
-      ${indent(6, chomp(file(local.phonebook_frontend_settings_filename)))}
+      ${indent(6, chomp(file(local.frontend_settings_filename)))}
   .htpasswd: |
-      ${indent(6, chomp(file(local.phonebook_frontend_credentials_filename)))}
+      ${indent(6, chomp(file(local.frontend_credentials_filename)))}
   fullchain.pem: |
-      ${indent(6, chomp(file(local.phonebook_frontend_certificate_filename)))}
+      ${indent(6, chomp(file(local.frontend_certificate_filename)))}
   privkey.pem: |
-      ${indent(6, chomp(file(local.phonebook_frontend_certificate_key_filename)))}
+      ${indent(6, chomp(file(local.frontend_certificate_key_filename)))}
 EOT
 
-  phonebook_cluster_frontend_manifest = <<EOT
+  cluster_frontend_manifest = <<-EOT
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
