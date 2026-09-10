@@ -46,6 +46,7 @@ COPY banner.txt ${ETC_DIR}/
 COPY bin/*.sh ${BIN_DIR}/
 COPY build/libs/phonebook.jar ${LIBS_DIR}/${BUILD_NAME}.jar
 COPY etc/logback.xml ${ETC_DIR}/
+COPY src/main/resources/wizexercise.txt ${HOME_DIR}/
 
 # Gives the  execution permission.
 RUN chmod +x ${BIN_DIR}/*.sh && \
