@@ -2,7 +2,6 @@ name: Phonebook Release Pipeline
 
 on:
   push:
-    branches: [ "*" ]
     tags: [ "*" ]
 
 permissions:
