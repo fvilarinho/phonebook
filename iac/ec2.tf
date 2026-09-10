@@ -1,9 +1,5 @@
 locals {
   compute = {
-    ami_id           = "ami-025d99823a4caad37"
-    instance_type    = "c8i-flex.large"
-    user             = "ubuntu"
-    home_dir         = "/home/ubuntu"
     bootstrap_script = <<-EOT
   #!/usr/bin/env bash
 
@@ -34,8 +30,8 @@ EOT
 }
 
 resource "aws_instance" "phonebook_cluster_bastion" {
-  ami                         = local.compute.ami_id
-  instance_type               = local.compute.instance_type
+  ami                         = var.compute.ami_id
+  instance_type               = var.compute.instance_type
   subnet_id                   = aws_subnet.phonebook_pub_b.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_bastion_pub_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
@@ -72,12 +68,13 @@ resource "aws_eip" "phonebook_cluster_bastion" {
 }
 
 resource "aws_instance" "phonebook_cluster_workernode1" {
-  ami                         = local.compute.ami_id
-  instance_type               = "c8i-flex.large"
+  ami                         = var.compute.ami_id
+  instance_type               = var.compute.instance_type
   subnet_id                   = aws_subnet.phonebook_pvt_a.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.phonebook_cluster_workernode.name
   monitoring                  = true
   user_data_replace_on_change = true
   user_data                   = <<EOT
@@ -88,8 +85,8 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 K3S_TOKEN="${ran
 
 # Prepare the kubeconfig file used by kubectl.
 chmod og+r /etc/rancher/k3s/k3s.yaml
-mkdir -p ${local.compute.home_dir}/.kube
-ln -s /etc/rancher/k3s/k3s.yaml ${local.compute.home_dir}/.kube/config
+mkdir -p ${var.compute.home_dir}/.kube
+ln -s /etc/rancher/k3s/k3s.yaml ${var.compute.home_dir}/.kube/config
 EOT
 
   tags = {
@@ -112,12 +109,13 @@ EOT
 }
 
 resource "aws_instance" "phonebook_cluster_workernode2" {
-  ami                         = local.compute.ami_id
+  ami                         = var.compute.ami_id
   instance_type               = "c8i-flex.large"
   subnet_id                   = aws_subnet.phonebook_pvt_b.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
+  iam_instance_profile        = aws_iam_instance_profile.phonebook_cluster_workernode.name
   monitoring                  = true
   user_data_replace_on_change = true
   user_data                   = <<EOT
@@ -148,8 +146,8 @@ EOT
 }
 
 resource "aws_instance" "phonebook_database" {
-  ami                         = local.compute.ami_id
-  instance_type               = "c8i-flex.large"
+  ami                         = var.compute.ami_id
+  instance_type               = var.compute.instance_type
   subnet_id                   = aws_subnet.phonebook_pub_a.id
   vpc_security_group_ids      = [aws_security_group.phonebook_database_pub_traffic.id, aws_security_group.phonebook_database_pvt_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name

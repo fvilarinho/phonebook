@@ -8,10 +8,18 @@ function checkDependencies() {
     exit 1
   fi
 
-  export STATUS=$1
+  export PIPELINE=$1
+
+  if [ -z "$PIPELINE" ]; then
+    echo "The pipeline is not defined! Please specify to continue!"
+
+    exit 1
+  fi
+
+  export STATUS=$2
 
   if [ -z "$STATUS" ]; then
-    echo "Status is not defined!"
+    echo "The status is not defined! Please specify to continue!"
 
     exit 1
   fi
@@ -27,9 +35,9 @@ function notify() {
   URL="https://hooks.slack.com/services/$SLACK_TOKEN"
 
   if [ "$STATUS" == "success" ]; then
-    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline execution was *FLAWLESS*! Good job :heart:!"
+    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline $PIPELINE execution was *FLAWLESS*! Good job :heart:!"
   else
-    MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe pipeline execution *FAILED* in some steps!"
+    MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe pipeline $PIPELINE execution *FAILED* in some steps!"
   fi
 
   $CURL_CMD -s \

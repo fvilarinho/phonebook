@@ -24,53 +24,53 @@ resource "null_resource" "phonebook_cluster_setup" {
 
   connection {
     host        = aws_eip.phonebook_cluster_bastion.public_ip
-    user        = local.compute.user
+    user        = var.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "file" {
     source      = local.banner_filename
-    destination = "${local.compute.home_dir}/${basename(local.banner_filename)}"
+    destination = "${var.compute.home_dir}/${basename(local.banner_filename)}"
   }
 
   provisioner "file" {
     content     = local.cluster_namespace_manifest
-    destination = "${local.compute.home_dir}/${local.cluster_namespace_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.cluster_namespace_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.database_settings_manifest
-    destination = "${local.compute.home_dir}/${local.database_settings_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.database_settings_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.database_credentials_manifest
-    destination = "${local.compute.home_dir}/${local.database_credentials_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.database_credentials_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.cluster_backend_settings_manifest
-    destination = "${local.compute.home_dir}/${local.cluster_backend_settings_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.cluster_backend_settings_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.cluster_backend_manifest
-    destination = "${local.compute.home_dir}/${local.cluster_backend_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.cluster_backend_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.cluster_frontend_settings_manifest
-    destination = "${local.compute.home_dir}/${local.cluster_frontend_settings_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.cluster_frontend_settings_manifest_filename}"
   }
 
   provisioner "file" {
     content     = local.cluster_frontend_manifest
-    destination = "${local.compute.home_dir}/${local.cluster_frontend_manifest_filename}"
+    destination = "${var.compute.home_dir}/${local.cluster_frontend_manifest_filename}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "cd ${local.compute.home_dir}",
+      "cd ${var.compute.home_dir}",
       "cat ${basename(local.banner_filename)}",
       "kubectl apply -f ${local.cluster_namespace_manifest_filename}",
       "kubectl apply -f ${local.database_settings_manifest_filename}",

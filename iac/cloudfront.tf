@@ -97,7 +97,7 @@ resource "aws_cloudfront_distribution" "phonebook" {
   aliases         = ["${local.secrets.frontend.host}.${local.secrets.frontend.domain}"]
   enabled         = true
   is_ipv6_enabled = true
-  #  web_acl_id      = aws_wafv2_web_acl.app.arn
+  web_acl_id      = aws_wafv2_web_acl.phonebook.arn
 
   # TLS certificate definition.
   viewer_certificate {
@@ -169,11 +169,11 @@ resource "aws_cloudfront_distribution" "phonebook" {
   }
 
   # # Logging definition.
-  # logging_config {
-  #   bucket          = aws_s3_bucket.app_logs.bucket_domain_name
-  #   prefix          = "cloudfront/"
-  #   include_cookies = true
-  # }
+   logging_config {
+     bucket          = aws_s3_bucket.phonebook_logs.bucket_domain_name
+     prefix          = "cloudfront/"
+     include_cookies = true
+   }
 
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-cf"
@@ -181,15 +181,15 @@ resource "aws_cloudfront_distribution" "phonebook" {
 
   depends_on = [
     aws_acm_certificate.phonebook,
-    #aws_s3_bucket.app_logs,
-    aws_s3_bucket.phonebook_static,
-    aws_lb.phonebook_cluster,
-    aws_cloudfront_origin_access_control.phonebook_static,
-    #aws_wafv2_web_acl.app,
     aws_cloudfront_cache_policy.phonebook_static,
-    data.aws_cloudfront_cache_policy.phonebook_dynamic,
+    aws_cloudfront_origin_access_control.phonebook_static,
     aws_cloudfront_origin_request_policy.phonebook,
-    aws_cloudfront_response_headers_policy.phonebook
+    aws_cloudfront_response_headers_policy.phonebook,
+    aws_s3_bucket.phonebook_static,
+    data.aws_cloudfront_cache_policy.phonebook_dynamic,
+    aws_lb.phonebook_cluster,
+    aws_wafv2_web_acl.phonebook,
+    aws_s3_bucket.phonebook_logs,
   ]
 }
 

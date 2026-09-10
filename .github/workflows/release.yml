@@ -1,0 +1,37 @@
+name: Phonebook Release Pipeline
+
+on:
+  push:
+    branches: [ "*" ]
+    tags: [ "*" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Jobs
+    env:
+      SECRETS: ${{ secrets.SECRETS }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the Project Files
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.16.2'
+
+      - name: Deploy
+        run: ./deploy.sh
+
+      - name: Notify
+        if: always()
+        run: ./notify.sh "release" "${{ job.status }}"

@@ -1,5 +1,5 @@
 resource "aws_vpc" "phonebook" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.network.vpc.cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 

@@ -3,11 +3,6 @@ resource "aws_s3_bucket" "phonebook_static" {
   force_destroy = true
 }
 
-resource "aws_s3_bucket" "phonebook_backup" {
-  bucket        = "${local.prefix}-${local.build.name}-backup"
-  force_destroy = true
-}
-
 resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   bucket                  = aws_s3_bucket.phonebook_static.id
   block_public_acls       = true
@@ -18,14 +13,28 @@ resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   depends_on = [aws_s3_bucket.phonebook_static]
 }
 
-resource "aws_s3_bucket_public_access_block" "phonebook_backup" {
-  bucket                  = aws_s3_bucket.phonebook_backup.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+resource "aws_s3_bucket_policy" "phonebook_static" {
+  bucket = aws_s3_bucket.phonebook_static.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "s3:GetObject"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Resource = "${aws_s3_bucket.phonebook_static.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.phonebook.arn
+          }
+        }
+      }
+    ]
+  })
 
-  depends_on = [aws_s3_bucket.phonebook_backup]
+  depends_on = [aws_cloudfront_distribution.phonebook]
 }
 
 resource "aws_s3_object" "phonebook_static" {
@@ -61,26 +70,39 @@ resource "aws_s3_object" "phonebook_static" {
   depends_on = [aws_s3_bucket.phonebook_static]
 }
 
-resource "aws_s3_bucket_policy" "phonebook_static" {
-  bucket = aws_s3_bucket.phonebook_static.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = "s3:GetObject"
-        Principal = {
-          Service = "cloudfront.amazonaws.com"
-        }
-        Resource = "${aws_s3_bucket.phonebook_static.arn}/*"
-        Condition = {
-          StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.phonebook.arn
-          }
-        }
-      }
-    ]
-  })
+resource "aws_s3_bucket" "phonebook_backup" {
+  bucket        = "${local.prefix}-${local.build.name}-backup"
+  force_destroy = true
+}
 
-  depends_on = [aws_cloudfront_distribution.phonebook]
+resource "aws_s3_bucket_public_access_block" "phonebook_backup" {
+  bucket                  = aws_s3_bucket.phonebook_backup.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  depends_on = [aws_s3_bucket.phonebook_backup]
+}
+
+resource "aws_s3_bucket" "phonebook_logs" {
+  bucket        = "${local.prefix}-${local.build.name}-logs"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_ownership_controls" "phonebook_logs" {
+  bucket = aws_s3_bucket.phonebook_logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+
+  depends_on = [aws_s3_bucket.phonebook_logs]
+}
+
+resource "aws_s3_bucket_acl" "phonebook_logs" {
+  bucket = aws_s3_bucket.phonebook_logs.id
+  acl    = "log-delivery-write"
+
+  depends_on = [aws_s3_bucket.phonebook_logs]
 }

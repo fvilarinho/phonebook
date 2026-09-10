@@ -11,8 +11,8 @@ This is a demo project for education/training purposes of software development, 
 - [`jq 1.7.x`](https://jqlang.org/)
 - [`snyk 1.x`](https://snyk.io/)
 - [`htpasswd`](https://httpd.apache.org/docs/trunk/programs/htpasswd.html)
-- [`Github account`](https://github.com) - Please check the file `.github/workflows/pipeline.yml` to define the steps to
-be executed in the pipeline.
+- [`Github account`](https://github.com) - Please check the file `.github/workflows/release.yml` to define the steps to
+  be executed in the pipeline.
 - [`Sonarcloud account`](https://sonarcloud.io)
 
 To Run Locally:
