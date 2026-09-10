@@ -30,7 +30,15 @@ terraform {
 
 data "aws_region" "current" {}
 
+resource "random_string" "prefix" {
+  length  = 4
+  special = false
+  numeric = false
+  upper   = false
+}
+
 locals {
+  prefix          = "vilanet${random_string.prefix.result}"
   build           = jsondecode(file(abspath(pathexpand("../build.json"))))
   secrets         = jsondecode(file(abspath(pathexpand("../secrets.json"))))
   banner_filename = abspath(pathexpand("../banner.txt"))

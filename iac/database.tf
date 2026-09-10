@@ -18,7 +18,7 @@ locals {
   database_environment = <<-EOT
 export DB_USER=${local.secrets.database.user}
 export DB_PASSWORD=${local.secrets.database.password}
-export BACKUP_BUCKET="${local.build.name}-backup"
+export BACKUP_BUCKET="${local.prefix}-${local.build.name}-backup"
 EOT
 
   database_settings_manifest = <<-EOT

@@ -52,9 +52,7 @@ chmod +x /usr/local/bin/kubectl
 EOT
 
   tags = {
-    "Name"        = "${local.build.name}-cluster-bastion"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    "Name" = "${local.prefix}-${local.build.name}-cluster-bastion"
   }
 
   depends_on = [
@@ -86,7 +84,7 @@ resource "aws_instance" "phonebook_cluster_workernode1" {
 ${local.compute.bootstrap_script}
 
 # Install Kubernates distribution (K3S) as manager node.
-curl -sfL https://get.k3s.io | K3S_TOKEN="${random_password.phonebook_cluster.result}" sh -
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 K3S_TOKEN="${random_password.phonebook_cluster.result}" sh -
 
 # Prepare the kubeconfig file used by kubectl.
 chmod og+r /etc/rancher/k3s/k3s.yaml
@@ -95,9 +93,7 @@ ln -s /etc/rancher/k3s/k3s.yaml ${local.compute.home_dir}/.kube/config
 EOT
 
   tags = {
-    "Name"        = "${local.build.name}-cluster-workernode1"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    "Name" = "${local.prefix}-${local.build.name}-cluster-workernode1"
   }
 
   depends_on = [
@@ -128,13 +124,11 @@ resource "aws_instance" "phonebook_cluster_workernode2" {
 ${local.compute.bootstrap_script}
 
 # Install Kubernetes distribution (K3S) as worker node.
-curl -sfL https://get.k3s.io | K3S_TOKEN="${random_password.phonebook_cluster.result}" K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443" sh -
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 K3S_TOKEN="${random_password.phonebook_cluster.result}" K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443" sh -
 EOT
 
   tags = {
-    "Name"        = "${local.build.name}-cluster-workernode2"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    "Name" = "${local.prefix}-${local.build.name}-cluster-workernode2"
   }
 
   depends_on = [
@@ -175,9 +169,7 @@ curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -s -- --system
 EOT
 
   tags = {
-    "Name"        = "${local.build.name}-database"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    "Name" = "${local.prefix}-${local.build.name}-database"
   }
 
   depends_on = [

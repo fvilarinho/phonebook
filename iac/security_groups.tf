@@ -11,7 +11,7 @@ locals {
 }
 
 resource "aws_security_group" "phonebook_cluster_bastion_pub_traffic" {
-  name        = "${local.build.name}-cluster-bastion-pub-traffic"
+  name        = "${local.prefix}-${local.build.name}-cluster-bastion-pub-traffic"
   description = "Allow public traffic to phonebook cluster bastion."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -36,7 +36,7 @@ resource "aws_security_group" "phonebook_cluster_bastion_pub_traffic" {
 }
 
 resource "aws_security_group" "phonebook_cluster_lb_traffic" {
-  name        = "${local.build.name}-cluster-lb-traffic"
+  name        = "${local.prefix}-${local.build.name}-cluster-lb-traffic"
   description = "Allow public HTTP traffic to the K3s application ALB."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -68,7 +68,7 @@ resource "aws_security_group" "phonebook_cluster_lb_traffic" {
 }
 
 resource "aws_security_group" "phonebook_cluster_lb_secure_traffic" {
-  name        = "${local.build.name}-cluster-lb-secure-traffic"
+  name        = "${local.prefix}-${local.build.name}-cluster-lb-secure-traffic"
   description = "Allow public HTTPS traffic to the K3s application ALB."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -100,7 +100,7 @@ resource "aws_security_group" "phonebook_cluster_lb_secure_traffic" {
 }
 
 resource "aws_security_group" "phonebook_database_pub_traffic" {
-  name        = "${local.build.name}-database-pub-traffic"
+  name        = "${local.prefix}-${local.build.name}-database-pub-traffic"
   description = "Allow public traffic to phonebook database."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -108,7 +108,7 @@ resource "aws_security_group" "phonebook_database_pub_traffic" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${local.my_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -125,7 +125,7 @@ resource "aws_security_group" "phonebook_database_pub_traffic" {
 }
 
 resource "aws_security_group" "phonebook_database_pvt_traffic" {
-  name        = "${local.build.name}-database-pvt-traffic"
+  name        = "${local.prefix}-${local.build.name}-database-pvt-traffic"
   description = "Allow private traffic to phonebook database."
   vpc_id      = aws_vpc.phonebook.id
 
@@ -152,7 +152,7 @@ resource "aws_security_group" "phonebook_database_pvt_traffic" {
 
 # Allows only the database EC2 to initiate SSH connections to private workers.
 resource "aws_security_group" "phonebook_cluster_workernodes_traffic" {
-  name        = "${local.build.name}-cluster-workernodes-traffic"
+  name        = "${local.prefix}-${local.build.name}-cluster-workernodes-traffic"
   description = "Allow traffic to workernodes"
   vpc_id      = aws_vpc.phonebook.id
 

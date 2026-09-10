@@ -1,5 +1,5 @@
 resource "aws_cloudfront_origin_access_control" "phonebook_static" {
-  name                              = "${local.build.name}_static_oac"
+  name                              = "${local.prefix}-${local.build.name}-static-oac"
   description                       = "OAC for static content bucket."
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
@@ -7,7 +7,7 @@ resource "aws_cloudfront_origin_access_control" "phonebook_static" {
 }
 
 resource "aws_cloudfront_cache_policy" "phonebook_static" {
-  name        = "${local.build.name}_static_cache_policy"
+  name        = "${local.prefix}-${local.build.name}-static-cache-policy"
   default_ttl = 86400
 
   parameters_in_cache_key_and_forwarded_to_origin {
@@ -33,7 +33,7 @@ data "aws_cloudfront_cache_policy" "phonebook_dynamic" {
 }
 
 resource "aws_cloudfront_origin_request_policy" "phonebook" {
-  name = "${local.build.name}_origin_request_policy"
+  name = "${local.prefix}-${local.build.name}-origin-request-policy"
 
   query_strings_config {
     query_string_behavior = "all"
@@ -49,7 +49,7 @@ resource "aws_cloudfront_origin_request_policy" "phonebook" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "phonebook" {
-  name = "${local.build.name}_origin_response_policy"
+  name = "${local.prefix}-${local.build.name}-origin-response-policy"
 
   remove_headers_config {
     items {
@@ -108,14 +108,14 @@ resource "aws_cloudfront_distribution" "phonebook" {
 
   # Static origin.
   origin {
-    origin_id                = "${local.build.name}_static"
+    origin_id                = "${local.prefix}-${local.build.name}-static"
     domain_name              = aws_s3_bucket.phonebook_static.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.phonebook_static.id
   }
 
   # Dynamic origin.
   origin {
-    origin_id   = "${local.build.name}_dynamic"
+    origin_id   = "${local.prefix}-${local.build.name}-dynamic"
     domain_name = aws_lb.phonebook_cluster.dns_name
 
     origin_shield {
@@ -133,7 +133,7 @@ resource "aws_cloudfront_distribution" "phonebook" {
 
   # Default behavior.
   default_cache_behavior {
-    target_origin_id           = "${local.build.name}_dynamic"
+    target_origin_id           = "${local.prefix}-${local.build.name}-dynamic"
     viewer_protocol_policy     = "redirect-to-https"
     allowed_methods            = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods             = ["GET", "HEAD"]
@@ -144,7 +144,7 @@ resource "aws_cloudfront_distribution" "phonebook" {
   }
 
   ordered_cache_behavior {
-    target_origin_id           = "${local.build.name}_static"
+    target_origin_id           = "${local.prefix}-${local.build.name}-static"
     viewer_protocol_policy     = "redirect-to-https"
     allowed_methods            = ["GET", "HEAD"]
     cached_methods             = ["GET", "HEAD"]
@@ -176,9 +176,7 @@ resource "aws_cloudfront_distribution" "phonebook" {
   # }
 
   tags = {
-    "Name"        = "${local.build.name}_cf"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    "Name" = "${local.prefix}-${local.build.name}-cf"
   }
 
   depends_on = [

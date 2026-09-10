@@ -1,10 +1,10 @@
 resource "aws_s3_bucket" "phonebook_static" {
-  bucket        = "${local.build.name}-static"
+  bucket        = "${local.prefix}-${local.build.name}-static"
   force_destroy = true
 }
 
 resource "aws_s3_bucket" "phonebook_backup" {
-  bucket        = "${local.build.name}-backup"
+  bucket        = "${local.prefix}-${local.build.name}-backup"
   force_destroy = true
 }
 

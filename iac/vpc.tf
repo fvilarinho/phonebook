@@ -4,7 +4,7 @@ resource "aws_vpc" "phonebook" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${local.build.name}-vpc"
+    Name = "${local.prefix}-${local.build.name}-vpc"
   }
 }
 
@@ -12,7 +12,7 @@ resource "aws_internet_gateway" "phonebook" {
   vpc_id = aws_vpc.phonebook.id
 
   tags = {
-    Name = "${local.build.name}-igw"
+    Name = "${local.prefix}-${local.build.name}-igw"
   }
 
   depends_on = [aws_vpc.phonebook]
@@ -27,7 +27,7 @@ resource "aws_route_table" "phonebook_igw" {
   }
 
   tags = {
-    Name = "${local.build.name}-rtb-igw"
+    Name = "${local.prefix}-${local.build.name}-rtb-igw"
   }
 
   depends_on = [
@@ -50,7 +50,7 @@ resource "aws_eip" "phonebook_subnet_a" {
   domain = "vpc"
 
   tags = {
-    Name = "${local.build.name}-eip-subnet-a"
+    Name = "${local.prefix}-${local.build.name}-eip-subnet-a"
   }
 }
 
@@ -59,9 +59,7 @@ resource "aws_nat_gateway" "phonebook_pvt_subnet_a" {
   subnet_id     = aws_subnet.phonebook_pub_a.id
 
   tags = {
-    Name          = "${local.build.name}-natgw-pvt-subnet-a"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    Name = "${local.prefix}-${local.build.name}-natgw-pvt-subnet-a"
   }
 
   depends_on = [
@@ -79,7 +77,7 @@ resource "aws_route_table" "phonebook_pvt_subnet_a" {
   }
 
   tags = {
-    Name = "${local.build.name}-rtb-natgw-pvt-subnet-a"
+    Name = "${local.prefix}-${local.build.name}-rtb-natgw-pvt-subnet-a"
   }
 
   depends_on = [
@@ -102,7 +100,7 @@ resource "aws_eip" "phonebook_subnet_b" {
   domain = "vpc"
 
   tags = {
-    Name = "${local.build.name}-eip-subnet-b"
+    Name = "${local.prefix}-${local.build.name}-eip-subnet-b"
   }
 }
 
@@ -111,9 +109,7 @@ resource "aws_nat_gateway" "phonebook_pvt_subnet_b" {
   subnet_id     = aws_subnet.phonebook_pub_b.id
 
   tags = {
-    Name          = "${local.build.name}-natgw-pvt-subnet-b"
-    "auto-delete" = "no"
-    "auto-stop"   = "no"
+    Name = "${local.prefix}-${local.build.name}-natgw-pvt-subnet-b"
   }
 
   depends_on = [
@@ -131,7 +127,7 @@ resource "aws_route_table" "phonebook_pvt_subnet_b" {
   }
 
   tags = {
-    Name = "${local.build.name}-rtb-natgw-pvt-subnet-b"
+    Name = "${local.prefix}-${local.build.name}-rtb-natgw-pvt-subnet-b"
   }
 
   depends_on = [

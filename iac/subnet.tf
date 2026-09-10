@@ -6,7 +6,7 @@ resource "aws_subnet" "phonebook_pub_a" {
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name = "${local.build.name}-pub-subnet-a"
+    Name = "${local.prefix}-${local.build.name}-pub-subnet-a"
   }
 }
 
@@ -17,7 +17,7 @@ resource "aws_subnet" "phonebook_pvt_a" {
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name = "${local.build.name}-pvt-subnet-a"
+    Name = "${local.prefix}-${local.build.name}-pvt-subnet-a"
   }
 }
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "phonebook_pub_b" {
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name = "${local.build.name}-pub-subnet-b"
+    Name = "${local.prefix}-${local.build.name}-pub-subnet-b"
   }
 }
 
@@ -40,6 +40,6 @@ resource "aws_subnet" "phonebook_pvt_b" {
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = {
-    Name = "${local.build.name}-pvt-subnet-b"
+    Name = "${local.prefix}-${local.build.name}-pvt-subnet-b"
   }
 }

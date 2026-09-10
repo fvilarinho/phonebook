@@ -1,5 +1,5 @@
 resource "aws_iam_role" "phonebook_backup" {
-  name = "${local.build.name}-backup"
+  name = "${local.prefix}-${local.build.name}-backup"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -14,7 +14,7 @@ resource "aws_iam_role" "phonebook_backup" {
 }
 
 resource "aws_iam_role_policy" "phonebook_backup" {
-  name = "${local.build.name}-backup"
+  name = "${local.prefix}-${local.build.name}-backup"
   role = aws_iam_role.phonebook_backup.id
 
   policy = jsonencode({
@@ -50,7 +50,7 @@ resource "aws_iam_role_policy" "phonebook_backup" {
 }
 
 resource "aws_iam_instance_profile" "phonebook_database" {
-  name = "${local.build.name}-database"
+  name = "${local.prefix}-${local.build.name}-database"
   role = aws_iam_role.phonebook_backup.name
 
   depends_on = [aws_iam_role.phonebook_backup]

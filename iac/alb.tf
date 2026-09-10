@@ -1,5 +1,5 @@
 resource "aws_lb" "phonebook_cluster" {
-  name                       = "${local.build.name}-cluster-lb"
+  name                       = "${local.prefix}-${local.build.name}-cluster"
   load_balancer_type         = "application"
   internal                   = false
   security_groups            = [aws_security_group.phonebook_cluster_lb_traffic.id, aws_security_group.phonebook_cluster_lb_secure_traffic.id]
@@ -14,7 +14,7 @@ resource "aws_lb" "phonebook_cluster" {
 }
 
 resource "aws_lb_target_group" "phonebook_cluster" {
-  name        = "${local.build.name}-cluster-lb-tg"
+  name        = "${local.prefix}-${local.build.name}-cluster"
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
