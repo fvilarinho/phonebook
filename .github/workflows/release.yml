@@ -28,6 +28,9 @@ jobs:
         with:
           terraform_version: '1.16.2'
 
+      - name: Compile & Build
+        run: ./build.sh
+
       - name: Package
         run: ./package.sh
 
