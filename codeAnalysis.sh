@@ -36,8 +36,6 @@ function prepareToExecute() {
 
 # Starts the code analysis process.
 function codeAnalysis() {
-  $SNYK_CMD iac test iac/*.tf --severity-threshold=critical || exit 1
-
   ./gradlew sonar || exit 1
 
   QUALITY_GATE_STATUS=$($CURL_CMD -s \
@@ -50,6 +48,9 @@ function codeAnalysis() {
 
     exit 1
   fi
+
+  $SNYK_CMD code test --severity-threshold=high || exit 1
+  $SNYK_CMD iac test iac/*.tf --severity-threshold=critical || exit 1
 
   echo
   echo "Code analysis passed!"
