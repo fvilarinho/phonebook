@@ -5,6 +5,7 @@ on:
     branches: [ "*" ]
     paths-ignore:
       - ".gitignore"
+      - ".github/release.yml"
       - "*.md"
       - "bin/backup*"
       - "deploy.sh"
