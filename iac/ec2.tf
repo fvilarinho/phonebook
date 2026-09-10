@@ -1,6 +1,11 @@
+locals {
+  user    = "ubuntu"
+  homeDir = "/home/${local.user}"
+}
+
 resource "aws_instance" "phonebook_cluster_bastion" {
-  ami                         = var.infrastructure.compute.ami
-  instance_type               = var.infrastructure.compute.type
+  ami                         = "ami-025d99823a4caad37"
+  instance_type               = "c8i-flex.large"
   subnet_id                   = aws_subnet.phonebook_pub_b.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_bastion_pub_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
@@ -51,8 +56,8 @@ resource "aws_eip" "phonebook_cluster_bastion" {
 }
 
 resource "aws_instance" "phonebook_cluster_workernode1" {
-  ami                         = var.infrastructure.compute.ami
-  instance_type               = var.infrastructure.compute.type
+  ami                         = "ami-025d99823a4caad37"
+  instance_type               = "c8i-flex.large"
   subnet_id                   = aws_subnet.phonebook_pvt_a.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
@@ -81,8 +86,8 @@ curl -sfL https://get.k3s.io | K3S_TOKEN="${random_password.phonebook_cluster.re
 
 # Prepare the kubeconfig file used by kubectl.
 chmod og+r /etc/rancher/k3s/k3s.yaml
-mkdir -p ${var.infrastructure.compute.home_dir}/.kube
-ln -s /etc/rancher/k3s/k3s.yaml ${var.infrastructure.compute.home_dir}/.kube/config
+mkdir -p ${local.homeDir}/.kube
+ln -s /etc/rancher/k3s/k3s.yaml ${local.homeDir}/.kube/config
 EOT
 
   tags = {
@@ -107,8 +112,8 @@ EOT
 }
 
 resource "aws_instance" "phonebook_cluster_workernode2" {
-  ami                         = var.infrastructure.compute.ami
-  instance_type               = var.infrastructure.compute.type
+  ami                         = "ami-025d99823a4caad37"
+  instance_type               = "c8i-flex.large"
   subnet_id                   = aws_subnet.phonebook_pvt_b.id
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
@@ -159,8 +164,8 @@ EOT
 }
 
 resource "aws_instance" "phonebook_database" {
-  ami                         = var.infrastructure.compute.ami
-  instance_type               = var.infrastructure.compute.type
+  ami                         = "ami-025d99823a4caad37"
+  instance_type               = "c8i-flex.large"
   subnet_id                   = aws_subnet.phonebook_pub_a.id
   vpc_security_group_ids      = [aws_security_group.phonebook_database_pub_traffic.id, aws_security_group.phonebook_database_pvt_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name

@@ -70,43 +70,43 @@ resource "null_resource" "phonebook_database_setup" {
 
   connection {
     host        = aws_instance.phonebook_database.public_ip
-    user        = var.infrastructure.compute.user
+    user        = local.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "file" {
     source      = local.phonebook_database_backup_script_filename
-    destination = "${var.infrastructure.compute.home_dir}/${basename(local.phonebook_database_backup_script_filename)}"
+    destination = "${local.homeDir}/${basename(local.phonebook_database_backup_script_filename)}"
   }
 
   provisioner "file" {
     content     = local.phonebook_database_environment
-    destination = "${var.infrastructure.compute.home_dir}/${local.phonebook_database_environment_filename}"
+    destination = "${local.homeDir}/${local.phonebook_database_environment_filename}"
   }
 
   provisioner "file" {
     content     = local.phonebook_database_manifest
-    destination = "${var.infrastructure.compute.home_dir}/${local.phonebook_database_manifest_filename}"
+    destination = "${local.homeDir}/${local.phonebook_database_manifest_filename}"
   }
 
   provisioner "file" {
     source      = local.banner_filename
-    destination = "${var.infrastructure.compute.home_dir}/${basename(local.banner_filename)}"
+    destination = "${local.homeDir}/${basename(local.banner_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_database_start_script_filename
-    destination = "${var.infrastructure.compute.home_dir}/${basename(local.phonebook_database_start_script_filename)}"
+    destination = "${local.homeDir}/${basename(local.phonebook_database_start_script_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_database_stop_script_filename
-    destination = "${var.infrastructure.compute.home_dir}/${basename(local.phonebook_database_stop_script_filename)}"
+    destination = "${local.homeDir}/${basename(local.phonebook_database_stop_script_filename)}"
   }
 
   provisioner "file" {
     source      = local.phonebook_database_helper_script_filename
-    destination = "${var.infrastructure.compute.home_dir}/${basename(local.phonebook_database_helper_script_filename)}"
+    destination = "${local.homeDir}/${basename(local.phonebook_database_helper_script_filename)}"
   }
 
   provisioner "remote-exec" {
@@ -114,7 +114,7 @@ resource "null_resource" "phonebook_database_setup" {
       "echo 'Waiting for Cloud-init to complete...'",
       "sudo cloud-init status --wait",
       "echo 'Cloud-init finished!'",
-      "cd ${var.infrastructure.compute.home_dir}",
+      "cd ${local.homeDir}",
       "chmod u+x *.sh",
       "chmod og-rwx *.sh",
       "chmod og-rwx *.txt",
