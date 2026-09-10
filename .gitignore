@@ -7,4 +7,5 @@
 /etc/tls/private/*
 /iac/.terraform*
 /iac/terraform*
+/iac/*tfplan
 /secrets.json
