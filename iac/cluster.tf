@@ -1,10 +1,10 @@
 locals {
-  phonebook_cluster_namespace_manifest_filename = "namespace.yaml"
-  phonebook_cluster_setup_hash                  = "${md5(local.phonebook_cluster_namespace_manifest_filename)}-${md5(local.phonebook_database_settings_manifest)}-${md5(local.phonebook_database_credentials_manifest)}-${md5(local.phonebook_cluster_backend_settings_manifest)}-${md5(local.phonebook_cluster_backend_manifest)}-${md5(local.phonebook_cluster_frontend_settings_manifest)}-${md5(local.phonebook_cluster_frontend_manifest)}-${md5(local.phonebook_cluster_namespace_manifest)}-${filemd5(local.banner_filename)}"
+  cluster_namespace_manifest_filename = "namespace.yaml"
+  cluster_setup_hash                  = "${md5(local.cluster_namespace_manifest_filename)}-${md5(local.database_settings_manifest)}-${md5(local.database_credentials_manifest)}-${md5(local.cluster_backend_settings_manifest)}-${md5(local.cluster_backend_manifest)}-${md5(local.cluster_frontend_settings_manifest)}-${md5(local.cluster_frontend_manifest)}-${md5(local.cluster_namespace_manifest)}-${filemd5(local.banner_filename)}"
 }
 
 locals {
-  phonebook_cluster_namespace_manifest = <<EOT
+  cluster_namespace_manifest = <<-EOT
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -19,66 +19,66 @@ resource "random_password" "phonebook_cluster" {
 
 resource "null_resource" "phonebook_cluster_setup" {
   triggers = {
-    hash = local.phonebook_cluster_setup_hash
+    hash = local.cluster_setup_hash
   }
 
   connection {
     host        = aws_eip.phonebook_cluster_bastion.public_ip
-    user        = local.user
+    user        = local.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
 
   provisioner "file" {
     source      = local.banner_filename
-    destination = "${local.homeDir}/${basename(local.banner_filename)}"
+    destination = "${local.compute.home_dir}/${basename(local.banner_filename)}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_cluster_namespace_manifest
-    destination = "${local.homeDir}/${local.phonebook_cluster_namespace_manifest_filename}"
+    content     = local.cluster_namespace_manifest
+    destination = "${local.compute.home_dir}/${local.cluster_namespace_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_database_settings_manifest
-    destination = "${local.homeDir}/${local.phonebook_database_settings_manifest_filename}"
+    content     = local.database_settings_manifest
+    destination = "${local.compute.home_dir}/${local.database_settings_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_database_credentials_manifest
-    destination = "${local.homeDir}/${local.phonebook_database_credentials_manifest_filename}"
+    content     = local.database_credentials_manifest
+    destination = "${local.compute.home_dir}/${local.database_credentials_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_cluster_backend_settings_manifest
-    destination = "${local.homeDir}/${local.phonebook_cluster_backend_settings_manifest_filename}"
+    content     = local.cluster_backend_settings_manifest
+    destination = "${local.compute.home_dir}/${local.cluster_backend_settings_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_cluster_backend_manifest
-    destination = "${local.homeDir}/${local.phonebook_cluster_backend_manifest_filename}"
+    content     = local.cluster_backend_manifest
+    destination = "${local.compute.home_dir}/${local.cluster_backend_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_cluster_frontend_settings_manifest
-    destination = "${local.homeDir}/${local.phonebook_cluster_frontend_settings_manifest_filename}"
+    content     = local.cluster_frontend_settings_manifest
+    destination = "${local.compute.home_dir}/${local.cluster_frontend_settings_manifest_filename}"
   }
 
   provisioner "file" {
-    content     = local.phonebook_cluster_frontend_manifest
-    destination = "${local.homeDir}/${local.phonebook_cluster_frontend_manifest_filename}"
+    content     = local.cluster_frontend_manifest
+    destination = "${local.compute.home_dir}/${local.cluster_frontend_manifest_filename}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "cd ${local.homeDir}",
+      "cd ${local.compute.home_dir}",
       "cat ${basename(local.banner_filename)}",
-      "kubectl apply -f ${local.phonebook_cluster_namespace_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_database_settings_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_database_credentials_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_cluster_backend_settings_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_cluster_backend_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_cluster_frontend_settings_manifest_filename}",
-      "kubectl apply -f ${local.phonebook_cluster_frontend_manifest_filename}",
+      "kubectl apply -f ${local.cluster_namespace_manifest_filename}",
+      "kubectl apply -f ${local.database_settings_manifest_filename}",
+      "kubectl apply -f ${local.database_credentials_manifest_filename}",
+      "kubectl apply -f ${local.cluster_backend_settings_manifest_filename}",
+      "kubectl apply -f ${local.cluster_backend_manifest_filename}",
+      "kubectl apply -f ${local.cluster_frontend_settings_manifest_filename}",
+      "kubectl apply -f ${local.cluster_frontend_manifest_filename}",
     ]
   }
 
