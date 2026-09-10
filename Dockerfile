@@ -1,5 +1,5 @@
 # Base image definition.
-FROM alpine:3.21.1
+FROM alpine:3.24.1
 
 # Metadata definition.
 LABEL authors="me@vila.net.br"
