@@ -19,7 +19,7 @@ if [ -f .env ]; then
   source .env
 fi
 
-sudo $DOCKER_CMD exec -it database mongodump --username $DB_USER --password $DB_PASSWORD || exit 1
+sudo $DOCKER_CMD exec database mongodump --username $DB_USER --password $DB_PASSWORD || exit 1
 sudo $DOCKER_CMD cp database:/dump . || exit 1
 sudo chown -R ubuntu:ubuntu dump || exit 1
 

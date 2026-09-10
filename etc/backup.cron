@@ -3,4 +3,4 @@ SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CRON_TZ=UTC
 
-0 2 * * * ubuntu cd /home/ubuntu && /home/ubuntu/backup.sh >> /home/ubuntu/backup.log 2>&1
+0 0 * * * ubuntu cd /home/ubuntu && /home/ubuntu/backup.sh >> /home/ubuntu/backup.log 2>&1
