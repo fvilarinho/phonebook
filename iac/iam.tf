@@ -22,6 +22,11 @@ resource "aws_iam_role_policy" "phonebook_backup" {
     Statement = [
       {
         Effect   = "Allow"
+        Action   = "ec2:RunInstances"
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
         Action   = "s3:PutObject"
         Resource = "${aws_s3_bucket.phonebook_backup.arn}/*"
       },
