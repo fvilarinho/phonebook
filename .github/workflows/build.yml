@@ -44,9 +44,6 @@ jobs:
       - name: Package Analysis
         run: ./packageAnalysis.sh
 
-      - name: Publish
-        run: ./publish.sh
-
       - name: Notify
         if: always()
         run: ./notify.sh "build" "${{ job.status }}"
