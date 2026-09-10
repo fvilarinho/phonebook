@@ -35,9 +35,9 @@ function notify() {
   URL="https://hooks.slack.com/services/$SLACK_TOKEN"
 
   if [ "$STATUS" == "success" ]; then
-    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe pipeline $PIPELINE execution was *FLAWLESS*! Good job :heart:!"
+    MESSAGE="Hi there!\n\nGreat news :tada: :smiley:!\n\nThe *$PIPELINE* pipeline  execution was *FLAWLESS*! Good job :heart:!"
   else
-    MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe pipeline $PIPELINE execution *FAILED* in some steps!"
+    MESSAGE="Hi!\n\nI got some bad news :sob:!\n\nThe *$PIPELINE* pipeline execution *FAILED* in some steps!"
   fi
 
   $CURL_CMD -s \
