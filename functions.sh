@@ -30,9 +30,27 @@ function showBanner() {
   showLabel
 }
 
+function getAttribute() {
+  local response=
+
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "$response"
+  else
+    response=$($JQ_CMD -r ".$1" "$2")
+
+    if [ "$response" = "null" ]; then
+      response=
+    fi
+
+    echo "$response"
+  fi
+}
+
 function loadBuildAttributes() {
-  export BUILD_NAME=$($JQ_CMD -r '.name' "$BUILD_FILENAME")
-  export BUILD_VERSION=$($JQ_CMD -r '.version' "$BUILD_FILENAME")
+  if [ -f "$BUILD_FILENAME" ]; then
+    export BUILD_NAME=$(getAttribute "name" "$BUILD_FILENAME")
+    export BUILD_VERSION=$(getAttribute "version" "$BUILD_FILENAME")
+  fi
 }
 
 function loadSecretsAttributes() {
@@ -43,41 +61,43 @@ function loadSecretsAttributes() {
   fi
 
   if [ -f "$SECRETS_FILENAME" ]; then
-    export SONAR_URL=$($JQ_CMD -r '.sonar.url' "$SECRETS_FILENAME")
-    export SONAR_ORGANIZATION=$($JQ_CMD -r '.sonar.organization' "$SECRETS_FILENAME")
-    export SONAR_PROJECT_KEY=$($JQ_CMD -r '.sonar.projectKey' "$SECRETS_FILENAME")
-    export SONAR_TOKEN=$($JQ_CMD -r '.sonar.token' "$SECRETS_FILENAME")
+    export SONAR_TOKEN=$(getAttribute "sonar.token" "$SECRETS_FILENAME")
+    export SONAR_URL=$(getAttribute "sonar.url" "$SECRETS_FILENAME")
+    export SONAR_ORGANIZATION=$(getAttribute "sonar.organization" "$SECRETS_FILENAME")
+    export SONAR_PROJECT_KEY=$(getAttribute "sonar.project.key" "$SECRETS_FILENAME")
 
-    export SNYK_TOKEN=$($JQ_CMD -r '.snyk.token' "$SECRETS_FILENAME")
+    export SNYK_TOKEN=$(getAttribute "snyk.token" "$SECRETS_FILENAME")
 
-    export SLACK_TOKEN=$($JQ_CMD -r '.slack.token' "$SECRETS_FILENAME")
+    export SLACK_TOKEN=$(getAttribute "slack.token" "$SECRETS_FILENAME")
 
-    export DOCKER_REGISTRY_URL=$($JQ_CMD -r '.dockerRegistry.url' "$SECRETS_FILENAME")
-    export DOCKER_REGISTRY_ID=$($JQ_CMD -r '.dockerRegistry.id' "$SECRETS_FILENAME")
-    export DOCKER_REGISTRY_PASSWORD=$($JQ_CMD -r '.dockerRegistry.password' "$SECRETS_FILENAME")
+    export DOCKER_REGISTRY_URL=$(getAttribute "docker.registry.url" "$SECRETS_FILENAME")
+    export DOCKER_REGISTRY_ID=$(getAttribute "docker.registry.id" "$SECRETS_FILENAME")
+    export DOCKER_REGISTRY_PASSWORD=$(getAttribute "docker.registry.password" "$SECRETS_FILENAME")
 
-    export TERRAFORM_STATE_BUCKET=$($JQ_CMD -r '.terraform.state.bucket' "$SECRETS_FILENAME")
-    export TERRAFORM_STATE_KEY=$($JQ_CMD -r '.terraform.state.key' "$SECRETS_FILENAME")
+    export TERRAFORM_STATE_BUCKET=$(getAttribute "terraform.state.bucket" "$SECRETS_FILENAME")
+    export TERRAFORM_STATE_KEY=$(getAttribute "terraform.state.key" "$SECRETS_FILENAME")
 
-    export AWS_PROFILE=$($JQ_CMD -r '.aws.profile' "$SECRETS_FILENAME")
-    export AWS_REGION=$($JQ_CMD -r '.aws.region' "$SECRETS_FILENAME")
+    export AWS_PROFILE=$(getAttribute "aws.profile" "$SECRETS_FILENAME")
+    export AWS_REGION=$(getAttribute "aws.region" "$SECRETS_FILENAME")
+    export AWS_ACCESS_KEY_ID=$(getAttribute "aws.access_key" "$SECRETS_FILENAME")
+    export AWS_SECRET_ACCESS_KEY=$(getAttribute "aws.secret_key" "$SECRETS_FILENAME")
 
-    export CLOUDFLARE_API_TOKEN=$($JQ_CMD -r '.cloudflare.token' "$SECRETS_FILENAME")
+    export CLOUDFLARE_API_TOKEN=$(getAttribute "cloudflare.token" "$SECRETS_FILENAME")
 
-    export FRONTEND_HOST=$($JQ_CMD -r '.frontend.host' "$SECRETS_FILENAME")
-    export FRONTEND_DOMAIN=$($JQ_CMD -r '.frontend.domain' "$SECRETS_FILENAME")
-    export FRONTEND_USER=$($JQ_CMD -r '.frontend.user' "$SECRETS_FILENAME")
-    export FRONTEND_PASSWORD=$($JQ_CMD -r '.frontend.password' "$SECRETS_FILENAME")
+    export FRONTEND_HOST=$(getAttribute "frontend.host" "$SECRETS_FILENAME")
+    export FRONTEND_DOMAIN=$(getAttribute "frontend.domain" "$SECRETS_FILENAME")
+    export FRONTEND_USER=$(getAttribute "frontend.user" "$SECRETS_FILENAME")
+    export FRONTEND_PASSWORD=$(getAttribute "frontend.password" "$SECRETS_FILENAME")
 
-    export BACKEND_HOST=$($JQ_CMD -r '.backend.host' "$SECRETS_FILENAME")
-    export DEBUG_ENABLED=$($JQ_CMD -r '.backend.debug.enabled' "$SECRETS_FILENAME")
-    export OBSERVABILITY_ENABLED=$($JQ_CMD -r '.backend.observability.enabled' "$SECRETS_FILENAME")
-    export OBSERVABILITY_LOGS_URL=$($JQ_CMD -r '.backend.observability.logsUrl' "$SECRETS_FILENAME")
+    export BACKEND_HOST=$(getAttribute "backend.host" "$SECRETS_FILENAME")
+    export DEBUG_ENABLED=$(getAttribute "backend.debug.enabled" "$SECRETS_FILENAME")
+    export OBSERVABILITY_ENABLED=$(getAttribute "backend.observability.enabled" "$SECRETS_FILENAME")
+    export OBSERVABILITY_LOGS_URL=$(getAttribute "backend.observability.logs.url" "$SECRETS_FILENAME")
 
-    export DB_HOST=$($JQ_CMD -r '.database.host' "$SECRETS_FILENAME")
-    export DB_NAME=$($JQ_CMD -r '.database.name' "$SECRETS_FILENAME")
-    export DB_USER=$($JQ_CMD -r '.database.user' "$SECRETS_FILENAME")
-    export DB_PASSWORD=$($JQ_CMD -r '.database.password' "$SECRETS_FILENAME")
+    export DB_HOST=$(getAttribute "database.host" "$SECRETS_FILENAME")
+    export DB_NAME=$(getAttribute "database.name" "$SECRETS_FILENAME")
+    export DB_USER=$(getAttribute "database.user" "$SECRETS_FILENAME")
+    export DB_PASSWORD=$(getAttribute "database.password" "$SECRETS_FILENAME")
   fi
 }
 
