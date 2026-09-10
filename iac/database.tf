@@ -128,6 +128,7 @@ resource "null_resource" "phonebook_database_setup" {
       "chmod og-rwx *.yaml",
       "sudo install -o root -g root -m 0644 backup.cron /etc/cron.d/phonebook-backup",
       "sudo systemctl enable --now cron",
+      "rm -f backup.cron",
       "sudo ./start.sh"
     ]
   }
