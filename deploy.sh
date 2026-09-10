@@ -25,10 +25,10 @@ function deploy() {
                         -backend-config="key=$TERRAFORM_STATE_KEY" \
                         -backend-config="region=$AWS_REGION" || exit 1
 
-    $TERRAFORM_CMD plan -out="$TMPDIR"/phonebook.tfplan || exit 1
-    $TERRAFORM_CMD apply "$TMPDIR"/phonebook.tfplan
+    $TERRAFORM_CMD plan -out=./phonebook.tfplan || exit 1
+    $TERRAFORM_CMD apply ./phonebook.tfplan
 
-    rm -f "$TMPDIR"/phonebook.tfplan
+    rm -f ./phonebook.tfplan
 }
 
 # Main function.
