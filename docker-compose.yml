@@ -4,9 +4,9 @@ services:
     container_name: frontend
     restart: unless-stopped
     environment:
-      - FRONTEND_HOST=${FRONTEND_HOST}
-      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN}
-      - BACKEND_HOST=${BACKEND_HOST}
+      - FRONTEND_HOST=${FRONTEND_HOST:-}
+      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-}
+      - BACKEND_HOST=${BACKEND_HOST:-}
     volumes:
       - ./src/main/static:/var/www/static
       - ./etc/nginx.conf:/etc/nginx/templates/default.conf.template
@@ -26,13 +26,13 @@ services:
     container_name: backend
     restart: unless-stopped
     environment:
-      - DEBUG_ENABLED=${DEBUG_ENABLED}
-      - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
-      - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL}
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - DEBUG_ENABLED=${DEBUG_ENABLED:-}
+      - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED:-}
+      - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL:-}
+      - DB_HOST=${DB_HOST:-}
+      - DB_USER=${DB_USER:-}
+      - DB_PASSWORD=${DB_PASSWORD:-}
+      - DB_NAME=${DB_NAME:-}
     volumes:
       - ./etc/logback.xml:/home/${BUILD_NAME}/etc/logback.xml
     hostname: backend
@@ -47,8 +47,8 @@ services:
     container_name: database
     restart: unless-stopped
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER:-}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD:-}
     volumes:
       - database-data:/data/db
     hostname: database
