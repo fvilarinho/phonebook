@@ -1,14 +1,14 @@
 locals {
-  phonebook_backend_observability_settings_filename = abspath(pathexpand("../etc/logback.xml"))
+  backend_observability_settings_filename = abspath(pathexpand("../etc/logback.xml"))
 }
 
 locals {
-  phonebook_cluster_backend_settings_manifest_filename = "backend-settings.yaml"
-  phonebook_cluster_backend_manifest_filename          = "backend.yaml"
+  cluster_backend_settings_manifest_filename = "backend-settings.yaml"
+  cluster_backend_manifest_filename          = "backend.yaml"
 }
 
 locals {
-  phonebook_cluster_backend_settings_manifest = <<EOT
+  cluster_backend_settings_manifest = <<-EOT
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,12 +17,12 @@ metadata:
 data:
   DEBUG_ENABLED: "${local.secrets.backend.debug.enabled}"
   OBSERVABILITY_ENABLED: "${local.secrets.backend.observability.enabled}"
-  OBSERVABILITY_LOGS_URL: "${local.secrets.backend.observability.logsUrl}"
+  OBSERVABILITY_LOGS_URL: "${local.secrets.backend.observability.logs.url}"
   logback.xml: |
-      ${indent(6, chomp(file(local.phonebook_backend_observability_settings_filename)))}
+      ${indent(6, chomp(file(local.backend_observability_settings_filename)))}
 EOT
 
-  phonebook_cluster_backend_manifest = <<EOT
+  cluster_backend_manifest = <<-EOT
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -40,7 +40,7 @@ spec:
       containers:
         - name: backend
           imagePullPolicy: Always
-          image: ${local.secrets.dockerRegistry.url}/${local.secrets.dockerRegistry.id}/${local.build.name}:${local.build.version}
+          image: ${local.secrets.docker.registry.url}/${local.secrets.docker.registry.id}/${local.build.name}:${local.build.version}
           env:
             - name: DEBUG_ENABLED
               valueFrom:
