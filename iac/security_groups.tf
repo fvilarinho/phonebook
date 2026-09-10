@@ -48,10 +48,10 @@ resource "aws_security_group" "phonebook_cluster_lb_traffic" {
   }
 
   ingress {
-    from_port      = 80
-    to_port        = 80
-    protocol       = "tcp"
-    prefix_list_ids = [ data.aws_ec2_managed_prefix_list.cloudfront_ips.id ]
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront_ips.id]
   }
 
   egress {
@@ -80,10 +80,10 @@ resource "aws_security_group" "phonebook_cluster_lb_secure_traffic" {
   }
 
   ingress {
-    from_port      = 443
-    to_port        = 443
-    protocol       = "tcp"
-    prefix_list_ids = [ data.aws_ec2_managed_prefix_list.cloudfront_ips.id ]
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront_ips.id]
   }
 
   egress {
@@ -181,7 +181,7 @@ resource "aws_security_group" "phonebook_cluster_workernodes_traffic" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}","${aws_instance.phonebook_cluster_bastion.public_ip}/32", "${aws_instance.phonebook_cluster_bastion.private_ip}/32"]
+    cidr_blocks = ["${aws_subnet.phonebook_pvt_a.cidr_block}", "${aws_subnet.phonebook_pvt_b.cidr_block}", "${aws_instance.phonebook_cluster_bastion.public_ip}/32", "${aws_instance.phonebook_cluster_bastion.private_ip}/32"]
   }
 
   ingress {

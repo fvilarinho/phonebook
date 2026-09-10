@@ -94,10 +94,10 @@ resource "aws_cloudfront_response_headers_policy" "phonebook" {
 }
 
 resource "aws_cloudfront_distribution" "phonebook" {
-  aliases         = [ "${local.secrets.frontend.host}.${local.secrets.frontend.domain}" ]
+  aliases         = ["${local.secrets.frontend.host}.${local.secrets.frontend.domain}"]
   enabled         = true
   is_ipv6_enabled = true
-#  web_acl_id      = aws_wafv2_web_acl.app.arn
+  #  web_acl_id      = aws_wafv2_web_acl.app.arn
 
   # TLS certificate definition.
   viewer_certificate {

@@ -15,7 +15,7 @@ resource "aws_s3_bucket_public_access_block" "phonebook_static" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  depends_on = [ aws_s3_bucket.phonebook_static ]
+  depends_on = [aws_s3_bucket.phonebook_static]
 }
 
 resource "aws_s3_bucket_public_access_block" "phonebook_backup" {
@@ -25,16 +25,16 @@ resource "aws_s3_bucket_public_access_block" "phonebook_backup" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  depends_on = [ aws_s3_bucket.phonebook_backup ]
+  depends_on = [aws_s3_bucket.phonebook_backup]
 }
 
 resource "aws_s3_object" "phonebook_static" {
   for_each = fileset(abspath(pathexpand("../src/main/static")), "**")
 
-  bucket       = aws_s3_bucket.phonebook_static.id
-  key          = "static/${each.value}"
-  source       = abspath(pathexpand("../src/main/static/${each.value}"))
-  etag         = filemd5(abspath(pathexpand("../src/main/static/${each.value}")))
+  bucket = aws_s3_bucket.phonebook_static.id
+  key    = "static/${each.value}"
+  source = abspath(pathexpand("../src/main/static/${each.value}"))
+  etag   = filemd5(abspath(pathexpand("../src/main/static/${each.value}")))
   content_type = lookup(
     {
       "html"  = "text/html"
@@ -58,7 +58,7 @@ resource "aws_s3_object" "phonebook_static" {
     "application/octet-stream"
   )
 
-  depends_on = [ aws_s3_bucket.phonebook_static ]
+  depends_on = [aws_s3_bucket.phonebook_static]
 }
 
 resource "aws_s3_bucket_policy" "phonebook_static" {

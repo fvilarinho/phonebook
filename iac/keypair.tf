@@ -1,7 +1,7 @@
 resource "aws_key_pair" "phonebook" {
   public_key = tls_private_key.phonebook.public_key_openssh
 
-  depends_on = [ tls_private_key.phonebook ]
+  depends_on = [tls_private_key.phonebook]
 }
 
 resource "local_file" "phonebook_private_key" {
@@ -9,5 +9,5 @@ resource "local_file" "phonebook_private_key" {
   filename        = abspath(pathexpand("../etc/keypair.pem"))
   file_permission = "0400"
 
-  depends_on = [ tls_private_key.phonebook ]
+  depends_on = [tls_private_key.phonebook]
 }

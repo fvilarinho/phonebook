@@ -15,7 +15,7 @@ resource "aws_internet_gateway" "phonebook" {
     Name = "${local.build.name}-igw"
   }
 
-  depends_on = [ aws_vpc.phonebook ]
+  depends_on = [aws_vpc.phonebook]
 }
 
 resource "aws_route_table" "phonebook_igw" {
