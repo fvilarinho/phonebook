@@ -3,6 +3,18 @@ name: Phonebook Build Pipeline
 on:
   push:
     branches: [ "*" ]
+    paths-ignore: [
+      ".gitignore",
+      "*.md",
+      "bin/backup*",
+      "deploy.sh",
+      "etc/backup*",
+      "etc/nginx.conf",
+      "gradle*",
+      "iac/*"
+      "LICENSE",
+      "notify.sh",
+    ]
 
 permissions:
   contents: read
