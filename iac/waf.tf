@@ -3,21 +3,16 @@ resource "aws_wafv2_web_acl" "phonebook" {
   description = "WAF ACL to protect against L3/L4 and L7 attacks - allowlist model"
   scope       = "CLOUDFRONT"
 
-  # Blocks if there is no match with the allow rules (allowlist model).
-  # Empty allowed_ips AND allowed_geos => no allow rule is created => all traffic blocked.
   default_action {
     block {}
   }
 
-  # Enables monitoring.
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "WAFProtectionACL"
     sampled_requests_enabled   = true
   }
 
-  # Rate-based rule to mitigate L3/L4 volumetric attacks.
-  # Evaluated before the allow rules so admitted traffic is still rate limited.
   rule {
     name     = "rate_limit"
     priority = 0
@@ -46,7 +41,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # Size constraint to block oversized requests (L7 - slow POST attacks).
   rule {
     name     = "body_inspection_constraint"
     priority = 1
@@ -80,7 +74,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - IP Reputation (blocks known malicious IPs - L3/L4).
   rule {
     name     = "ip_reputation"
     priority = 2
@@ -103,7 +96,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - Anonymous IP List (L3/L4 protection).
   rule {
     name     = "anonymous_ip"
     priority = 3
@@ -126,7 +118,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - Common Rule Set (L7 - OWASP Top 10).
   rule {
     name     = "owasp"
     priority = 4
@@ -149,7 +140,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - SQL Injection (L7).
   rule {
     name     = "sqli"
     priority = 5
@@ -172,7 +162,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - Known Bad Inputs (L7).
   rule {
     name     = "known_bad_inputs"
     priority = 6
@@ -195,7 +184,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - Linux OS (L7)
   rule {
     name     = "exploitation"
     priority = 7
@@ -218,7 +206,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # AWS Managed Rule - Bot Control (L7).
   rule {
     name     = "bot_control"
     priority = 8
@@ -241,9 +228,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # Allowlist rule - admits requests from approved IPs.
-  # Created only when allowed_ips is non-empty. Evaluated after the protection
-  # rules above, so admitted traffic is still scanned by the managed rule groups.
   dynamic "rule" {
     for_each = length(var.waf.restrictions.allowed_ips) > 0 ? [1] : []
 
@@ -269,9 +253,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
     }
   }
 
-  # Allowlist rule - admits requests from approved countries.
-  # Created only when allowed_geos is non-empty (geo_match requires >= 1 code).
-  # Combined with allowed_ips as OR: a request matching either allow rule passes.
   dynamic "rule" {
     for_each = length(var.waf.restrictions.allowed_geos) > 0 ? [1] : []
 
@@ -312,28 +293,27 @@ resource "aws_wafv2_ip_set" "phonebook_allowed_ips" {
   }
 }
 
-# Enables the logging and attach it to Cloudwatch logs.
-# resource "aws_wafv2_web_acl_logging_configuration" "phonebook" {
-#   log_destination_configs = [aws_cloudwatch_log_group.app.arn]
-#   resource_arn            = aws_wafv2_web_acl.phonebook.arn
-#
-#   logging_filter {
-#     default_behavior = "KEEP"
-#
-#     filter {
-#       behavior    = "KEEP"
-#       requirement = "MEETS_ANY"
-#
-#       condition {
-#         action_condition {
-#           action = "BLOCK"
-#         }
-#       }
-#     }
-#   }
-#
-#   depends_on = [
-#     aws_cloudwatch_log_group.phone,
-#     aws_wafv2_web_acl.phonebook
-#   ]
-# }
+resource "aws_wafv2_web_acl_logging_configuration" "phonebook" {
+  log_destination_configs = [aws_cloudwatch_log_group.phonebook_waf.arn]
+  resource_arn            = aws_wafv2_web_acl.phonebook.arn
+
+  logging_filter {
+    default_behavior = "KEEP"
+
+    filter {
+      behavior    = "KEEP"
+      requirement = "MEETS_ANY"
+
+      condition {
+        action_condition {
+          action = "BLOCK"
+        }
+      }
+    }
+  }
+
+  depends_on = [
+    aws_cloudwatch_log_group.phonebook_waf,
+    aws_wafv2_web_acl.phonebook
+  ]
+}
