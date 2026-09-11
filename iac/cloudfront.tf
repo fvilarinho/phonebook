@@ -169,11 +169,11 @@ resource "aws_cloudfront_distribution" "phonebook" {
   }
 
   # # Logging definition.
-   logging_config {
-     bucket          = aws_s3_bucket.phonebook_logs.bucket_domain_name
-     prefix          = "cloudfront/"
-     include_cookies = true
-   }
+  logging_config {
+    bucket          = aws_s3_bucket.phonebook_logs.bucket_domain_name
+    prefix          = "cloudfront/"
+    include_cookies = true
+  }
 
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-cf"
