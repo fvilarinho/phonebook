@@ -300,8 +300,6 @@ resource "aws_wafv2_web_acl" "phonebook" {
   depends_on = [aws_wafv2_ip_set.phonebook_allowed_ips]
 }
 
-# Creates an allowlist IP set for approved IPs. An empty address list is valid;
-# in that case the allowed_ips rule above is not created and no IP is admitted.
 resource "aws_wafv2_ip_set" "phonebook_allowed_ips" {
   name               = "${local.prefix}-${local.build.name}-allowed-ips"
   description        = "IP set for allowing specific IPv4 addresses"

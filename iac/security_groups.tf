@@ -150,7 +150,6 @@ resource "aws_security_group" "phonebook_database_pvt_traffic" {
   ]
 }
 
-# Allows only the database EC2 to initiate SSH connections to private workers.
 resource "aws_security_group" "phonebook_cluster_workernodes_traffic" {
   name        = "${local.prefix}-${local.build.name}-cluster-workernodes-traffic"
   description = "Allow traffic to workernodes"

@@ -158,7 +158,7 @@ resource "aws_instance" "phonebook_database" {
   user_data                   = <<EOT
 ${local.compute.bootstrap_script}
 
-# Install docker.
+# Install Docker.
 curl -fsSL https://get.docker.com | sh -
 systemctl enable docker
 

@@ -82,17 +82,7 @@ resource "aws_iam_role_policy" "phonebook_logs" {
         Effect   = "Allow"
         Action   = "s3:PutObject"
         Resource = "${aws_s3_bucket.phonebook_logs.arn}/backend/*"
-      },
-      {
-        Effect   = "Allow"
-        Action   = "s3:GetObject"
-        Resource = "${aws_s3_bucket.phonebook_logs.arn}/backend/*"
-      },
-      {
-        Effect   = "Allow"
-        Action   = "s3:ListBucket"
-        Resource = aws_s3_bucket.phonebook_logs.arn
-      },
+      }
     ]
   })
 

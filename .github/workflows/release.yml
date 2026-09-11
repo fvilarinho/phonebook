@@ -28,11 +28,26 @@ jobs:
         with:
           terraform_version: '1.16.2'
 
+      - name: Set up Snyk
+        run: npm install --ignore-scripts -g snyk@1.1307.0
+
       - name: Compile & Build
         run: ./build.sh
 
-      - name: Package
+      - name: Test & Coverage
+        run: ./test.sh
+
+      - name: Code Analysis
+        run: ./codeAnalysis.sh
+
+      - name: Libraries Analysis
+        run: ./librariesAnalysis.sh
+
+      - name: Packaging
         run: ./package.sh
+
+      - name: Package Analysis
+        run: ./packageAnalysis.sh
 
       - name: Publish
         run: ./publish.sh

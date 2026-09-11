@@ -99,21 +99,18 @@ resource "aws_cloudfront_distribution" "phonebook" {
   is_ipv6_enabled = true
   web_acl_id      = aws_wafv2_web_acl.phonebook.arn
 
-  # TLS certificate definition.
   viewer_certificate {
     acm_certificate_arn      = aws_acm_certificate.phonebook.arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  # Static origin.
   origin {
     origin_id                = "${local.prefix}-${local.build.name}-static"
     domain_name              = aws_s3_bucket.phonebook_static.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.phonebook_static.id
   }
 
-  # Dynamic origin.
   origin {
     origin_id   = "${local.prefix}-${local.build.name}-dynamic"
     domain_name = aws_lb.phonebook_cluster.dns_name
@@ -131,7 +128,6 @@ resource "aws_cloudfront_distribution" "phonebook" {
     }
   }
 
-  # Default behavior.
   default_cache_behavior {
     target_origin_id           = "${local.prefix}-${local.build.name}-dynamic"
     viewer_protocol_policy     = "redirect-to-https"
@@ -154,13 +150,11 @@ resource "aws_cloudfront_distribution" "phonebook" {
     response_headers_policy_id = aws_cloudfront_response_headers_policy.phonebook.id
   }
 
-  # Cache 404 errors.
   custom_error_response {
     error_code            = 404
     error_caching_min_ttl = 300
   }
 
-  # Geo block restrictions. It's empty because the restrictions are being made in WAF.
   restrictions {
     geo_restriction {
       restriction_type = "none"
@@ -168,7 +162,6 @@ resource "aws_cloudfront_distribution" "phonebook" {
     }
   }
 
-  # # Logging definition.
   logging_config {
     bucket          = aws_s3_bucket.phonebook_logs.bucket_domain_name
     prefix          = "cloudfront/"
@@ -193,7 +186,6 @@ resource "aws_cloudfront_distribution" "phonebook" {
   ]
 }
 
-# Enables the monitoring.
 resource "aws_cloudfront_monitoring_subscription" "app" {
   distribution_id = aws_cloudfront_distribution.phonebook.id
 
