@@ -11,16 +11,10 @@ locals {
   database_manifest_filename             = "docker-compose.yaml"
   database_settings_manifest_filename    = "database-settings.yaml"
   database_credentials_manifest_filename = "database-credentials.yaml"
-  database_setup_hash                    = "${aws_instance.phonebook_database.id}-${filemd5(local.database_backup_script_filename)}-${filemd5(local.database_backup_cron_filename)}-${md5(local.database_environment)}-${md5(local.database_manifest)}-${filemd5(local.banner_filename)}-${filemd5(local.database_start_script_filename)}-${filemd5(local.database_stop_script_filename)}-${filemd5(local.database_helper_script_filename)}}"
+  database_setup_hash                    = "${aws_instance.phonebook_database.id}-${filemd5(local.database_backup_script_filename)}-${filemd5(local.database_backup_cron_filename)}-${filemd5(local.banner_filename)}-${filemd5(local.database_start_script_filename)}-${filemd5(local.database_stop_script_filename)}-${filemd5(local.database_helper_script_filename)}}=${md5(local.database_environment)}-${md5(local.database_manifest)}"
 }
 
 locals {
-  database_environment = <<-EOT
-export DB_USER=${local.secrets.database.user}
-export DB_PASSWORD=${local.secrets.database.password}
-export BACKUP_BUCKET="${local.prefix}-${local.build.name}-backup"
-EOT
-
   database_settings_manifest = <<-EOT
 apiVersion: v1
 kind: ConfigMap
@@ -42,6 +36,12 @@ type: Opaque
 stringData:
   DB_USER: ${local.secrets.database.user}
   DB_PASSWORD: ${local.secrets.database.password}
+EOT
+
+  database_environment = <<-EOT
+export DB_USER=${local.secrets.database.user}
+export DB_PASSWORD=${local.secrets.database.password}
+export BACKUP_BUCKET="${local.prefix}-${local.build.name}-backup"
 EOT
 
   database_manifest = <<-EOT

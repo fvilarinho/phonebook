@@ -23,6 +23,25 @@ data:
 EOT
 
   cluster_backend_manifest = <<-EOT
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend
+  namespace: ${local.build.name}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: backend-role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: backend
+    namespace: ${local.build.name}
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -37,6 +56,7 @@ spec:
       labels:
         app: backend
     spec:
+      serviceAccountName: backend
       containers:
         - name: backend
           imagePullPolicy: Always

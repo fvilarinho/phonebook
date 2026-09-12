@@ -34,7 +34,11 @@ resource "aws_s3_bucket_policy" "phonebook_static" {
     ]
   })
 
-  depends_on = [aws_cloudfront_distribution.phonebook]
+  depends_on = [
+    aws_s3_bucket.phonebook_static,
+    aws_s3_bucket_public_access_block.phonebook_static,
+    aws_cloudfront_distribution.phonebook
+  ]
 }
 
 resource "aws_s3_object" "phonebook_static" {
@@ -107,7 +111,10 @@ resource "aws_s3_bucket_policy" "phonebook_backup" {
     ]
   })
 
-  depends_on = [aws_s3_bucket.phonebook_backup]
+  depends_on = [
+    aws_s3_bucket.phonebook_backup,
+    aws_s3_bucket_public_access_block.phonebook_backup
+  ]
 }
 
 resource "aws_s3_bucket" "phonebook_logs" {
@@ -129,5 +136,8 @@ resource "aws_s3_bucket_acl" "phonebook_logs" {
   bucket = aws_s3_bucket.phonebook_logs.id
   acl    = "log-delivery-write"
 
-  depends_on = [aws_s3_bucket.phonebook_logs]
+  depends_on = [
+    aws_s3_bucket.phonebook_logs,
+    aws_s3_bucket_ownership_controls.phonebook_logs
+  ]
 }

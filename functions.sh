@@ -78,9 +78,24 @@ function loadSecretsAttributes() {
     export TERRAFORM_STATE_KEY=$(getAttribute "terraform.state.key" "$SECRETS_FILENAME")
 
     export AWS_REGION=$(getAttribute "aws.region" "$SECRETS_FILENAME")
-    export AWS_PROFILE=$(getAttribute "aws.profile" "$SECRETS_FILENAME")
-    export AWS_ACCESS_KEY_ID=$(getAttribute "aws.access_key" "$SECRETS_FILENAME")
-    export AWS_SECRET_ACCESS_KEY=$(getAttribute "aws.secret_key" "$SECRETS_FILENAME")
+
+    local buffer=$(getAttribute "aws.profile" "$SECRETS_FILENAME")
+
+    if [ -n "$buffer" ]; then
+      export AWS_PROFILE=$buffer
+    fi
+
+    buffer=$(getAttribute "aws.access_key" "$SECRETS_FILENAME")
+
+    if [ -z "$buffer" ]; then
+      export AWS_ACCESS_KEY_ID=$buffer
+    fi
+
+    buffer=$(getAttribute "aws.secret_key" "$SECRETS_FILENAME")
+
+    if [ -z "$buffer" ]; then
+      export AWS_SECRET_ACCESS_KEY=$buffer
+    fi
 
     export CLOUDFLARE_API_TOKEN=$(getAttribute "cloudflare.token" "$SECRETS_FILENAME")
 
