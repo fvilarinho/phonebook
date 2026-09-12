@@ -23,7 +23,7 @@ resource "aws_wafv2_web_acl" "phonebook" {
 
     statement {
       rate_based_statement {
-        limit                 = 1000
+        limit                 = var.waf.restrictions.rate_limit
         aggregate_key_type    = "FORWARDED_IP"
         evaluation_window_sec = 60
 

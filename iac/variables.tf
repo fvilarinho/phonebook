@@ -34,6 +34,7 @@ variable "network" {
 variable "waf" {
   default = {
     restrictions = {
+      rate_limit   = 1000
       body_size    = 16384
       allowed_ips  = []
       allowed_geos = ["BR", "US"]
