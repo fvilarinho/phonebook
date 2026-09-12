@@ -141,3 +141,30 @@ resource "aws_s3_bucket_acl" "phonebook_logs" {
     aws_s3_bucket_ownership_controls.phonebook_logs
   ]
 }
+
+resource "aws_s3_bucket_policy" "phonebook_logs" {
+  bucket = aws_s3_bucket.phonebook_logs.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action   = "s3:GetBucketAcl"
+        Resource = aws_s3_bucket.phonebook_logs.arn
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.phonebook_logs.arn}/audit/*"
+      }
+    ]
+  })
+
+  depends_on = [aws_s3_bucket.phonebook_logs]
+}
