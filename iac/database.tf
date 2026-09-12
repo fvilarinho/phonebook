@@ -70,7 +70,7 @@ resource "null_resource" "phonebook_database_setup" {
   }
 
   connection {
-    host        = aws_instance.phonebook_database.public_ip
+    host        = aws_eip.phonebook_database.public_ip
     user        = var.compute.user
     private_key = tls_private_key.phonebook.private_key_pem
   }
@@ -134,6 +134,7 @@ resource "null_resource" "phonebook_database_setup" {
   }
 
   depends_on = [
+    aws_eip.phonebook_database,
     aws_instance.phonebook_database,
     tls_private_key.phonebook
   ]

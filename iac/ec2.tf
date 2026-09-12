@@ -179,3 +179,10 @@ EOT
     aws_key_pair.phonebook
   ]
 }
+
+resource "aws_eip" "phonebook_database" {
+  instance = aws_instance.phonebook_database.id
+  domain   = "vpc"
+
+  depends_on = [aws_instance.phonebook_database]
+}
