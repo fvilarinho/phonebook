@@ -1,6 +1,6 @@
 locals {
   cluster_namespace_manifest_filename = "namespace.yaml"
-  cluster_setup_hash                  = "${md5(local.cluster_namespace_manifest_filename)}-${md5(local.database_settings_manifest)}-${md5(local.database_credentials_manifest)}-${md5(local.cluster_backend_settings_manifest)}-${md5(local.cluster_backend_manifest)}-${md5(local.cluster_frontend_settings_manifest)}-${md5(local.cluster_frontend_manifest)}-${md5(local.cluster_namespace_manifest)}-${filemd5(local.banner_filename)}"
+  cluster_setup_hash                  = "${aws_instance.phonebook_cluster_bastion.id}-${aws_instance.phonebook_cluster_workernode1.id}=${md5(local.cluster_namespace_manifest_filename)}-${md5(local.database_settings_manifest)}-${md5(local.database_credentials_manifest)}-${md5(local.cluster_backend_settings_manifest)}-${md5(local.cluster_backend_manifest)}-${md5(local.cluster_frontend_settings_manifest)}-${md5(local.cluster_frontend_manifest)}-${md5(local.cluster_namespace_manifest)}-${filemd5(local.banner_filename)}"
 }
 
 locals {
