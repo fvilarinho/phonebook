@@ -27,8 +27,6 @@ services:
     restart: unless-stopped
     environment:
       - DEBUG_ENABLED=${DEBUG_ENABLED:-}
-      - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED:-}
-      - OBSERVABILITY_LOGS_URL=${OBSERVABILITY_LOGS_URL:-}
       - DB_HOST=${DB_HOST:-}
       - DB_USER=${DB_USER:-}
       - DB_PASSWORD=${DB_PASSWORD:-}

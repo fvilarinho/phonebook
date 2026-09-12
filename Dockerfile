@@ -18,9 +18,8 @@ ENV DB_USER=demo
 ENV DB_PASSWORD=demo
 ENV DB_NAME=phonebook
 
-# Debug and observavility flags.
-ENV DEBUG_ENABLED=true
-ENV OBSERVABILITY_ENABLED=true
+# Debug flag.
+ENV DEBUG_ENABLED=false
 
 # Creates the directory structure.
 RUN mkdir -p ${HOME_DIR} \

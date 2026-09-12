@@ -15,9 +15,6 @@ metadata:
   name: backend-settings
   namespace: ${local.build.name}
 data:
-  DEBUG_ENABLED: "${local.secrets.backend.debug.enabled}"
-  OBSERVABILITY_ENABLED: "${local.secrets.backend.observability.enabled}"
-  OBSERVABILITY_LOGS_URL: "${local.secrets.backend.observability.logs.url}"
   logback.xml: |
       ${indent(6, chomp(file(local.backend_observability_settings_filename)))}
 EOT
@@ -62,16 +59,6 @@ spec:
           imagePullPolicy: Always
           image: ${local.secrets.docker.registry.url}/${local.secrets.docker.registry.id}/${local.build.name}:${local.build.version}
           env:
-            - name: DEBUG_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-settings
-                  key: DEBUG_ENABLED
-            - name: OBSERVABILITY_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-settings
-                  key: OBSERVABILITY_ENABLED
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
