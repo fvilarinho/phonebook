@@ -65,36 +65,15 @@ resource "aws_iam_role" "phonebook_logs" {
       Effect = "Allow"
       Action = "sts:AssumeRole"
       Principal = {
-        Service = "ec2.amazonaws.com"
+        Service = "config.amazonaws.com"
       }
     }]
   })
 }
 
-resource "aws_iam_role_policy" "phonebook_logs" {
-  name = "${local.prefix}-${local.build.name}-logs"
-  role = aws_iam_role.phonebook_logs.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.phonebook_logs.arn}/backend/*"
-      }
-    ]
-  })
-
-  depends_on = [
-    aws_iam_role.phonebook_logs,
-    aws_s3_bucket.phonebook_logs
-  ]
-}
-
-resource "aws_iam_instance_profile" "phonebook_cluster_workernode" {
-  name = "${local.prefix}-${local.build.name}-cluster-workernode"
-  role = aws_iam_role.phonebook_logs.name
+resource "aws_iam_role_policy_attachment" "phonebook_logs" {
+  role       = aws_iam_role.phonebook_logs.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
 
   depends_on = [aws_iam_role.phonebook_logs]
 }

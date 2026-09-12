@@ -1,9 +1,10 @@
 variable "compute" {
   default = {
-    ami_id        = "ami-025d99823a4caad37"
-    instance_type = "c8i-flex.large"
-    user          = "ubuntu"
-    home_dir      = "/home/ubuntu"
+    approved_ami_id = "ami-07574623ba26e48f8"
+    ami_id          = "ami-025d99823a4caad37"
+    instance_type   = "c8i-flex.large"
+    user            = "ubuntu"
+    home_dir        = "/home/ubuntu"
   }
 }
 

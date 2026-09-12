@@ -74,7 +74,6 @@ resource "aws_instance" "phonebook_cluster_workernode1" {
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
-  iam_instance_profile        = aws_iam_instance_profile.phonebook_cluster_workernode.name
   monitoring                  = true
   user_data_replace_on_change = true
   user_data                   = <<EOT
@@ -115,7 +114,6 @@ resource "aws_instance" "phonebook_cluster_workernode2" {
   vpc_security_group_ids      = [aws_security_group.phonebook_cluster_workernodes_traffic.id]
   key_name                    = aws_key_pair.phonebook.key_name
   associate_public_ip_address = false
-  iam_instance_profile        = aws_iam_instance_profile.phonebook_cluster_workernode.name
   monitoring                  = true
   user_data_replace_on_change = true
   user_data                   = <<EOT

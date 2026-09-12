@@ -161,7 +161,26 @@ resource "aws_s3_bucket_policy" "phonebook_logs" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.phonebook_logs.arn}/audit/*"
+        Resource = "${aws_s3_bucket.phonebook_logs.arn}/cloudtrail/*"
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action = [
+          "s3:GetBucketAcl",
+          "s3:ListBucket"
+        ]
+        Resource = aws_s3_bucket.phonebook_logs.arn
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action = "s3:PutObject"
+        Resource = "${aws_s3_bucket.phonebook_logs.arn}/config/*"
       }
     ]
   })
