@@ -25,6 +25,13 @@ locals {
 
   # Install minimum packages.
   apt-get -y install net-tools dnsutils vim curl wget unzip zip htop cron
+
+  # Disable SSH password and keyboard-interactive authentication.
+  install -d -m 0755 /etc/ssh/sshd_config.d
+  cat >/etc/ssh/sshd_config.d/00-disable-password-auth.conf <<'EOF'
+  PasswordAuthentication no
+  KbdInteractiveAuthentication no
+  EOF
 EOT
   }
 }
@@ -46,6 +53,10 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 mv kubectl /usr/local/bin
 chmod +x /usr/local/bin/kubectl
 EOT
+
+  metadata_options {
+    http_tokens = "required"
+  }
 
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-cluster-bastion"
@@ -88,6 +99,10 @@ mkdir -p ${var.compute.home_dir}/.kube
 ln -s /etc/rancher/k3s/k3s.yaml ${var.compute.home_dir}/.kube/config
 EOT
 
+  metadata_options {
+    http_tokens = "required"
+  }
+
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-cluster-workernode1"
   }
@@ -122,6 +137,10 @@ ${local.compute.bootstrap_script}
 # Install Kubernetes distribution (K3S) as worker node.
 curl -sfL https://get.k3s.io | K3S_TOKEN="${random_password.phonebook_cluster.result}" K3S_URL="https://${aws_instance.phonebook_cluster_workernode1.private_ip}:6443" sh -
 EOT
+
+  metadata_options {
+    http_tokens = "required"
+  }
 
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-cluster-workernode2"
@@ -163,6 +182,10 @@ systemctl enable docker
 # Install AWS CLI.
 curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash -s -- --system
 EOT
+
+  metadata_options {
+    http_tokens = "required"
+  }
 
   tags = {
     "Name" = "${local.prefix}-${local.build.name}-database"
