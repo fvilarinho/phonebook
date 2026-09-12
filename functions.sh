@@ -87,13 +87,13 @@ function loadSecretsAttributes() {
 
     buffer=$(getAttribute "aws.access_key" "$SECRETS_FILENAME")
 
-    if [ -z "$buffer" ]; then
+    if [ -n "$buffer" ]; then
       export AWS_ACCESS_KEY_ID=$buffer
     fi
 
     buffer=$(getAttribute "aws.secret_key" "$SECRETS_FILENAME")
 
-    if [ -z "$buffer" ]; then
+    if [ -n "$buffer" ]; then
       export AWS_SECRET_ACCESS_KEY=$buffer
     fi
 
